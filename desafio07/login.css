@@ -1,0 +1,98 @@
+:root{
+    --login-primary-color: #3a68b7;
+}
+
+
+body{
+    align-items: center;
+    background-color: var(--login-primary-color);
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    justify-content: center;
+    margin: 0;
+    min-height: 100vh;
+}
+
+form{
+    background-color: white;
+    border-left: 5px solid #031d48;
+    border-radius: 4px;
+    padding: 2em .5em;
+    width: 25em;
+}
+
+legend{
+    font-size: 1.5em;
+    color: #2870e2;
+}
+
+
+/* primeiro fieldset */
+.cadastro1{
+    border: none;
+    display: flex;
+    flex-direction: column;
+    padding: .9em;
+    gap: .5em;
+}
+
+.cadastro2{
+    display: flex;
+    font-size: .6rem;
+    justify-content: space-between;
+    margin-top: .8em;
+}
+
+.cadastro2 a{
+    text-decoration: none;
+}
+
+.form_input{
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.438);
+    padding: .4em;
+    outline: none;
+}
+
+.form_input:focus{
+    padding-left: 10px;
+    transition: .3s;
+
+}
+
+.form_input:focus:invalid{
+    border-bottom: 2px solid #ff0000;
+
+} 
+
+.form_input:valid{
+    border-bottom: 2px solid #09ff00;
+    border-radius: 2px;
+}
+
+.btn{
+    background-color: var(--login-primary-color);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    letter-spacing: 1px;
+    padding: .5em;
+}
+
+.btn:hover{
+    background-color: #031d48;
+    transition: .3s;
+}
+
+label{
+    font-size: .6rem;
+    color: #818181;
+    text-transform: uppercase;
+}
+
+.entrar a{
+   margin-left: .5em; 
+}

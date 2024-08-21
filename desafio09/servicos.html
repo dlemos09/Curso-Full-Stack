@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 11</title>
+    <link rel="stylesheet" href="../desafio09/servicos.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="cabecalho">
+        <h1>RN Services</h1>
+
+        <nav class="menu">
+          <ul>
+            <li>Início</li>
+            <li>Sobre</li>
+            <li>
+              <form action="#" method="get">
+                <input
+                  type="search"
+                  name="pesquisa"
+                  id=""
+                  placeholder="Pesquise aqui"
+                />
+                <img src="../desafio09/img/lupa.png" alt="lupa" />
+              </form>
+            </li>
+            <li><a href="../desafio09/login.html">Login</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sub-menu">
+        <div class="cadastro_paciente">
+          <a href="../desafio09/patient-registration.html"
+            >Cadastrar Paciente +</a
+          >
+        </div>
+
+        <div>
+          <input type="text" list="Services" placeholder="Nossos serviços" />
+
+          <datalist id="Services">
+            <option value="Consulta"></option>
+            <option value="Dentista"></option>
+            <option value="Fisioterapia"></option>
+            <option value="Nutricionista"></option>
+            <option value="Psicologia"></option>
+          </datalist>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div class="imagem_clinica">
+          <img src="../desafio09/img/consulta.jpg" alt="imagem_consulta" />
+        </div>
+
+        <div class="cards_container">
+          <div class="card">
+            <div class="card_icon">
+              <img src="../desafio09/img/protecao.png" alt="protecao" />
+            </div>
+            <h4>Trabalhe conosco</h4>
+          </div>
+          <div class="card">
+            <div class="card_icon">
+              <img
+                src="../desafio09/img/servico-de-atendimento-ao-consumidor.png"
+                alt="servico-de-atendimento-ao-consumidor"
+              />
+            </div>
+            <h4>Atendimento Virtual</h4>
+          </div>
+          <div class="card">
+            <div class="card_icon">
+              <img src="../desafio09/img/medico.png" alt="medico" />
+            </div>
+            <h4>Guia Médico</h4>
+          </div>
+          <div class="card">
+            <div class="card_icon">
+              <img
+                src="../desafio09/img/plano-de-saude.png"
+                alt="plano-de-saude"
+              />
+            </div>
+            <h4>Nossos Planos</h4>
+          </div>
+          <div class="card">
+            <div class="card_icon">
+              <img src="../desafio09/img/parceiro.png" alt="parceiro" />
+            </div>
+            <h4>Parceiros</h4>
+          </div>
+          <div class="card">
+            <div class="card_icon">
+              <img src="../desafio09/img/noticias.png" alt="noticias" />
+            </div>
+            <h4>Notícias</h4>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="container">
+      <h1>Tabela de Planos RN SERVICES</h1>
+      <table>
+          <thead>
+              <tr>
+                  <th>Plano</th>
+                  <th>Mensalidade</th>
+                  <th>Consultas</th>
+                  <th>Internações</th>
+                  <th>Exames</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>Básico</td>
+                  <td>R$ 100,00</td>
+                  <td>2 por mês</td>
+                  <td>Sim</td>
+                  <td>10 exames por ano</td>
+              </tr>
+              <tr>
+                  <td>Intermediário</td>
+                  <td>R$ 200,00</td>
+                  <td>5 por mês</td>
+                  <td>Sim</td>
+                  <td>20 exames por ano</td>
+              </tr>
+              <tr>
+                  <td>Avançado</td>
+                  <td>R$ 300,00</td>
+                  <td>Ilimitadas</td>
+                  <td>Sim</td>
+                  <td>Ilimitados</td>
+              </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+                <td colspan="5">Valores Sujeitos a alteração sem aviso prévio</td>
+            </tr>
+
+        </tfoot>
+      </table>
+  </div>
+
+    <footer>
+      <h3>RN Services &COPY;</h3>
+    </footer>
+  </body>
+</html>

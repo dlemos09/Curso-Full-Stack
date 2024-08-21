@@ -1,0 +1,134 @@
+body {
+    background-color: #b6b6b6;
+    margin: 0;
+
+}
+
+
+.hero {
+    background-image: url(../desafio03/bg-3.jpg);
+    height: 600px;
+    background-size: cover;
+    background-position: right center;
+    padding-top: 1px;
+
+}
+
+.hero-content {
+    margin: 50px auto 0;
+    width: 80%;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero-content h1 {
+    text-shadow: -1px 0 rgb(0, 0, 0), 0 1px #000000, 1px 0 #000000, 0 -1px black;
+    font-size: 60px;
+    text-transform: uppercase;
+    margin: auto;
+    padding-top: 100px;
+}
+
+.hero-content p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 18px 10px;
+    background: #000000a6;
+    display: inline-block;
+    border-bottom: 2px solid #ffffff;
+    border-radius: 10px;
+
+}
+
+.menu {
+    text-align: right;
+}
+
+.menu ul {
+    margin-right: 20px;
+}
+
+.menu li {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    list-style-type: none;
+    display: inline-block;
+    padding: 15px;
+}
+
+.menu a {
+    background-color: #818181;
+    color: #ffffff;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 2px solid #ffffff;
+    text-transform: uppercase;
+    border-radius: 10px;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.menu a:hover {
+    background-color: rgb(0, 0, 0, .5);
+    transition: 0.4s all;
+}
+
+/* section {
+    /* background-color: white;
+    margin: auto;
+    width: 80%;
+    margin-top: 20px;
+    padding: 15px; */
+
+
+.art {
+    background-color: #ffffff;
+    margin: auto;
+    width: 80%;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+
+.art h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px;
+    background-color: #eeeeee;
+    border-bottom: 1px solid #6b6b6b;
+    margin-top: 0;
+}
+
+.art p {
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: left;
+}
+
+a.btn {
+    text-decoration: none;
+    background-color: #818181;
+    display: block;
+    padding: 12px 16px;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 10px;
+    margin-left: auto;
+    width: fit-content;
+}
+
+.art .btn:hover {
+    background-color: rgb(0, 0, 0, .6);
+    transition: 0.4s all;
+}
+
+footer {
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #6b6b6b;
+    color: #ffffff;
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    margin-top: 20px;
+    letter-spacing: 2px;
+}

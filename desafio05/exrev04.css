@@ -1,0 +1,368 @@
+/* Estilo para o body */
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #F4E3D7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+/* Estilo para o header */
+.cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    background-color: #8B4513;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    background-image: url(../desafio05/img/backgroud.png);
+    background-repeat: repeat;
+}
+
+.cabecalho h1{
+    background-color: #00000054;
+    border-radius: 10px;
+    font-size: 40px;
+    text-shadow: 2px 2px 6px black;
+    padding: 20px;
+    width: 80%;
+    text-align: center;
+}
+
+/* Estilo para o nav */
+nav {
+    
+    background-color: #D2691E;
+    color: white;
+    padding: 20px;
+    width: 20%;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 15px;
+    display: block;
+    margin: 15px;
+    font-size: 20px;
+    padding: 20px;
+}
+
+nav ul li a:hover {
+    background-color: #A0522D;
+    border-radius: 5px;
+    transition: 0.3s;
+    outline: 1px solid #ddd;
+
+}
+
+.teste{
+    display: flex;
+}
+
+/* Estilo para o main */
+main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Estilo para a seção de cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 80px;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10% 10px;
+    padding: 10px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #CD853F;
+    outline: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 20%;
+    height: 180px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 4px 3px 4px #8B4513;
+}
+
+.card p{
+    font-size: 1.5rem;
+}
+
+.card:hover{
+    transform: scale(1.2);
+    transition: 0.3s;
+}
+
+
+
+.borda-imagem{
+    background-color: transparent;
+    display: inline-block;
+    padding: 15px;
+    border-radius: 100px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.wave{
+    margin: 0;
+    padding: 0;
+    height: 20px;
+}
+
+/* Estilo para o conteúdo extra */
+.teste02{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+
+.extra-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    margin: 10%;
+    border-radius: 8px;
+    height: 600px;
+    margin-bottom: 0;
+    background-image: url(../desafio05/img/background_01.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+  
+}
+
+.extra-content header {
+    background-color: #00000046;
+    width: 80%;
+    color: white;
+    padding: 12px;
+    margin: 50px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.extra-content p{
+    border-radius: 8px;
+    font-size: 20px;
+    line-height: 1.5;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    width: 85%;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    background-color: #00000046;
+    overflow-y: auto;
+    scrollbar-width: thin; /* Largura fina da barra de rolagem */
+}
+
+/* Estilo para o conteúdo extra parte 2*/
+
+.extra-content2{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 8px;
+    height: 800px;
+    margin: 10%;
+    margin-top: 0;
+    margin-bottom: 5%;
+    background-image: url(../desafio05/img/background_02.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-y: scroll;
+    scrollbar-width: thin; /* Largura fina da barra de rolagem */
+    /* scrollbar-color: #00000000 #00000000; */
+    scrollbar-color: #8B4513 #CD853F; 
+}
+
+.extra-content2 header{
+    background-color: #00000046;
+    width: 80%;
+    color: white;
+    padding: 12px;
+    margin: 50px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.extra-content2 .servicos{
+    background-color: #00000046;
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+    border-radius: 8px;
+    width: 82%;
+
+}
+
+.servicos ol{
+    padding-inline-start: 0px;
+}
+
+.li_titulo{
+ list-style-type: none; /* Remove os bullets */
+ 
+}
+
+ .li_titulo span{
+    padding-left: 10px; 
+    line-height: 2.0;
+    font-weight: bold;
+}
+
+
+
+/* Estilo para a seção de asides */
+.asides-container {
+    display: flex;
+    gap: 80px;
+    margin-top: 20px;
+    width: 80%;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10%;
+
+}
+
+aside {
+    background-color: #F4A460;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-items: center;
+    justify-content: space-between;
+    height: 900px;
+}
+
+aside header {
+    background-color: #00000046;
+    color: white;
+    padding: 10px 5px;
+    width: 88%;
+    text-align: center;
+    border-radius: 8px;
+    
+}
+
+.aside01, .aside02{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.aside01{
+    background-image: url(../desafio05/img/fotografo.jpg);
+}
+
+.aside02{
+    background-image: url(../desafio05/img/camera.jpg);
+}
+
+.aside02_p{
+    background-color: #00000054;
+    width: 90%;
+    box-sizing: border-box;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 18px;
+    overflow-y:auto;
+    scrollbar-width: thin; /* Largura fina da barra de rolagem */
+    scrollbar-color: #00000000 #00000000;
+    box-sizing: border-box;
+
+}
+
+.aside02 p{
+    text-indent: 25px;
+    color: white;
+    font-weight:bold ;
+    text-align: justify;
+    font-size: 18px;
+}
+
+table caption{
+    font-size: 2em;
+    margin-bottom: 1em;
+}
+
+.tabela_preco{
+    border: 2px solid red;
+    border-collapse: collapse;
+    text-align: center;
+    padding: 1em;
+    width: 80%;
+    margin: 10%;
+
+}
+
+th{
+    border: 2px solid rgb(0, 0, 0);
+    background-color: #00000046;
+    padding: 1em;
+
+}
+
+tbody td{
+    border: 2px solid rgb(0, 0, 0);
+    font-weight: bold;
+    padding: 1em;
+}
+
+
+tbody tr:hover{
+    background-color: #F4A460;
+}
+
+tfoot td{
+    border: 2px solid rgb(0, 0, 0);
+    padding: 1em;
+    background-color: #00000046;
+
+}
+
+
+
+
+
+/* Estilo para o footer */
+footer {
+    background-color: #8B4513;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+}

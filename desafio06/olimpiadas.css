@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
+
+:root{
+    --font-padrao: "Roboto Slab", serif;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+/* Estilos Globais */
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo para o header e nav */
+header {
+
+    background: #09294A;
+    background: linear-gradient(180deg, #09294A, #290DF2);
+    left: 0;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    display: block;
+    font-size: 2.5rem;
+    font-family: var(--font-padrao);
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    border-bottom: 2px solid rgb(255, 255, 255);
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+/* Estilo para o main */
+main {
+    margin-top: 20rem; /* Para compensar o header fixo */
+    padding: 20px;
+    text-align: center;
+}
+
+main h1{
+    color: #09294A;
+    font-family: "Courgette", cursive;
+    font-size: 12rem;
+    margin-top: 0;
+    margin-bottom: 8rem;
+    text-shadow: 6px 4px 8px #988bf9;
+}
+
+.menu{
+    top: 8em;
+    position: absolute;
+    z-index: 7;
+}
+
+.menu img{
+    position: fixed;
+    overflow: auto;
+    width: 10vw;
+}
+
+
+.titulo img{
+    margin: 11em 2em;
+    right: 1em;
+    position: absolute;
+    top: 1em;
+    transform: rotate(18deg);
+    width: 20vw;
+}
+
+.titulo img:hover{
+    transition: .8s;
+    transform: rotate(720deg); 
+}
+
+
+/* Estilo para a imagem expansível */
+.image-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .5em;
+    justify-content: space-evenly;
+    margin-bottom: 6em;
+    position: relative;
+}
+
+.expandable-image, .expandable-image_vertical {
+    margin-top: .8em;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+.expandable-image {
+    width: 45vw;
+
+}
+
+.expandable-image_vertical{
+   width: 30vw;
+}
+
+.expandable-image:hover, .expandable-image_vertical:hover {
+    transform: scale(1.1);
+}
+
+.expandable-image:active, .expandable-image_vertical:active {
+    transform: scale(1.5);
+}
+
+/* Estilo para os cards */
+.cards-container {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin: auto;
+    width: 82vw;
+
+}
+
+.card {
+    background-color: #f4f4f4;
+    border: 1px solid #09294A;
+    border-radius: 8px;
+    font-family: var(--font-padrao);
+    font-size: 1.8rem;
+    padding: 20px;
+    transition:  0.3s ease-in-out;
+    width: 20vw;
+
+}
+
+.card:hover {
+    background-color: #09294A;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+    color: #f4f4f4;
+    font-weight: bold;
+    transform: translateY(-10px);
+}
+
+/* Estilo para o footer */
+footer {
+    background: #09294A;
+    background: linear-gradient(180deg, #09294A, #290DF2);
+    color: white;
+    font-family: var(--font-padrao);
+    font-size: 1.5rem;
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px 0;
+}

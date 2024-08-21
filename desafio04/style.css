@@ -1,0 +1,262 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0%;
+    padding: 0%;
+    background-color: #efefef;
+    color: #333333;
+    /* Texto principal */
+}
+
+main {
+    display: flex;
+}
+
+.container_menu {
+    height: 770px;
+    width: 200px;
+    background-color: #2d3e50;
+    /* Fundo do menu */
+
+}
+
+.container_menu_bar h2 {
+    text-align: center;
+    font-size: 40px;
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
+    color: #ffffff;
+    /* Texto do menu */
+}
+
+.container_menu_bar h2 img {
+    background-color: #efefef;
+    border-radius: 100%;
+    height: 25px;
+    margin: 0;
+}
+
+.container_menu_bar h2 img:hover {
+    background-color: #3498db;
+    transition: 0.2s;
+    cursor: pointer;
+    height: 25px;
+    margin: 0;
+}
+
+
+.container_menu_bar h2 a {
+    border: none;
+    text-decoration: none;
+    padding: 0%;
+    margin: 0%;
+}
+
+.container_menu_bar hr {
+    margin: 0;
+    border-color: #ffffff;
+    /* Cor da linha horizontal */
+
+}
+
+.container_menu_bar ul {
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+}
+
+.container_menu_bar ul li {
+    text-align: center;
+    display: flex;
+    margin: 0px;
+}
+
+.container_menu_bar a {
+    text-decoration: none;
+    width: 170px;
+    margin: 0px;
+    padding: 26px 10px;
+    border-bottom: 3px dotted #ffffff;
+    /* Bordas dos links */
+    border-radius: 10px 30px;
+    font-weight: bold;
+    color: #3498db;
+    /* Destaques e links */
+}
+
+.container_menu_bar .link_menu:hover {
+    background-color: #34495e;
+    /* Cor de fundo do link ao passar o mouse */
+    color: #ffffff;
+    /* Texto do título do cardápio */
+}
+.container_menu_bar .link_menu .menu_icon:hover {
+    background-color: #3498db;
+    /* Cor de fundo do link ao passar o mouse */
+    color: #ffffff;
+    /* Texto do título do cardápio */
+}
+
+.container_menu_bar ul li a .menu_itens_icon {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+}
+
+.container_menu_bar ul li a .menu_icon {
+    background-color: #efefef;
+    border-radius: 100%;
+    height: 25px;
+    margin: 0 15px;
+
+}
+
+
+.container_principal {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    position: relative;
+
+}
+
+.titulo_cardapio {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-image: url(../desafio04/img/pexels-pixabay-260922.jpg);
+    /* background-color: #3498db; */
+    /* Fundo do título do cardápio */
+    width: 100%;
+    height: 240px;
+
+}
+
+.titulo_cardapio h1 {
+    font-size: 80px;
+    text-align: center;
+    /* text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000; */
+    text-shadow: 2px 2px 4px #000000;
+    background-color: rgba(0, 0, 0, 0.62);
+    border-radius: 8px;
+    padding: 10px;
+    color: #ffffff;
+    /* Texto do título do cardápio */
+}
+
+.container_comida {
+    width: 100%;
+    height: 476px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    background-color: #efefef;
+}
+
+.container_comida h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: #2d3e50;
+}
+
+.card_food {
+    width: 190px;
+    height: 254px;
+    padding: 10px;
+    background: #f5f5f5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    margin: 10px;
+    margin-top: 20px;
+    border-radius: 15px;
+
+}
+
+.sobre_nos {
+    width: 80%;
+    height: 400px;
+}
+
+.banner_food_pai {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.banner_food {
+    width: 300px;
+    height: 350px;
+    padding: 10px;
+    background: #f5f5f5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    margin: 12px;
+    margin-top: 20px;
+    overflow-y: auto;
+}
+
+.banner_food h4 {
+    text-align: center;
+}
+
+.banner_food p {
+    box-sizing: border-box;
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.card_food_image img {
+    height: 40%;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.card_food_image:active {
+    position: relative;
+    top: 20px;
+    transform: scale(1.8);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card_food h2 {
+    font-size: 25px;
+    padding: 0;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+
+}
+
+.card_food h3 {
+    font-size: 15px;
+    letter-spacing: 1.2px;
+    padding-top: 9px;
+    margin: 0;
+
+}
+
+.card_food p {
+    padding: 0;
+    margin: 0;
+    font-size: 10px;
+}
+
+
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d3e50;
+    /* Fundo do rodapé */
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    color: #ffffff;
+    /* Texto do rodapé */
+}
