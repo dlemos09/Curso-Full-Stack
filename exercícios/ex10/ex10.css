@@ -1,0 +1,106 @@
+/* Estilo para o body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+/* Estilo para o header */
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+header h1:hover {
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2em;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease-in-out;
+
+}
+
+nav ul li a:focus {
+    background-color: #555;
+    border-radius: 0.2rem 9rem 0.2rem;
+    background-color: brown;
+    outline: 0.1rem solid #f4f4f9;
+}
+
+/* Estilo para o main */
+main {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Estilo para a seção de cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    width: 80%;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    width: 20rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.852), 0 8px 16px rgba(255, 0, 0, 0.719);
+    cursor: pointer;
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+.card p {
+    font-size: 1rem;
+}
+
+/* Estilo para o footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Satisfação</title>
+    <link rel="stylesheet" href="../ex15/survey-styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pesquisa de Satisfação</h1>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Qual é o seu nível de satisfação com nosso serviço?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="satisfaction" value="1" required> 1 (Muito insatisfeito)</label>
+                    <label><input type="radio" name="satisfaction" value="2" required> 2</label>
+                    <label><input type="radio" name="satisfaction" value="3" required> 3</label>
+                    <label><input type="radio" name="satisfaction" value="4" required> 4</label>
+                    <label><input type="radio" name="satisfaction" value="5" required> 5 (Muito satisfeito)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="comments">Comentários:</label>
+                <textarea id="comments" name="comments" rows="4" required></textarea>
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+/* Estilo para o body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 16px; /* Tamanho base para rem */
+}
+
+/* Estilo para o header */
+header {
+    background-color: lightblue;
+    height: 20vh; /* 20% da altura da viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+/* Estilo para o título do header */
+header h1 {
+    font-size: 2rem; /* 2 * 16px = 32px */
+}
+
+/* Estilo para a seção principal */
+main {
+    padding: 2em; /* 2 * tamanho da fonte do pai (16px) = 32px */
+}
+
+/* Estilo para o conteúdo */
+.content {
+    background-color: rgb(128, 128, 128);
+    padding: 2vw; /* 2% da largura da viewport */
+}
+
+/* Estilo para o título da seção principal */
+.content h2 {
+    font-size: 1.5rem; /* 1.5 * 16px = 24px */
+}
+
+/* Estilo para os cards */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+/* Estilo para cada card individual */
+.card {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 1em;
+    padding: 2em;
+    width: 20vw; /* 20% da largura da viewport */
+    height: 20vh; /* 20% da altura da viewport */
+}
+
+/* Estilo para os títulos dos cards */
+.card h3 {
+    font-size: 1.5em; /* 1.5 * tamanho da fonte do pai (16px) = 24px */
+}
+
+/* Estilo para os parágrafos dos cards */
+.card p {
+    font-size: 1rem; /* 1rem = 16px */
+    margin-top: 0.5em;
+}
+
+/* Estilo para o footer */
+footer {
+    background-color: lightcoral;
+    height: 10vh; /* 10% da altura da viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo para o texto do footer */
+footer p {
+    font-size: 1rem; /* 1rem = 16px */
+}

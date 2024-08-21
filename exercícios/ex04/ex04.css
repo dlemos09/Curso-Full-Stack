@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 60%;
+    padding: 20px;
+    border-top: 1px solid #f1f1f1;
+    border-right: 1px solid #f1f1f1;
+    border-bottom: 1px solid #f1f1f1;
+    border-left: 1px solid #f1f1f1;
+    border-radius: 30px;
+    background-image: url(../../img/sasuke.webp);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: contain;
+}
+
+/* Títulos */
+
+h1, h2 {
+    color: #e1e1e1;
+    margin-top: 20px;
+    text-decoration: underline;
+    text-shadow: 2px 2px 5px red;
+  }
+
+/* parágrafos */
+
+p{
+  color: #e1e1e1;
+  text-align: justify;
+  margin-bottom: 100px;
+  line-height: 1.5;
+}
+
+p:hover{
+  background-color: #b1b1b1;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 10px;
+  transition: 0.8s;
+  color: #2A2D3A;
+}
+
+/* rodape */
+
+.rodape{
+    text-align: center;
+    padding: 0%;
+    margin: 0;
+}
+
+/* Configuração das imagens */
+
+img{
+    width: 500px; /* Altere o valor conforme necessário */
+    height: auto;
+    border: 2px solid #e10000;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+img:hover{
+  box-shadow: 0 0 10px 1px #e10000;
+  transform: scale(1.2);
+  transition: 0.6s;
+}
+
+.dragao, .aventureiros, .warriorvsdragon ,.encontro{
+  float: left;
+  margin-right: 20px;
+  width: 300px;
+}
+
+
+.warrior, .war, .elfo{
+  float: right;
+  margin-left: 20px;
+  width: 300px;
+}
+
+.aventureiros, .war, .encontro{
+  width: 500px;
+}
+
+
+
+
+/* Paginação */
+
+ul{
+  list-style: none;
+  margin-right: 35px;
+  margin-bottom: 40px;
+}
+
+li{
+  display: inline-block;
+  padding: auto;
+}
+
+a{
+  padding: 10px;
+  border-radius: 100%;
+  margin: 0px 10px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #f1f1f1;
+  color: #e10000;
+  border: 2px solid #e10000;
+}
+
+a:hover{
+  background-color: #e10000;
+  border: 2px solid #f1f1f1;
+  font-weight: bold;
+  color: #f1f1f1;
+  transition: 0.4s;
+}
+
+a:active{
+  background-color: bisque;
+  color: #e10000;
+}

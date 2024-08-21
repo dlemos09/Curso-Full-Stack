@@ -1,0 +1,40 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #1a8699;
+    color: aliceblue;
+}
+
+h1{
+    text-align: center;
+    font-size: 35px;
+    text-shadow: 2px 2px black;
+    text-decoration: underline;
+
+
+}
+
+h2{
+    text-align: center;
+    text-shadow: 1px 1px 1px black;
+
+}
+
+p{
+    font-size: small;
+    text-align: left;
+}
+
+.p1{
+    font-weight: bold;
+    text-align: right;
+}
+
+a{
+    text-decoration: none;
+    color: rgb(33, 30, 210);
+    font-weight: normal;
+}
+
+h3 + p{
+    background-color: rgb(8, 6, 128);
+}

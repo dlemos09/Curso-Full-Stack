@@ -1,0 +1,168 @@
+/* Reset básico para remover margens e preenchimentos padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo do corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Estilo do container principal */
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar content"
+        "footer footer";
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto 1fr auto;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Estilo do cabeçalho */
+.header {
+    grid-area: header;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.header h1::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 4px;
+    background-color: #ff0000;
+    margin: 10px auto 0 auto;
+}
+
+/* Estilo da barra de navegação */
+.navbar {
+    margin-top: 20px;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.menu li {
+    position: relative;
+}
+
+.menu a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    display: block;
+    background-color: #555;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu a:hover {
+    background-color: #777;
+}
+
+.menu li::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: tomato;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 5px;
+    
+
+}
+
+.menu li:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Estilo da barra lateral */
+.sidebar {
+    grid-area: sidebar;
+    background-color: #555;
+    color: white;
+    padding: 20px;
+}
+
+/* Estilo do conteúdo principal */
+.content {
+    grid-area: content;
+    display: grid;
+    grid-template-areas:
+        "section1"
+        "section2"
+        "section3";
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.section1 {
+    grid-area: section1;
+}
+
+.section2 {
+    grid-area: section2;
+}
+
+.section3 {
+    grid-area: section3;
+}
+
+/* Estilo do rodapé */
+.footer {
+    grid-area: footer;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+    .container {
+        grid-template-areas:
+            "header"
+            "content"
+            "sidebar"
+            "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+    }
+
+    .content {
+        grid-template-areas:
+            "section1"
+            "section2"
+            "section3";
+    }
+}
