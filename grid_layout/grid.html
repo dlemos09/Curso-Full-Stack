@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRID</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .grid_container {
+            background-color: bisque;
+            display: grid;
+            border: 2px solid #ccc;
+            margin: 0 auto;
+            max-width: 400px;
+            margin-top: 1em;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        h1 {
+            color: #333;
+            background-color: #f3f3f3;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .item {
+            background-color: tomato;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .grid_examples {
+
+            /* grid-template-columns: 100px 100px 100px 100px 100px; */
+
+            /* grid-template-columns: 1fr 2fr 1fr 2fr 1fr; */
+
+            /* grid-template-columns: repeat(3, 1fr); */
+
+            /* grid-template-columns: minmax(200px,1fr) 1fr 1fr; */
+
+            /* grid-template-columns: repeat(auto-fit, 100px); */
+
+            /* grid-template-columns: repeat(auto-fit, minmax(100px, auto)); */
+
+            grid-template-columns: 1fr 1fr 1fr;
+
+        }
+
+        /* ###################################################################### */
+        /* agora demonstração de grid template rows */
+
+        .grid_template_rows {
+            grid-template-columns: 1fr 1fr;
+
+
+            /* grid-template-rows: 100px 20px 50px 30px; */
+
+            /* grid-template-rows: 100px 100px; */
+
+            /* grid-template-rows: 1fr 2fr 3fr 1fr; */
+
+            /* grid-template-rows: repeat(2, 100px);*/
+
+
+
+            /* No grid-template-rows se não colocar o valor, a altura será definida pelo tamanho do conteúdo */
+        }
+
+        .grid_template_rows .item {
+            color: white;
+            background-color: dodgerblue;
+        }
+
+        /* ##################################################################### */
+
+        .grid_template_rows_and_columns {
+            grid-template-columns: 100px auto 50px;
+            grid-template-rows: 50px 200px 50px;
+        }
+
+        /* importante lembrar que ao adicionar mais colunas, os itens irão obedecer o padrão do grid */
+
+        .grid_template_rows_and_columns .item {
+            background-color: aquamarine;
+        }
+
+        /* ##################################################################### */
+
+        .grid_template_areas-1 {
+            grid-template-areas:
+                /* "a a a"
+            "a a a"; */
+                /* "a b c"
+            "d e f" */
+                /* grid são colunas e linhas */
+                /* "a e c"
+            "d e f" */
+                "logo nav nav"
+                "sidenav content advert"
+                "sidenav footer footer"
+            ;
+        }
+
+        .logo {
+            grid-area: logo;
+        }
+
+        .nav {
+            grid-area: nav;
+        }
+
+        .sidenav {
+            grid-area: sidenav;
+        }
+
+        .content {
+            grid-area: content;
+        }
+
+        .advert {
+            grid-area: advert;
+        }
+
+        .footer {
+            grid-area: footer;
+        }
+
+        .grid_template_areas-1 .item,
+        .grid_template_areas-2 .item,
+        .grid_template_areas-3 .item,
+        .grid_template_areas-4 .item {
+            color: white;
+            background-color: darkorchid;
+        }
+
+        @media (max-width: 500px) {
+            .grid_template_areas-1 {
+                grid-template-areas:
+                    "logo logo logo"
+                    "sidenav sidenav sidenav"
+                    "nav nav nav"
+                    "content content content"
+                    "advert footer footer"
+                ;
+            }
+        }
+
+        .grid_template_areas-2 {
+            grid-template-areas:
+                "logo logo"
+                "nav nav"
+                "content content"
+                "sidenav advert"
+                "footer footer"
+            ;
+        }
+
+        .grid_template_areas-3 {
+            grid-template-columns: 100px auto 50px;
+            grid-template-rows: 50px 150px 50px;
+            grid-template-areas:
+                "logo nav nav "
+                "sidenav content advert"
+                "sidenav footer footer"
+            ;
+        }
+
+        .grid_template_areas-4 {
+
+            grid-template-areas:
+                "logo nav nav "
+                ". content advert"
+                "sidenav footer ."
+            ;
+        }
+
+        /* ##################################################################### */
+
+        .grid_template {
+            grid-template:
+                "logo  content advert" 80px
+                "nav content sidenav " 150px
+                "nav footer sidenav" 50px
+                /100px 1fr .5fr
+            ;
+
+            /* gap: 10px; */
+            /* column-gap: 45px; */
+            /* row-gap: 30px; */
+        }
+
+        .grid_template .item {
+            background-color: chartreuse;
+        }
+
+        .grid_template .nav {
+            background-color: red;
+
+        }
+
+        /* ##################################################################### */
+
+        .grid_auto_columns_example {
+            grid-template-columns: 100px 100px;
+            grid-auto-columns: 1fr;
+
+        }
+
+        .grid_auto_columns_example .item6 {
+            grid-column: 3;
+
+        }
+
+        .grid_auto_columns_example .item {
+            background-color: seagreen;
+            color: aliceblue;
+        }
+
+        /* ##################################################################### */
+
+        .grid_auto_rows_example {
+            grid-auto-rows: 50px;
+        }
+
+
+        .grid_auto_rows_example .item {
+            background-color: steelblue;
+            color: aliceblue;
+        }
+
+        .grid_auto_rows_example .item4 {
+            background-color: coral;
+            grid-row: 1;
+        }
+
+        /* ##################################################################### */
+
+        .grid_auto_flow_example {
+            /* grid-template-columns: 100px; */
+            /* grid-auto-flow: column; */
+
+            grid-template-columns: repeat(2, minmax(100px, 1fr));
+            grid-template-rows: 50px 50px 50px; 
+            /* a definição de linha evita que o conteúdo estoure  */
+            grid-auto-columns: 200px;
+            grid-auto-flow: column;
+        }
+
+        .grid_auto_flow_dense{
+            grid-template-rows: auto 100px;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-auto-flow: dense;
+            /* ele tenta encaixar o demais elementos no espaço restante, sugerido quando a ordem não importa*/
+
+        }
+
+       
+        .grid_auto_flow_example .item, .grid_auto_flow_dense .item {
+            background-color: darkmagenta;
+            color: aliceblue;
+        }
+
+        .grid_auto_flow_dense .item2{
+            grid-column: span 3;
+            background-color: rgb(144, 127, 255);
+        }
+
+        .grid_auto_flow_dense .item5{
+            grid-column: span 2;
+            background-color: rgb(73, 53, 204);
+        }
+
+        /* ################################################## */
+
+
+        .grid-1{
+            grid: 100px 100px 20px / 1fr 1fr;
+            
+        }
+
+        .grid-1 .item{
+            background-color: rgb(144, 127, 255);
+            color: aliceblue;
+        }
+
+        .grid-2 {
+            grid: 100px 100px / auto-flow 100px 50px;
+            grid-auto-columns: 100px 50px;
+            grid-auto-flow: column;
+
+        }
+
+        .grid-2 .item{
+            background-color: rgb(11, 0, 83);
+            color: aliceblue;
+        }
+
+        .grid-3{
+            grid:
+               "menu  menu lateral" 80px
+                "submenu conteudo propaganda " 150px
+                "submenu rodape rodape " 30px
+                /100px 2fr 1fr
+            ;
+        }
+
+        .menu{
+            grid-area: menu;
+        }
+        .submenu{
+            grid-area: submenu;
+        }
+
+        .conteudo{
+            grid-area: conteudo;
+        }
+
+        .propaganda{
+            grid-area: propaganda;
+        }
+
+        .lateral{
+            grid-area: lateral;
+        }
+
+        .rodape{
+            grid-area: rodape;
+        }
+
+        .grid-3 .item{
+            background-color: rgba(34, 0, 255, 0.833);
+            color: aliceblue;
+        }
+
+        /* ################################# */
+
+        /* Demonstração do justify */
+
+        .grid-justify{
+            /* grid-template-columns: 150px 100px 100px;  */
+            /* grid-template-rows: 150px 100px; */
+            grid-template-columns: repeat(3, 1fr); 
+            grid-template-rows: repeat(2, 100px);
+            /* justify-content: start; */
+            /* justify-content: end; */
+            /* justify-content: center; */
+            /* justify-content: stretch; */
+            /* justify-content: space-around; */
+            /* justify-content: space-between; */
+            /* justify-items: start; */
+            /* justify-items: end; */
+            /* importante demonstrar sem o grid template column */
+            align-items: start;
+            /* align-content: space-between; */
+            height: 230px;
+        }
+        
+
+        .grid-justify .item{
+            background-color: rgba(70, 180, 112, 0.833);
+            color: aliceblue;
+            
+        }
+
+        /* ############################################## */
+
+        .grid-item{
+            font-size: 1.2em;
+            font-weight: bold;
+            /* grid-template-columns: repeat(5, 1fr); */
+            grid-template-columns: [inicio] 1fr 1fr [final];
+            /* nomeando colunas */
+            grid-auto-rows: 50px;
+        }
+
+        .grid-item .item3{
+            /* grid-column: span 2; */
+            /* grid-column: 1 / 5;  */
+            grid-column: inicio / 3;
+            grid-row: 2;
+
+        }
+
+        /* .grid-item .item2{
+             grid-column: span 2; 
+
+        }
+        .grid-item .item6{
+             grid-column: span 2; 
+
+        } */
+/* 
+        .grid-item .item5{
+            grid-column: 4;
+            grid-column: span 4; 
+
+        } */
+        
+        .grid-item .item{
+            background-color: lightskyblue;
+        }
+
+
+    </style>
+
+
+</head>
+
+<body>
+    <h1>Grid</h1>
+
+    <h2>Demonstração de grid-template-columns</h2>
+    <section class="grid_container grid_examples">
+        <div class="item"> 1 </div>
+        <!-- utilize frases para demonstração -->
+        <!-- <div class="item">1</div> -->
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+
+    </section>
+
+    <hr>
+
+    <h2>Demonstração de grid-template-rows</h2>
+
+    <section class="grid_container grid_template_rows">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia consequuntur alias
+            temporibus. Molestias, repellat quisquam cumque provident ullam, eum magni quia in saepe ipsum ratione earum
+            alias laborum itaque inventore ad numquam quae reprehenderit beatae!</div>
+        <div class="item">7</div>
+        <div class="item">8</div>
+        <!-- <div class="item">6</div>
+        <div class="item">7</div> -->
+
+    </section>
+
+    <hr>
+
+    <h2> grid-template-columns + grid-template-rows</h2>
+
+    <section class="grid_container grid_template_rows_and_columns">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+        <div class="item">7</div>
+        <div class="item">8</div>
+
+    </section>
+
+    <hr>
+
+    <h2> grid-template-areas-1 </h2>
+
+    <section class="grid_container grid_template_areas-1">
+        <div class="item logo">logo</div>
+        <div class="item nav">nav</div>
+        <div class="item content">content</div>
+        <!-- <div class="item content">lorem20</div> -->
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <h2> grid-template-areas (mobile) </h2>
+
+    <section class="grid_container grid_template_areas-2">
+        <div class="item logo">logo</div>
+        <div class="item nav">nav</div>
+        <div class="item content">content</div>
+        <!-- <div class="item content">lorem20</div> -->
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <h2> grid-template-areas (coluna e linha) </h2>
+
+    <section class="grid_container grid_template_areas-3">
+        <div class="item logo">logo</div>
+        <div class="item nav">nav</div>
+        <div class="item content">content</div>
+        <!-- <div class="item content">lorem20</div> -->
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <h2> grid-template-areas (. para área vazia) </h2>
+
+    <section class="grid_container grid_template_areas-4">
+        <div class="item logo">logo</div>
+        <div class="item nav">nav</div>
+        <div class="item content">content</div>
+        <!-- <div class="item content">lorem20</div> -->
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2> grid-template </h2>
+
+    <section class="grid_container grid_template">
+        <div class="item logo">logo</div>
+        <div class="item nav">nav</div>
+        <div class="item content">content</div>
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2>GAP</h2>
+
+    <section class="grid_container grid_template ">
+        <div class="item logo">logo</div>
+        <div id="item2" class="item nav">nav</div>
+        <div class="item content">content</div>
+        <div class="item sidenav">sidenav</div>
+        <div class="item advert">advert</div>
+        <div class="item footer">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2>grid-auto-columns</h2>
+
+    <section class="grid_container grid_auto_columns_example ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2>grid-auto-rows</h2>
+
+    <section class="grid_container grid_auto_rows_example ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2>grid-auto-flow</h2>
+
+    <section class="grid_container grid_auto_flow_example ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <h2>grid-auto-flow</h2>
+
+    <section class="grid_container grid_auto_flow_dense ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <hr>
+
+    <h2>Grid</h2>
+
+    <section class="grid_container grid-1 ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <section class="grid_container grid-2 ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+    <section class="grid_container grid-3 ">
+        <div class="item menu">menu</div>
+        <div class="item submenu">submenu</div>
+        <div class="item conteudo">conteudo</div>
+        <div class="item propaganda">propaganda</div>
+        <div class="item lateral">lateral</div>
+        <div class="item rodape">rodape</div>
+
+    </section>
+
+    <hr>
+
+    <h2>justify</h2>
+
+    <section class="grid_container grid-justify ">
+        <div class="item item1">logo</div>
+        <div class="item item2">nav</div>
+        <div class="item item3">content</div>
+        <div class="item item4">sidenav</div>
+        <div class="item item5">advert</div>
+        <div class="item item6">footer</div>
+
+    </section>
+
+<hr>
+
+    
+    <h2>grid item</h2>
+
+    <section class="grid_container grid-item ">
+        <div class="item item1">1</div>
+        <div class="item item2">2</div>
+        <div class="item item3">3</div>
+        <div class="item item4">4</div>
+        <div class="item item5">5</div>
+        <div class="item item6">6</div>
+
+    </section>
+
+</body>
+
+</html>
