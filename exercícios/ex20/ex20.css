@@ -23,8 +23,14 @@ nav {
   padding: 30px;
   border-right: 1px solid #ddd;
 }
+
+nav div{
+  position: fixed;
+}
+
 nav li {
   text-decoration: underline;
+  
 }
 article {
   padding: 30px;
@@ -36,6 +42,12 @@ article h2 {
 article img {
   width: 100%;
 }
+
+article h3{
+  font-size: 2.5em;
+  max-width: 800px;
+}
+
 article p {
   margin-top: 30px;
   line-height: 2em;
@@ -44,6 +56,10 @@ article p {
 aside {
   padding: 30px;
   border-left: 1px solid #ddd;
+  
+}
+aside ul{
+  position: fixed;
 }
 footer {
   grid-column: span 3;
