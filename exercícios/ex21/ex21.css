@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 
 body {
@@ -11,6 +10,7 @@ header {
   background: #fff;
   padding: 10px;
 }
+
 nav {
   max-width: 1400px;
   margin: 0 auto;
@@ -19,26 +19,32 @@ nav {
   align-items: center;
   text-align: center;
 }
+
 nav a {
   text-decoration: none;
   color: #333;
 
 }
-nav a:hover{
-   font-weight: bold;
-   transition: .1s ease-in-out;
+
+nav a:hover {
+  font-weight: bold;
+  transition: .1s ease-in-out;
 }
+
 nav h1 {
   text-transform: uppercase;
   line-height: 1em;
 }
+
 nav h1 div:first-child {
   font-weight: 800;
   letter-spacing: 1.5px;
 }
+
 nav h1 div:last-child {
   font-weight: 400;
 }
+
 main {
   max-width: 1200px;
   margin: 60px auto;
@@ -48,25 +54,29 @@ main {
   grid-auto-rows: 250px;
   gap: 30px;
 }
+
 main div {
   overflow: hidden;
   background: #fff;
   border-radius: 6px;
   border: 16px solid #fff;
-  box-shadow: 3px 3px 5px rgba(0,0,0,0.05);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
 }
+
 main img {
   min-width: 100%;
   height: 100%;
 }
+
 main .short {
   grid-row: span 1;
 }
+
 main .tall {
   grid-row: span 2;
 }
 
-.tall{ 
+.tall {
   perspective: 600px;
 
 }
@@ -74,23 +84,74 @@ main .tall {
 
 
 
-.card{
+.card {
   width: 100%;
   height: 100%;
   transition: 1s transform;
   transform-style: preserve-3d;
 
-
-}
-.tall .card:hover{
-    transform: rotateY(180deg);
-
 }
 
+.subindo {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subindo:nth-child(1) {
+  animation-delay: 0.5s;
+}
+.subindo:nth-child(2) {
+  animation-delay: 0.7s;
+}
+.subindo:nth-child(3) {
+  animation-delay: 1s;
+}
+.subindo:nth-child(4) {
+  animation-delay: 1.2s;
+}
+.subindo:nth-child(5) {
+  animation-delay: 1.5s;
+}
+.subindo:nth-child(6) {
+  animation-delay: 1.7s;
+}
+.subindo:nth-child(7) {
+  animation-delay: 1.9s;
+}
+
+.subindo:nth-child(8) {
+  animation-delay: 2.1s;
+}
+.subindo:nth-child(9) {
+  animation-delay: 2.3s;
+}
+.subindo:nth-child(10) {
+  animation-delay: 2.5s;
+}
+
+
+.tall .card:hover {
+  transform: rotateY(180deg);
+
+}
 
 
 
-.card_face-front{
+
+.card_face-front {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -99,7 +160,7 @@ main .tall {
   align-items: center;
 }
 
-.card_face-back{
+.card_face-back {
   background-color: lightcoral;
   width: 100%;
   height: 100%;
@@ -109,7 +170,7 @@ main .tall {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  
+
 }
 
 .card_face-back-back {
@@ -124,7 +185,7 @@ main .tall {
   flex-direction: column;
 }
 
-.card-back{
+.card-back {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,11 +208,13 @@ main .tall {
     max-width: 400px;
     margin-top: 20px;
   }
+
   nav {
     grid-template-columns: repeat(4, 1fr);
   }
-  nav h1{
+
+  nav h1 {
     grid-column: 1 / span 4;
     grid-row: 1;
-  }  
+  }
 }
