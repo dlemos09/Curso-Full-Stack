@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condicionais</title>
+</head>
+
+<body>
+    <h1>Condicionais</h1>
+
+    <script>
+
+
+        let n1 = parseFloat(prompt("Digite a primeira nota"));
+        let n2 = parseFloat(prompt("Digite a segunda nota"));
+
+        let media = (n1 + n2) / 2;
+
+        if (media > 4 && n1 > 0 && n2 > 0) {
+            alert(`Sua nota foi ${media} ` + 'Aprovado');
+        }else if (media <= 4 && n1 != 0 && n2 != 0) {
+            alert(`Sua nota foi ${media} ` + 'Recuperação');
+        }else{
+            alert(`Sua media foi ${media}, mas você zerou uma das notas por isso está Reprovado`);
+        }
+
+
+        // else if (media == 4) {
+        //     alert(`Sua nota foi ${media} ` + 'Recuperação');
+        // }
+
+    </script>
+</body>
+
+</html>

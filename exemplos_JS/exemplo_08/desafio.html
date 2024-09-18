@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>desafio swich</title>
+</head>
+
+<body>
+
+    <script>
+        let n = true;
+
+        switch (typeof n) {
+            case "string":
+                alert("n is a String");
+                break
+            case "number":
+                alert("n is a Number");
+                break
+            case "boolean":
+                alert("n is a Boleana");
+                break
+            case "undefined":
+                alert("n is undefined");
+                break
+            default:
+                alert('Nenhum tipo conhecido');
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

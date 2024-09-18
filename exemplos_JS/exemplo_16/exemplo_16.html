@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo_16</title>
+</head>
+
+<body>
+    <!-- O código força a Demonstração do uso do 'break' -->
+    <script>
+
+        let quantasVezesDadosJogados = 0
+        let quantasVezesASomaEhPar = 0
+
+        while (true) {
+            let dado1 = parseInt(Math.random() * 6) + 1;
+            let dado2 = parseInt(Math.random() * 6) + 1;
+
+            console.log(dado1, dado2, quantasVezesASomaEhPar, quantasVezesDadosJogados);
+            quantasVezesDadosJogados++;
+
+            if ((dado1 + dado2) % 2 === 0) {
+                quantasVezesASomaEhPar++
+            }
+            if (quantasVezesASomaEhPar >= 10) {
+                break;
+            }
+
+        }
+
+        console.log('Os dados fora jogados' + quantasVezesDadosJogados + ' vezes')
+    </script>
+
+<!-- 
+    1. Variáveis:
+    quantasVezesDadosJogados: Contador que rastreia quantas vezes os dados foram jogados.
+    quantasVezesASomaEhPar: Contador que rastreia quantas vezes a soma dos dois dados foi par.
+    2. Laço while (true):
+    O código entra em um laço infinito que continua até que seja explicitamente interrompido.
+    3. Geração dos valores dos dados:
+    dado1 e dado2 geram números aleatórios entre 1 e 6 (inclusivo), simulando o lançamento de dois dados. Isso é feito
+    através da expressão parseInt(Math.random() * 6) + 1, onde:
+    Math.random() gera um número aleatório entre 0 e 1.
+    Multiplicamos por 6 para obter um valor entre 0 e 5,999...
+    parseInt converte esse valor em um número inteiro e somamos 1 para garantir que o resultado seja de 1 a 6.
+    4. Exibição dos resultados:
+    A cada iteração, o código exibe no console o valor dos dois dados, quantas vezes a soma foi par até agora e quantas
+    vezes os dados foram lançados.
+    5. Incremento dos contadores:
+    quantasVezesDadosJogados é incrementado a cada jogada.
+    Se a soma dos dados (dado1 + dado2) for par ((dado1 + dado2) % 2 === 0), quantasVezesASomaEhPar também é
+    incrementado.
+    6. Condição de parada:
+    O loop while é interrompido (break) quando quantasVezesASomaEhPar atinge 10.
+    7. Resultado final:
+    Após o loop ser interrompido, o código exibe no console a quantidade total de vezes que os dados foram jogados, com
+    a mensagem: 'Os dados foram -->
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tabuada</title>
+</head>
+
+<body>
+    <script>
+        let multiplicador = 1;
+
+        while (multiplicador <= 10) {
+            console.log("Tabuada do " + multiplicador + ":");
+
+            let numero = 1;
+            while (numero <= 10) {
+                document.write(multiplicador + " x " + numero + " = " + (multiplicador * numero)+ '<br>');
+                numero++;
+            }
+
+            document.write(("-------------------")+ '<br>'); // Separador entre as tabuadas
+            multiplicador++;
+        }
+
+    </script>
+</body>
+
+</html>

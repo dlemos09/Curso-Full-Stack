@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo 15</title>
+</head>
+<body>
+    <!-- Demonstração do uso do 'break' e do 'continue' -->
+
+    <script>
+        for(i = 1; i < 10; i++){
+            console.log(i)
+            if(i === 5){
+                break;
+            }
+        }
+        console.log('Fim do loop com o break')
+
+        for(i = 1; i < 10; i++){
+            if(i === 5){
+                continue;
+            }
+            console.log(i)
+        }
+        console.log('Fim do loop continue')
+    </script>
+</body>
+</html>

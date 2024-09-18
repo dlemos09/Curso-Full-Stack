@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loops</title>
+</head>
+
+<body>
+    <h1>Loops - tabuada</h1>
+
+    <script>
+        let n = parseFloat(prompt('Digite um número'));
+
+        let contador = 0
+
+
+        // enquanto (contador <= 1000)
+
+        if (!isNaN(n)) {
+            while (contador <= 10) {
+                document.write(`${n} * ${contador}  = ${n * contador} <br>`)
+                contador++;
+            }
+
+            document.write('Saiu do loop')
+        } else {
+            alert('Digite um número válido')
+        }
+
+        // o simbolo de exclamação '!' significa negação, logo a expressão "!isNaN" pode ser lindo "Se for um número" pois o NaN significa "Not a number" logo seria "!Not a Number" ou seje "its a number" seria como uma negação da negação
+
+        // No profissional não se utiliza mais o 'document.write'
+
+        // o loop while é ideal quando não sabemos quantas vezes o código será executado
+
+
+
+
+        // document.write(`${n} * 0 = ${n * 0}<br>`)
+        // document.write(`${n} * 1 = ${n * 1}<br>`)
+        // document.write(`${n} * 2 = ${n * 2}<br>`)
+        // document.write(`${n} * 3 = ${n * 3}<br>`)
+        // document.write(`${n} * 4 = ${n * 4}<br>`)
+        // document.write(`${n} * 5 = ${n * 5}<br>`)
+        // document.write(`${n} * 6 = ${n * 6}<br>`)
+        // document.write(`${n} * 7 = ${n * 7}<br>`)
+        // document.write(`${n} * 8 = ${n * 8}<br>`)
+        // document.write(`${n} * 9 = ${n * 9}<br>`)
+        // document.write(`${n} * 10 = ${n * 10}<br>`)
+    </script>
+
+</body>
+
+</html>

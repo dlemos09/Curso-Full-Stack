@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Número primo</title>
+</head>
+
+<body>
+    <script>
+        let numero = parseInt(prompt('Digite um número: ')); // Número a ser verificado
+        let divisor = 2;
+        let ePrimo = true;
+
+        while (divisor < numero) {
+            if (numero % divisor === 0) {
+                ePrimo = false;
+                break;
+            }
+            divisor++;
+        }
+
+        if (ePrimo && numero > 1) {
+            document.write(numero + " é um número primo.");
+        } else {
+            document.write(numero + " não é um número primo.");
+        }
+
+    </script>
+
+</body>
+
+</html>
