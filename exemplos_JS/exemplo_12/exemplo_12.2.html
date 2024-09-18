@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exercício de fixação</title>
+</head>
+
+<body>
+
+    <h2>Implemente um programa que recebe 10 números reais e calcula o
+        quadrado deles.</h2>
+
+    <script>
+        let contador = 0; // Contador para controlar quantos números foram inseridos
+
+        while (contador < 10) {
+            let numero = parseFloat(prompt("Digite um número real:")); // Solicita um número real ao usuário
+            let quadrado = numero * numero; // Calcula o quadrado do número
+            document.write("O quadrado de " + numero + " é: " + quadrado + '<br>'); // Exibe o resultado
+            contador++; // Incrementa o contador
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exercício de fixação</title>
+</head>
+
+<body>
+    <h2>
+        Neste exercício, o programa continua pedindo uma idade até que o usuário insira uma idade válida (maior que 0 e
+        menor que 120).
+    </h2>
+    <script>
+        let idade;
+
+        do {
+            idade = parseInt(prompt("Digite sua idade: ")); // Solicita a idade ao usuário
+
+            if (idade > 0 && idade < 120) { // Verifica se a idade está no intervalo válido
+                document.write("Idade válida." + '<br>');
+            } else { // Se a idade não for válida, informa o usuário
+                document.write("Idade inválida. Digite uma idade entre 1 e 120. <br>");
+            }
+
+        } while (idade <= 0 || idade >= 120); // Continua pedindo até a idade ser válida
+
+    </script>
+</body>
+
+</html>

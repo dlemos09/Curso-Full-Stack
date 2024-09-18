@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let divida = parseFloat(prompt("Digite o valor da sua dívida no banco:")); // Solicita o valor inicial da dívida
+
+        // Verifica se o usuário tem dívida
+        while (divida > 0) {
+            document.write("Você deve R$ " + divida.toFixed(2)); // Exibe o valor atual da dívida
+
+            // Solicita o valor do pagamento
+            let pagamento = parseFloat(prompt("Digite o valor que deseja pagar:"));
+
+            if (pagamento > divida) {
+                console.log("Você não pode pagar mais do que a dívida. Tente um valor menor.");
+            } else if (pagamento <= 0) {
+                console.log("O pagamento deve ser maior que zero.");
+            } else {
+                divida -= pagamento; // Subtrai o valor pago da dívida
+                document.write("Pagamento de R$ " + pagamento.toFixed(2) + " realizado." + '<br>');
+            }
+        }
+
+        // Exibe mensagem final quando a dívida é quitada
+        document.write("Parabéns! Sua dívida foi quitada.");
+
+    </script>
+</body>
+
+</html>
