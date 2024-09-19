@@ -13,12 +13,12 @@
 
         // Verifica se o usuário tem dívida
         while (divida > 0) {
-            document.write("Você deve R$ " + divida.toFixed(2)); // Exibe o valor atual da dívida
+            document.write("Você deve R$ " + divida.toFixed(2) + '<br>'); // Exibe o valor atual da dívida
 
             // Solicita o valor do pagamento
             let pagamento = parseFloat(prompt("Digite o valor que deseja pagar:"));
 
-            if (pagamento > divida) {
+            if (pagamento > divida || isNaN(pagamento)) {
                 console.log("Você não pode pagar mais do que a dívida. Tente um valor menor.");
             } else if (pagamento <= 0) {
                 console.log("O pagamento deve ser maior que zero.");
