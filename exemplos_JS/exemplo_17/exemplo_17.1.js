@@ -1,4 +1,5 @@
 // Exemplos básicos de laço de repetição for
+// Geralmente com iteráveis (array ou strings)
 //i significa index
 for (let i = 0; i <=5; i++) {
     console.log(i);
