@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex Box</title>
+
+    <style>
+        body{
+            font-size: 20px;
+        }
+        
+        .flexbox{
+            height: 250px;
+            border: 3px solid red;
+            margin-bottom: 16px;
+            display: flex;
+            /*COMENTE SOBRE O COMPORTAMENTO PADRÃO, deixe para por
+            o display flex por último */
+            /* flex-wrap: nowrap;  */
+            /* falar sobre o flex-wrap*/
+            /* flex-direction: row; */
+            /* falar sobre todas as propriedades do flex-direction */
+            /* flex-flow: row nowrap; */
+
+            /* comente as demais propriedades e continue e separe as classes */
+        }
+
+        .flexbox div{
+            border: 2px solid rgb(51, 76, 14);
+            width: 300px; 
+            /* Realizar a mudança de largura para explicar como é o 
+            comportamento do flexbox, não importa o tamanho, será o tamanho máximo. */
+            /* margin: 15px; */
+        }
+
+        .flex-container2{
+            justify-content: space-evenly;
+            /* demonstrar as propriedades do justify-content */
+            /* a diferença entre o evenly e os demais é a divisão do espaço igualmente */
+        }
+
+        .flex-container2 div{
+            width: 30px;
+            margin: 0;
+        }
+
+        /* é possível trabalhar com o alinhamento na vertical */
+
+        .flex-container3{
+            justify-content: space-evenly
+            ;
+            align-items: baseline;
+
+        }
+
+        .flex-container3 div{
+            width: 30px;
+            /* margin: 0; */
+        }
+
+        /* demonstração do align-content */
+
+        .flex-container4{
+            justify-content: space-evenly
+            ;
+            align-items: flex-end;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .flex-container4 div{
+            width: 200px;
+        }
+
+        .flex-container5{
+            justify-content: flex-end;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .flex-container5 div{
+            background-color: yellow;
+            width: 50px;
+            height: 50px;
+        }
+        
+        .flex-container6{
+            justify-content: flex-end;
+            align-items: flex-start;
+            flex-direction: column;
+            /* fazer alteração do flex-direction para falar da altura */
+            height: 400px;
+        }
+
+        .flex-container6 div{
+            background-color: rgb(17, 255, 0);
+            width: 50px;
+            height: 50px;
+        }
+
+        .flex-container6 .div02{
+            flex-basis: 300px;
+        }
+
+        .flex-container7{
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+
+            
+        }
+
+        .flex-container7 div{
+            flex-basis: 50px;
+            background-color: orange;
+            margin: 0;
+        }
+
+        .flex-container7 .div02{
+            flex-grow: 1;
+        }
+        .flex-container7 .div04{
+            flex-grow: 1;
+        }
+
+        .flex-container8{
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flex-container8 div{
+            margin: 0;
+            flex-basis: 200px;
+            background-color: aquamarine;
+        }
+
+        .flex-container8 .div01{
+            flex-shrink: 2;
+        }
+
+        .flex-container8 .div03{
+            flex-shrink: 3;
+            /* flex: grow shrink basis; */
+            flex: 0 1 200px;
+        }
+
+        .flex-container9 div{
+            background-color: rgb(17, 226, 17);
+            margin: 10px;
+        }
+
+        .flex-container9 .div02{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <div class="flexbox flex-container1">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <!-- criar outras divs e continuar a demonstração das propriedades -->
+
+    <div class="flexbox flex-container2">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+
+    <div class="flexbox flex-container3">
+        <div class="div01">1</div>
+        <div class="div02" style="font-size: 50px;">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container4">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container5">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container6">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container7">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container8">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+    <div class="flexbox flex-container9">
+        <div class="div01">1</div>
+        <div class="div02">2</div>
+        <div class="div03">3</div>
+        <div class="div04">4</div>
+    </div>
+
+</body>
+</html>

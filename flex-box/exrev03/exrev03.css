@@ -1,0 +1,140 @@
+/* Estilo para o body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+}
+
+/* Estilo para o header */
+header {
+    background-color: #ff6f61;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilo para o nav */
+nav {
+    background-color: #6b5b95;
+    color: white;
+    padding: 20px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 12px;
+}
+
+nav ul li a:hover {
+    background-color: #d5a6bd;
+    border-radius: 20px 2px;
+    color: #1f201d;
+    transition: 0.3s;
+}
+
+/* Estilo para o main */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Estilo para a seção de cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.card {
+    background-color: #88b04b;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 22%;
+    color: white;
+    text-align: center;
+    
+}
+
+
+
+.card:hover{
+    transform: scale(1.2);
+    transition: 0.3s;
+    border-bottom: 2px solid #1f201d;
+    border-right: 2px solid #1f201d;
+    box-shadow: 2px 3px 5px #1f201d;
+    font-size: 20px;
+}
+
+/* Estilo para a seção de asides */
+.asides-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+aside {
+    background-color: #f7cac9;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+aside header, aside footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4a7b9;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 90%;
+    border-radius: 8px;
+}
+
+.asides-container p{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 80%;
+    text-align: justify;
+}
+
+p.teste{
+    text-align: center;
+}
+
+
+
+/* Estilo para o footer */
+footer {
+    background-color: #92a8d1;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
