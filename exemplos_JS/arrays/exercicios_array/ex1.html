@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex1 array</title>
+</head>
+
+<body>
+    <script>
+        let numeros = [];
+
+        // Pedir 10 números ao usuário
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+            numeros.push(numero);
+        }
+
+        // Exibir todos os números no html
+        document.write("Os números digitados foram:");
+        for (let i = 0; i < numeros.length; i++) {
+            document.write(numeros[i]);
+        }
+
+    </script>
+</body>
+
+</html>

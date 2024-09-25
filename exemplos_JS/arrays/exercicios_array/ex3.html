@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex3 array</title>
+</head>
+
+<body>
+    <script>
+        let numeros = [];
+        let limite = parseFloat(prompt("Digite o valor limite:"));
+        let contador = 0;
+
+        // Pedir 10 números ao usuário
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+            numeros.push(numero);
+
+            // Contar números maiores que o limite
+            if (numero > limite) {
+                contador++;
+            }
+        }
+
+        // Exibir o total de números maiores que o limite
+        console.log("Quantidade de números maiores que " + limite + ": " + contador);
+
+    </script>
+</body>
+
+</html>

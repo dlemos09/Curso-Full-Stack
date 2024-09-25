@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex4 array</title>
+</head>
+
+<body>
+    <script>
+        let numeros = [];
+        let dobrados = [];
+
+        // Pedir 10 números ao usuário
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+            numeros.push(numero);
+            dobrados.push(numero * 2);  // Multiplicar por 2
+        }
+
+        // Exibir o novo array com os valores dobrados
+        console.log("Os números dobrados são: " + dobrados);
+
+    </script>
+</body>
+
+</html>

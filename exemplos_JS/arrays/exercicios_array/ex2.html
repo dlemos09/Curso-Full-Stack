@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex2 array</title>
+</head>
+
+<body>
+    <script>
+        let numeros = [];
+        let soma = 0;
+
+        // Pedir 10 números ao usuário e calcular a soma
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+            numeros.push(numero);
+            soma += numero;
+        }
+
+        // Exibir a soma no console
+        console.log("A soma dos números é: " + soma);
+
+    </script>
+</body>
+
+</html>
