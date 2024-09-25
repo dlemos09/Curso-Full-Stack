@@ -104,7 +104,7 @@ console.log(escola.sort()) // Retorna [ 'Cascão', 'Cebolinha', 'Franginha', 'Ma
 // É possível "partir" um array, ou retornar apenas um pedaço específico utilizando o método slice()
 
 let turmaC = escola.slice(0, 3); // Note que foi utilizado o os indices 0 à 3 mas só foi impresso até o indice 2 logo, o método slice() determina o inicio e o penultimo indice. 
-                    //               0          1             2
+//               0          1             2
 console.log(turmaC) // Retorna [ 'Cascão', 'Cebolinha', 'Franginha' ]
 
 // ------------------------------------------------
@@ -114,3 +114,17 @@ console.log(turmaC) // Retorna [ 'Cascão', 'Cebolinha', 'Franginha' ]
 console.log(escola) // Retorna [ 'Cascão', 'Cebolinha', 'Franginha', 'Magali', 'Milena', 'Monica' ]
 console.log(escola.splice(4)) // Retorna [ 'Milena', 'Monica' ]
 console.log(escola) // Retorna [ 'Cascão', 'Cebolinha', 'Franginha', 'Magali' ]
+
+// ------------------------------------------------
+
+/* indexOf() e lastIndexOf() procuram um elemento com um valor especificado em um array e retor nam o índice do primeiro elemento encontrado com esse valor ou –1, se nenhum for encontrado. indexOf() pesquisa o array do início ao fim e lastIndexOf() pesquisa do fim para o início. */
+
+console.log(escola.indexOf('Cascão')) // Retorna o indíce 0
+console.log(escola.lastIndexOf('Magali')) // Retorna o indíce 3
+
+// ------------------------------------------------
+
+/*  Um array, assim como qualquer objeto de JavaScript, tem um método toString(). Para um array, esse método converte cada um de seus elementos em uma string (chamando os métodos toString() de seus elementos, se necessário) e produz na saída uma lista separada com vírgulas dessas strings. */
+
+let tabuada = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+console.log(tabuada.toString()) // Retorna 2,4,6,8,10,12,14,16,18,20
