@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex9.1 array</title>
+</head>
+
+<body>
+    <!-- Objetivo: Solicitar ao usuário 10 números e inverter a ordem do array. -->
+
+
+    <script>
+        let numeros = [];
+
+        // Pedir 10 números ao usuário
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+            numeros.push(numero);
+        }
+
+        // Usar o método reverse() para inverter o array
+        numeros.reverse();
+
+        // Exibir o array invertido
+        console.log("Os números invertidos são: " + numeros);
+
+
+    </script>
+</body>
+
+</html>

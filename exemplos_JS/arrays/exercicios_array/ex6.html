@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ex6 array</title>
+</head>
+
+
+<body>
+  <!-- Objetivo: Solicitar ao usuário 10 números e remover os valores duplicados. -->
+
+
+  <script>
+    let numeros = [];
+    let unicos = [];
+
+    // Pedir 10 números ao usuário
+    for (let i = 0; i < 10; i++) {
+      let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+      numeros.push(numero);
+
+      // Verificar se o número já está no array "unicos"
+      if (!unicos.includes(numero)) {
+        unicos.push(numero);  // Adicionar apenas se não estiver
+      }
+    }
+
+    // Exibir o array sem duplicatas
+    console.log("Números sem repetição: " + unicos);
+
+  </script>
+</body>
+
+</html>

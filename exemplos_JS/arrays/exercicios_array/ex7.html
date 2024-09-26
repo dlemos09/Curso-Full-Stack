@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex7 array</title>
+</head>
+
+<body>
+
+    <!-- Objetivo: Solicitar ao usuário 10 números e substituir os números negativos por 0. -->
+
+
+    <script>
+        let numeros = [];
+
+        // Pedir 10 números ao usuário
+        for (let i = 0; i < 10; i++) {
+            let numero = parseFloat(prompt("Digite o número " + (i + 1) + ":"));
+
+            // Substituir número negativo por 0
+            if (numero < 0) {
+                numero = 0;
+            }
+
+            numeros.push(numero);
+        }
+
+        // Exibir o array modificado
+        console.log("Números após substituição de negativos por 0: " + numeros);
+
+    </script>
+</body>
+
+</html>
