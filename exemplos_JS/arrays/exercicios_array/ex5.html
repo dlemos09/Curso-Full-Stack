@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <!-- Objetivo: contar quantos são os números pares -->
     <script>
         let numeros = [];
         let contagemPares = 0;
@@ -20,11 +21,12 @@
             // Verificar se o número é par
             if (numero % 2 === 0) {
                 contagemPares++;
+                document.write(`Os números pares são: ${numero} <br>`)
             }
         }
 
         // Exibir o total de números pares
-        console.log("Quantidade de números pares: " + contagemPares);
+        document.write("Quantidade de números pares: " + contagemPares);
 
     </script>
 </body>
