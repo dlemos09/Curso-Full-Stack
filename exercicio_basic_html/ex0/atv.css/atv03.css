@@ -1,0 +1,28 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: bisque;
+    margin: auto;
+    width: 70%;
+}
+
+h1{
+    border-bottom:  2px solid green;
+    text-align: center;
+    
+}
+
+p{
+    border: 50px solid red;
+    outline: 10px dashed rgb(23, 208, 57);
+    padding: 10px 10px 10px 5px;
+    background-color: cadetblue;
+}
+
+.p2{
+    margin-top: 100px;
+   
+}
+
+.p3{
+    margin-right: 5000px;
+}
