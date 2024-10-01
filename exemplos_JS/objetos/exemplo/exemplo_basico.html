@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo básico de objeto</title>
+</head>
+<body>
+    <script>
+
+        // maneira básica de pedir ao usuário para digitar os dados e exibir na tela
+       const usuario = {}
+
+       usuario.nome = prompt('Digite seu nome:');
+       usuario.idade = parseInt(prompt('Digite sua idade: '));
+       usuario.altura = parseFloat(prompt('Digite sua altura: '));
+
+       document.write(`Nome: ${usuario.nome} <br>`)
+       document.write(`Idade: ${usuario.idade}<br>`)
+       document.write(`Altura: ${usuario.altura}`)
+    </script>
+    
+</body>
+</html>
