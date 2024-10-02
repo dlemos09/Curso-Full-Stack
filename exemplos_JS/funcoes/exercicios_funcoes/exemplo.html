@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tabuada_funcao</title>
+</head>
+<body>
+    <h1>Função</h1>
+
+    <input type="number" id="number">
+    <button onclick="mostrarTabuada()">Mostrar tabuada</button>
+
+    <script>
+        const input = document.getElementById('number')
+
+        function mostrarTabuada(){
+            const inputValue = input.value
+            alert('Cliquei no botão e o número é ' + inputValue)
+        }
+    </script>
+</body>
+</html>
