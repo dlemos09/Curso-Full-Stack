@@ -1,0 +1,20 @@
+
+
+body{
+    width: 60%;
+    margin: auto;
+    background-color: #f4f4f4;
+}
+
+h1{
+    text-decoration: underline;
+}
+
+#dadosCarro{
+    padding: 2em;
+    border: 2px solid red;
+    width: 40%;
+    margin: auto;
+    min-height: 40vh;
+    
+}

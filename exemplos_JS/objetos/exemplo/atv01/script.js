@@ -2,6 +2,11 @@
 const carro = {}
 
 carro.nome = prompt('Digite o nome do carro: ');
+
+while (!isNaN(carro.nome)) {
+    carro.nome = prompt('Valor inválido, digite o nome do carro: ');
+}
+
 carro.cor = prompt('Digite a cor do carro: ');
 carro.marca = prompt('Digite a marca do carro: ');
 carro.ano = prompt('Digite o ano do carro: ');
