@@ -3,11 +3,10 @@
 function cumprimentar(nome, callback) {
     console.log("Olá, " + nome);
     callback();
-  }
-  
-  function dizerTchau() {
+}
+
+function dizerTchau() {
     console.log("Até logo!");
-  }
-  
-  cumprimentar("João", dizerTchau);
-  
+}
+
+cumprimentar("João", dizerTchau);
