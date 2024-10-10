@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    width: 60%;
+
+}
+
+
+.container_father {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    margin: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 60%;
+    box-shadow: 0px 4px 8px #949494;
+    border: 2px solid #f4f4f4;
+    border-radius: 10px;
+    padding: 2em;
+}
+
+input {
+    width: 80%;
+    padding: .5em;
+}
+
+.btn {
+    margin-top: 16px;
+    display: flex;
+    justify-content: end;
+    width: 100%;
+
+}
+
+button {
+    background-color: #28a745;
+    padding: 10px;
+    color: white;
+    border-radius: 8px;
+    border: none;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #006400;
+    transition: .3s;
+}
+
+#lista-tarefas li {
+    list-style: none;
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+#lista-tarefas li.concluida {
+    text-decoration: line-through;
+    background-color: #d4edda;
+}
+
+.remover-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.remover-btn:hover {
+    background-color: #cc0000;
+}
+
+.erro {
+    color: red;
+    margin-top: 10px;
+}

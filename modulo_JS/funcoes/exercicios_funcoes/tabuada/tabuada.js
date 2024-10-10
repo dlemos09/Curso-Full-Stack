@@ -1,7 +1,7 @@
 const input = document.getElementById('number')
 const output = document.getElementById('output')
 
-let = tabuadaHTML = ''
+let tabuadaHTML = ''
 
 function mostrarTabuada() {
     const inputValue = parseFloat(input.value);
