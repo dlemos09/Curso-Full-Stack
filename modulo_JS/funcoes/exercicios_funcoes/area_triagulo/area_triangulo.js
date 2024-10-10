@@ -10,3 +10,9 @@ function mostrarArea() {
 
     output.innerHTML = `A área do triângulo de base ${baseValue} e altura ${alturaValue} é ${area}cm.`
 }
+
+function limparArea(){
+    output.innerHTML = " "
+    altura.value = " "
+    base.value = " "
+}

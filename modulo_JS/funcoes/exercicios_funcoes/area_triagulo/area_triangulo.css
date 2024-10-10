@@ -28,8 +28,27 @@ body{
 
 .btn{
     display: flex;
-    justify-content: end;
+    justify-content: space-around;
     width: 100%;
+}
+
+#mostrar{
+    background-color: midnightblue;
+    color: white;
+    padding: .7em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+}
+
+#limpar{
+    background-color: rgb(112, 25, 25);
+    color: white;
+    padding: .7em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 .labels{
