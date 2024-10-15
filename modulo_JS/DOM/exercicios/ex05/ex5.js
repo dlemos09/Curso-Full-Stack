@@ -13,11 +13,11 @@
     const errorConfirmarSenha = document.getElementById("errorConfirmarSenha");
     const successMessage = document.getElementById("successMessage");
 
-    // Função de validação de email
+    // Função de validação de email sem regex
     function validarEmail(email) {
-        const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return re.test(String(email).toLowerCase());
+        return email.includes('@') && email.includes('.');
     }
+    
 
     // Limpa as mensagens de erro e os estilos de erro
     function limparErros() {
