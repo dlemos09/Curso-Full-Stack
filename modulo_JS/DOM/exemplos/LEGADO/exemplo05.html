@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercício 2 - firstChild e lastChild</title>
+  </head>
+  <body>
+    <div id="section">
+      <p>Primeiro parágrafo</p>
+      <p>Segundo parágrafo</p>
+      Texto fora das tags
+    </div>
+
+    <script>
+      const section = document.getElementById('section');
+
+      // Acessar e manipular o primeiro elemento filho
+      const firstElement = section.firstElementChild;
+      console.log('Primeiro elemento filho (firstElementChild):', firstElement);
+
+      // Manipulando o primeiro elemento filho (aplica cor azul)
+      if (firstElement) {
+        firstElement.style.color = 'blue';
+      }
+
+      // Acessar e manipular o último elemento filho
+      const lastElement = section.lastElementChild;
+      console.log('Último elemento filho (lastElementChild):', lastElement);
+
+      // Manipulando o último elemento filho (aplica cor vermelha)
+      if (lastElement) {
+        lastElement.style.color = 'red';
+      }
+    </script>
+  </body>
+</html>

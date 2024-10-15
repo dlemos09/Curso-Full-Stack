@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Evento Keyup</title>
+</head>
+<body>
+  <input type="text" id="inputTexto" placeholder="Digite algo">
+
+  <script>
+    const input = document.getElementById('inputTexto');
+
+    // Exibe o valor do campo de texto ao soltar a tecla
+    input.addEventListener('keyup', function() {
+      console.log('Valor atual: ' + input.value);
+    });
+  </script>
+</body>
+</html>

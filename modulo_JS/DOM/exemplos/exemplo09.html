@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Evento Mouseover</title>
+</head>
+<body>
+  <div id="meuDiv" style="width: 200px; height: 200px; background-color: lightblue;">
+    Passe o mouse sobre mim!
+  </div>
+
+  <script>
+    const div = document.getElementById('meuDiv');
+    
+    // Adiciona o evento 'mouseover' à div
+    div.addEventListener('mouseover', function() {
+      div.style.backgroundColor = 'lightgreen'; // Altera a cor de fundo quando o mouse passa por cima
+    });
+  </script>
+</body>
+</html>

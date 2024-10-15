@@ -1,0 +1,27 @@
+fazer a demonstração com  no console do navegador!
+
+document.getElementById('title').textContent = 'Novo Texto'
+
+----------------------------------------------------------------
+
+document.querySelector('#title').textContent = "Editado com querySelector"
+
+a diferença entre querySelector e getElementById é que o querySelector deve estar exatamente como está o css!
+
+----------------------------------------------------------------
+document.getElementsByClassName("paragrafo2")
+parece um array mas não é!
+
+document.getElementsByClassName("paragrafo2")[1].textContent = Olá mundo"
+necessário passar o índice
+
+document.querySelectorAll(".paragrafo2")[1].textContent = " Vou cortar os cabelos de Gio se ele faltar novamente! "
+
+----------------------------------------------------------------
+Seleciona todos os paragrafos 
+document.getElementsByTagName("p")
+
+
+document.querySelector ("#idmain p") -> sempre retorna um único objeto
+
+----------------------------------------------------------------

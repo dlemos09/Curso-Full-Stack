@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface_usuário</title>
+</head>
+
+<body>
+
+    <button>mudar cor</button>
+
+    <script>
+
+        let btn = document.querySelector("button");
+
+        function random(number) {
+            return Math.floor(Math.random() * (number + 1));
+        }
+
+        // btn.onclick = function () {
+        //     let rndCol =
+        //         "rgb(" + random(255) + "," + random(255) + "," + random(255) + ")";
+        //     document.body.style.backgroundColor = rndCol;
+        // };
+
+
+        function bgChange() {
+            let rndCol =
+                "rgb(" + random(255) + "," + random(255) + "," + random(255) + ")";
+            document.body.style.backgroundColor = rndCol;
+        }
+
+        btn.onclick = bgChange;
+    </script>
+
+</body>
+
+</html>

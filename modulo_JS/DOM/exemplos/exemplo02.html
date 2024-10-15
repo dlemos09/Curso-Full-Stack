@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM_Exemplo02</title>
+</head>
+
+<body>
+
+    <form name="cadastro">
+        <input placeholder="Digite seu nome" type="text" name="nome" id="nome">
+        <input placeholder="Digite seu email" type="text" name="email" id="">
+        <select name="sexo" id="">
+            <option value="">-------------</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+        </select>
+    </form>
+
+    <button onclick="salvar()">Salvar</button>
+
+
+    <script>
+        const obj = document.getElementsByName('cadastro');
+
+        //    console.log(obj)
+        // console.log(document.forms)
+        // console.log(document.cadastro.nome)
+        // console.log(document.cadastro.sexo)
+        // document.cadastro.nome.value = 'Batata'
+        // document.cadastro.sexo.value = 'masculino'
+        
+        function salvar(){
+            // document.cadastro.nome.value = 'Douglas'
+            // document.cadastro.email.value = 'dlemos09@gmail.com'
+            // document.cadastro.sexo.value = 'masculino'
+
+            // let nome = document.cadastro.nome.value
+            // let email = document.cadastro.email.value
+
+            const obj = document.getElementById('nome')
+
+            console.log(obj.value)
+
+            // console.log(nome)
+            // console.log(email)
+        }
+
+    </script>
+
+</body>
+
+</html>

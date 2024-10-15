@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM_Exemplo01</title>
+</head>
+
+<body>
+    <h1 id="title01">Exemplo 01 - DOM</h1>
+
+    <main class="cmain" id="idmain">
+        <h2>Subtitulo</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, placeat.</p>
+    </main>
+
+    <section class="csection" id="idsection">
+        <h3>Subtitulo</h3>
+        <p class="paragrafo2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, ipsum?</p>
+        <p class="paragrafo2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, ipsum?</p>
+    </section>
+
+    <script>
+
+        //função auto invocável
+
+        (function () {
+            const nomeUsuario = 'Douglas'
+            // document.querySelector(".cmain").textContent = "Bem vindo " + nomeUsuario
+            const elemento = document.querySelector('.cmain')
+            console.log(elemento.textContent)
+            // elemento.textContent = elemento.textContent + nomeUsuario
+            elemento.innerHTML += "<b>" + nomeUsuario + "</b>";
+        })()
+
+        // principal diferença entre innerHTML e textContent é que o innerHTML renderiza as tags html, não vai mostrar como texto
+    </script>
+
+</body>
+
+</html>

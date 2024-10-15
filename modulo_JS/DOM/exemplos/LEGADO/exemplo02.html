@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM - Exemplo 02</title>
+
+    <style>
+        li.primeiro{
+            /* background-color: black; */
+            color: rgb(0, 0, 0);
+        }
+        .destaque{
+            background-color: red;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="destaque">Área do conteúdo</div>
+    <!-- <div id="destaque">Área do conteúdo</div> -->
+    <h1 class="vermelho"></h1>
+
+    <p>Subtitulo</p>
+
+    <ul>
+        <li class="primeiro"> Item 1</li>
+    </ul>
+
+    <button onclick="executar()">Clique aqui</button>
+
+    <script>
+
+    //    const obj = document.getElementById('destaque')
+    //    const obj = document.querySelector('#destaque')
+    //    console.log(obj)
+
+    function executar(){
+        const obj = document.querySelector('li.primeiro') 
+        obj.innerHTML = "teste"
+        obj.classList.add("destaque")
+    }
+
+    const obj = document.getElementsByTagName('div')
+
+    </script>
+    
+</body>
+</html>

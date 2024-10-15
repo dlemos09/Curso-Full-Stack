@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arvore DOM</title>
+
+    <style>
+        #itens {
+            background-color: orange;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div>Irmão anterior</div>
+    <div id="pai">
+        <!-- <div id="itens">
+            <p>primeiro elemento</p>
+            <p>segundo elemento</p>
+            <p>terceiro elemento</p>
+            <p>quarto elemento</p>
+        </div> -->
+ 
+        <!-- foi organizado dessa maneira propositalmente -->
+        <div id="itens"><p>primeiro elemento</p><p>segundo elemento</p><p>terceiro elemento</p><p>quarto elemento</p></div>
+    </div>
+    <div>Próximo irmão</div>
+
+    <script>
+        const lista = document.querySelector('#itens')
+        // console.log(lista)
+        // console.log(lista.parentNode)//mostra que o pai da div é realmente o body
+        // console.log(lista.childNodes)//mostra os filhos, o espaço em branco também é considerado 'filho'
+
+        // console.log(lista.firstChild)
+        // console.log(lista.lastChild)
+       
+    
+    </script>
+
+</body>
+
+</html>

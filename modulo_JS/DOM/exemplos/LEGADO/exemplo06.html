@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercício 3 - Percorrendo uma lista</title>
+  </head>
+  <body>
+    <ul id="lista">
+      <li>Item A</li>
+      <li>Item B</li>
+      <li>Item C</li>
+    </ul>
+
+    <!-- Script colocado no final do body -->
+    <script>
+      const lista = document.getElementById('lista');
+      
+      // Usando children para percorrer apenas os elementos <li>
+      const itens = lista.children;
+
+      // Alterando o estilo de cada item
+      for (let i = 0; i < itens.length; i++) {
+        itens[i].style.backgroundColor = 'lightgray'; // Aplica fundo cinza claro a cada <li>
+        itens[i].style.padding = '10px'; // Adiciona um padding aos itens
+      }
+    </script>
+  </body>
+</html>

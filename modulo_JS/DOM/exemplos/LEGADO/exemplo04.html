@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercício 1 - childNodes e children</title>
+  </head>
+  <body>
+    <div id="container">
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ul>
+      <!-- Comentário -->
+      Texto fora de tags
+    </div>
+
+    <script>
+      const container = document.getElementById('container');
+
+      // Usando childNodes para listar todos os nós (inclui nós de texto e comentários)
+      console.log('Todos os nós (childNodes):', container.childNodes);
+
+      // Usando children para listar apenas os elementos (exclui nós de texto e comentários)
+      console.log('Apenas os elementos (children):', container.children);
+    </script>
+  </body>
+</html>

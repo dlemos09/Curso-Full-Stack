@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Evento Submit</title>
+</head>
+<body>
+  <form id="meuFormulario">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('meuFormulario');
+
+    // Adiciona o evento 'submit' ao formulário
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio do formulário
+      alert('Formulário enviado!');
+    });
+  </script>
+</body>
+</html>
