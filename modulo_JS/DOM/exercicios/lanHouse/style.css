@@ -1,0 +1,94 @@
+/* Estilos gerais para o corpo da página */
+body {
+    font-family: Arial, sans-serif; /* Define uma fonte padrão para o texto */
+    background-color: #f4f4f9; /* Cor de fundo suave */
+    margin: 0; /* Remove a margem padrão do body */
+    padding: 0; /* Remove o padding padrão do body */
+    display: flex; /* Usa flexbox para centralizar o conteúdo */
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    height: 100vh; /* Define a altura da página como 100% da altura da janela */
+}
+
+/* Estilos para o contêiner principal */
+.container {
+    background-color: #fff; /* Cor de fundo branco para o contêiner */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave ao redor do contêiner */
+    padding: 20px; /* Espaçamento interno */
+    max-width: 400px; /* Largura máxima do contêiner */
+    width: 100%; /* Largura do contêiner se adapta ao tamanho da tela */
+    text-align: center; /* Centraliza o texto dentro do contêiner */
+}
+
+/* Estilo para o título da página */
+h1 {
+    color: #333; /* Cor do texto do título */
+    margin-bottom: 20px; /* Espaçamento abaixo do título */
+}
+
+/* Estilos para as seções "Preço da Hora" e "Tempo de Uso" */
+.precoDaHora, .tempoDeUso {
+    margin-bottom: 20px; /* Espaçamento inferior entre os campos */
+}
+
+/* Estilo para os rótulos (label) */
+label {
+    display: block; /* Exibe o label como um bloco para que ocupe a largura inteira */
+    margin-bottom: 5px; /* Espaçamento abaixo do rótulo */
+    font-weight: bold; /* Deixa o texto do rótulo em negrito */
+}
+
+/* Estilo para os campos de entrada de texto */
+input[type="text"] {
+    width: 90%; /* Define a largura completa do campo */
+    padding: 10px; /* Espaçamento interno do campo de texto */
+    border: 1px solid #ddd; /* Bordas de cor cinza clara */
+    border-radius: 5px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte dentro dos campos */
+}
+
+/* Estilo para o botão "Calcular Preço" */
+input[type="button"] {
+    background-color: #4CAF50; /* Cor de fundo verde */
+    color: white; /* Cor do texto branca */
+    border: none; /* Remove as bordas do botão */
+    padding: 10px 20px; /* Espaçamento interno do botão */
+    font-size: 16px; /* Tamanho da fonte dentro do botão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro ao passar sobre o botão */
+    width: 95%; /* O botão ocupa toda a largura */
+    transition: background-color 0.3s ease; /* Transição suave da cor de fundo ao passar o mouse */
+}
+
+/* Mudança de cor de fundo do botão ao passar o mouse (hover) */
+input[type="button"]:hover {
+    background-color: #45a049; /* Muda para um verde mais escuro */
+}
+
+/* Estilo para a área de exibição do resultado */
+.resultado {
+    margin-top: 20px; /* Espaçamento superior para a área do resultado */
+}
+
+/* Estilo para o texto do resultado */
+#outResultado {
+    font-size: 18px; /* Tamanho maior da fonte para destaque */
+    color: #333; /* Cor do texto */
+    font-weight: bold; /* Negrito para dar ênfase ao resultado */
+}
+
+/* Estilos responsivos para telas menores */
+@media (max-width: 400px) {
+    .container {
+        padding: 10px; /* Diminui o padding interno em telas pequenas */
+    }
+
+    input[type="text"], input[type="button"] {
+        font-size: 14px; /* Reduz o tamanho da fonte para os inputs e botão */
+    }
+
+    #outResultado {
+        font-size: 16px; /* Reduz o tamanho do texto do resultado */
+    }
+}
