@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM_Exemplo02</title>
+    <link rel="stylesheet" href="../ex01/style.css">
+</head>
+
+<body>
+
+    <form>
+        <label for="txtEmail">Email</label>
+        <input type="email" id="txtEmail"  placeholder="Digite seu email">
+<!-- 
+        <input type="email" id="txtEmail" onblur="disabledEmail" disabled value="douglas@gmail.com" placeholder="Digite seu email"> -->
+
+        <button id="btn" onclick="cadastrarEmail(event)">Enviar</button>
+        <button id="btn" class="btn" onclick="editarEmail(event)">Editar</button>
+
+        <div id="feedback"></div>
+    </form>
+
+    <script src="../ex01/script.js"></script>
+
+</body>
+
+</html>
