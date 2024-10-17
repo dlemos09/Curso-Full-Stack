@@ -1,0 +1,82 @@
+/* Estilo geral do body */
+body {
+    font-family: Arial, sans-serif; /* Define uma fonte padrão */
+    background-color: #f4f4f4; /* Cor de fundo suave */
+    margin: 0; /* Remove as margens */
+    padding: 0; /* Remove os espaçamentos */
+    display: flex; /* Usa flexbox para centralizar o conteúdo */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100vh; /* A página ocupa toda a altura da janela */
+}
+
+/* Estilo para o contêiner principal */
+.container {
+    background-color: #fff; /* Fundo branco */
+    padding: 20px; /* Espaçamento interno */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    max-width: 400px; /* Largura máxima do contêiner */
+    width: 100%; /* Adapta o contêiner à largura disponível */
+    text-align: center; /* Centraliza o texto */
+}
+
+/* Estilo para o título */
+h1 {
+    color: #333; /* Cor do título */
+    font-size: 24px; /* Tamanho da fonte */
+    margin-bottom: 20px; /* Espaçamento inferior */
+}
+
+/* Estilo para as seções de entrada de dados (filme e tempo) */
+.filme, .tempo {
+    margin-bottom: 20px; /* Espaçamento inferior entre os campos */
+}
+
+/* Estilo para os rótulos (label) */
+label {
+    display: block; /* Exibe o label como bloco */
+    font-weight: bold; /* Texto em negrito */
+    margin-bottom: 5px; /* Espaçamento abaixo do rótulo */
+    color: #555; /* Cor do rótulo */
+}
+
+/* Estilo para os campos de entrada */
+input[type="text"] {
+    width: 100%; /* Largura total do campo */
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ddd; /* Bordas finas */
+    border-radius: 5px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte */
+    box-sizing: border-box; /* Inclui o padding na largura total */
+}
+
+/* Estilo para o botão */
+input[type="button"] {
+    background-color: #007bff; /* Cor de fundo azul */
+    color: white; /* Cor do texto branca */
+    border: none; /* Sem borda */
+    padding: 10px 20px; /* Espaçamento interno do botão */
+    font-size: 16px; /* Tamanho da fonte */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+    width: 100%; /* Largura total do botão */
+    transition: background-color 0.3s ease; /* Transição suave na cor ao passar o mouse */
+}
+
+/* Muda a cor do botão ao passar o mouse */
+input[type="button"]:hover {
+    background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilo para a exibição dos resultados (nome do filme e tempo convertido) */
+.tabelaFilme {
+    margin-top: 20px; /* Espaçamento superior para a área de resultado */
+}
+
+/* Estilo para os parágrafos de exibição de resultados */
+#outFilme, #outTempo {
+    font-size: 18px; /* Tamanho da fonte maior */
+    color: #333; /* Cor do texto */
+    font-weight: bold; /* Texto em negrito */
+}
