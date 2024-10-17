@@ -17,6 +17,7 @@ function adicionarTarefa() {
         const li = document.createElement('li'); // Cria um elemento 'li' (item de lista) dinamicamente.
         li.textContent = tarefa; // Define o texto do 'li' com o valor digitado pelo usuário.
 
+        //Função para remover uma tarefa por vez
         function removerTarefa(tarefa) {
             tarefa.remove(); // Remove o elemento <li> que foi clicado
         }
@@ -55,10 +56,11 @@ inputTarefa.addEventListener('keydown', function (event) {
     }
 });
 
-
+//Função de limpar todas as tarefas de uma vez
 function limparTarefa() {
     listaTarefas.innerHTML = ''
 }
 
+//Evento chamando quando a função limparTarefa é acionada ao clicar no botão
 btnClear.addEventListener('click', limparTarefa)
 
