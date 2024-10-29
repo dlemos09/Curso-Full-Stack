@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: 0;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+
+.menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: darkblue;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    padding: 1em;
+
+}
+
+.menu_container{
+    color: #FFA500;
+    display: flex;
+    flex-direction: column;
+    margin-left: 1em;
+
+
+}
+
+.menu_container_lista{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.menu_container h1{
+    font-size: 3em;
+    text-shadow: 2px 1px 0px #ffffff;
+}
+
+.menu_container_lista li{
+    list-style: none;
+}
+
+.menu_container_lista li a{
+    border-radius: 10px;
+    background-color: white;
+    text-decoration: none;
+    padding: .4em;
+    font-family: "Poppins", sans-serif;
+    color: #00008b;
+
+}
+
+.menu_container_lista li a:hover{
+    transition: ease-in-out .3s;
+    background-color: darkblue;
+    color: #FFA500;
+    outline: 2px solid #FFA500;
+    ;
+}
+
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+.card_container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background-color: #eeeeee;
+    padding: 5em;
+    gap: 1em;
+
+}
+
+.card_container_content{
+    display: flex;
+}
+
+.container_titulo h2{
+    font-size: 2.4em;
+    margin-bottom: 1em;
+    font-family: "Poppins", sans-serif;
+}
+
+
+.container_foto{
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    gap: 1em;
+    padding: 1em;
+    width: 90%;
+    margin-bottom: 2em;
+
+}
+.container_foto img{
+    width: 400px;
+    padding: .1em;
+    border-radius: 100%;
+    background-color: darkblue;
+
+}
+
+.container_foto_text{
+    background-color: darkblue;
+    border-radius: 2em;
+    color: #FFA500;
+    font-size: 1.4em; 
+    padding: 2em;
+    width: 40%;
+}
+.container_foto_text p{
+    font-family: "Poppins", sans-serif;
+
+}
+
+.forms_container{
+    width: 40%;
+    color: #ffa500;
+    padding: 2em;
+    border-radius: 2em;
+    font-size: 1.4em
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    padding: 3em 1em;
+    color: #00008b;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 3px solid #00008b;    box-shadow: 2px 2px 3px black;
+
+}
+
+legend{
+    text-align: center;
+    font-size: 1.5em;
+}
+
+form label{
+    margin-top: 1em;
+}
+
+form input{
+    padding: 1em;
+}
+
+.meubutao{
+    display: flex;
+    justify-content: end;
+}
+
+#meubotao{
+    background-color: #00008b;
+    color: #ffa500;
+    font-size: .6em;
+    font-family: var
+    (--fonte_padrao);
+    border-radius: 5px; 
+    border: none;
+}
+#meubotao:hover{
+    background-color: #0000b6;
+    color: #ffaf1b;
+    box-shadow: 1px 1px 3px black;
+    cursor: pointer;
+}
+.forms_container_actions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.forms_container_actions_forget{
+    font-size: 0.6em;
+}
+
+
+.card_container article{
+    height: 50vh;
+    width: 25vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card_container article img{
+    width: 250px;
+    background-color: darkblue;
+    padding: 2px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px;
+}
+
+.card_container article img:hover{
+    box-shadow: 2px 2px 8px;
+    transform: translate(0, -20px);
+    transition: .8s;
+    cursor: pointer;
+}
+
+footer{
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    padding: 10px;
+    background-color: darkblue;
+    color: #eeeeee;
+}
+
+
