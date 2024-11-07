@@ -1,0 +1,35 @@
+
+Quando você executa o comando npm init, o npm inicia um assistente interativo no terminal para ajudar a criar o arquivo package.json com as configurações básicas do projeto. Abaixo está a sequência típica de prompts e perguntas que aparecem:
+
+1. Pergunta: package name (nome do pacote)
+    - O npm sugere o nome do diretório como nome do pacote, mas você pode alterar conforme necessário.
+    - O nome do pacote deve ser único e seguir as convenções de nomenclatura npm (letras minúsculas, sem espaços, etc.).
+2. Pergunta: version (versão)
+    - O npm sugere a versão inicial 1.0.0, que pode ser alterada conforme necessário.
+    - A versão deve seguir o formato de versionamento semântico (semver), como MAJOR.MINOR.PATCH.
+3. Pergunta: description (descrição)
+    - Você pode adicionar uma breve descrição sobre o projeto ou pacote.
+    - A descrição ajuda outros desenvolvedores a entender o propósito do pacote.
+4. Pergunta: entry point (ponto de entrada)
+    - Define o arquivo principal do pacote, normalmente index.js.
+    - Este arquivo é o ponto de partida do pacote quando importado por outras aplicações.
+5. Pergunta: test command (comando de teste)
+    - Opcionalmente, você pode definir um comando para rodar os testes do projeto, como npm test. Por exemplo, echo \"Error: no test specified\" && exit 1 é uma mensagem padrão que indica que não há testes configurados.
+6. Pergunta: git repository (repositório Git)
+    - Se o projeto estiver vinculado a um repositório Git, você pode fornecer o link aqui.
+    - Ajuda a associar o projeto a um repositório para controle de versão e colaboração.
+7. Pergunta: keywords (palavras-chave)
+    - Palavras-chave que ajudam na descoberta do pacote no npm.
+    - Cada palavra-chave deve descrever o propósito ou características do pacote.
+8. Pergunta: author (autor)
+    - Nome do autor ou organização responsável pelo projeto.
+    - Pode incluir o nome, e-mail ou site do autor.
+9. Pergunta: license (licença)
+    - Define a licença sob a qual o pacote será distribuído.
+    - O npm sugere a licença ISC por padrão, mas você pode especificar outra, como MIT.
+10. Confirmação final
+    - Após preencher todas as informações, o npm exibe um resumo do package.json que será gerado.
+    - Pergunta: "Is this OK?" (Está tudo certo?), onde você confirma pressionando Enter (ou digita yes/y).
+    - Depois de confirmado, o npm cria o arquivo package.json no diretório atual com as informações fornecidas.
+
+Se preferir automatizar o processo sem prompts, você pode usar o comando npm init -y para criar um package.json com valores padrão para todas as perguntas.

@@ -1,0 +1,3 @@
+
+Para executar o npm de maneira mais rápida, basta digitar "npm init -y" no terminal,
+o "-y" significa "yes" e irá executar o comando npm de maneira mais rápida.
