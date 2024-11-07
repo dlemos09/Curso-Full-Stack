@@ -1,0 +1,10 @@
+Neste exemplo foi realizado o uso do "npm install --save-dev", quando você quer instalar
+pacotes apenas para o ambiente de desenvolvimento. Neste caso o modulo chalk é um exemplo. 
+
+Para atualizar os pacotes, utilize o comando "npm update", caso queira atualizar um pacote específico use o comando "npm update 'nomeDoPacote' "
+
+O comando "npx npm-check-updates -u" verifica se alguma dependência está pendente de atualização! 
+
+// 1. Desinstale localmente a versão atual do Chalk usando npm uninstall chalk;
+
+// 2. Instale localmente a versão anterior à 5 usando npm install chalk@4.1.2

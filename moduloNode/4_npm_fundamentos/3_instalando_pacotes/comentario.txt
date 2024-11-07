@@ -1,0 +1,7 @@
+Neste exemplo foi instalado o pacote lodash com o comando npm install lodash.
+
+Ao realizar essa ação, será instalado o módulo lodash e é possível verificar a adição no arquivo package-lock.json
+
+Lembre-se de que se for realizar um git push, exclua a pasta node_modules!
+
+Para achar mais módulos do npm - https://www.npmjs.com/

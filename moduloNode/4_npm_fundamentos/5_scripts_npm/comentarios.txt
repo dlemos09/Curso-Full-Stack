@@ -1,0 +1,5 @@
+Para essa demonstração, foi adicionado no package.json  "start": "node index.js" 
+Uso do "npm start"
+Isso facilita quando houver mais aplicações. Contudo, alguns comando é necessário o "npm run start"
+
+
