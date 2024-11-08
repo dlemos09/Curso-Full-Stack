@@ -1,0 +1,11 @@
+
+Para instalar módulos de maneira global, utilizar o comando "npm install -g nomeDoPacote"
+Mesmo instalando globalmente, é necessário utilizar o comando "npm link lodash"
+
+seção extra
+
+npx -> é um executor, alguns pacotes são scripts executaveis. Ex: React
+npm -> instalador
+
+exemplo: npx cowsay "Olá mundo"
+exemplo: npx cowsay -d "Virei churrasco"

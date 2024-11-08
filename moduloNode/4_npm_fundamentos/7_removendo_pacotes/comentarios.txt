@@ -1,0 +1,3 @@
+Para remover pacotes, utilize o comando npm uninstall nomeDoPacote
+
+Exemplo: npm uninstall lodash

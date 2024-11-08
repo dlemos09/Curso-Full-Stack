@@ -1,0 +1,10 @@
+
+
+Utilize o comando "npm -v" para visualizar a versão do npm!
+
+Utilize o comando "npm config" para configurar o package.jason
+Exemplo: npm config init-author-lemos
+
+npm get exibe todas as configurações do projeto
+
+npm config delete para deletar alguma configuração
