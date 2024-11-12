@@ -4,6 +4,8 @@ const port = 3000                  // Define a porta em que o servidor vai escut
 
 const path = require('path')       // Importa o módulo 'path', que facilita o trabalho com caminhos de arquivos e diretórios.
 
+
+//ler body
 app.use(
     express.urlencoded({
         extended: true,            // Configura o middleware para interpretar dados de formulários (x-www-form-urlencoded).

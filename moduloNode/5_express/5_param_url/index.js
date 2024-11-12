@@ -8,6 +8,21 @@ const basePath = path.join(__dirname, 'meusTemplates')
 // Define o caminho base para os templates. 
 // '__dirname' representa o diretório atual, e 'path.join' cria um caminho completo para a pasta 'meusTemplates'.
 
+// Função middleware para verificar autenticação do usuário
+const checkAuth = function(req, res, next) {
+    req.authStatus = true  // Define uma propriedade 'authStatus' no objeto 'req' indicando se o usuário está autenticado.
+
+    if(req.authStatus) {   // Se o usuário estiver autenticado, exibe uma mensagem e chama 'next()' para continuar a requisição.
+        console.log('Está logado')
+        next()
+    } else {               // Se o usuário não estiver autenticado, exibe uma mensagem e não prossegue com a requisição.
+        console.log('Não está logado, faça login para continuar')
+    }
+}
+
+// Aplica o middleware 'checkAuth' para todas as rotas, verificando a autenticação antes de processar cada requisição.
+app.use(checkAuth)
+
 app.get('/users/:id', (req, res) => {
     const id = req.params.id       // Extrai o parâmetro 'id' da URL, que identifica o usuário na rota.
 
