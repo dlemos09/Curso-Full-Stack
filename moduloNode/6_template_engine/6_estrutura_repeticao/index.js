@@ -16,7 +16,10 @@ app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
 
 app.get('/dashboard', (req, res) => {
-    res.render('dashboard')
+
+    const itens = ['item a', 'item b', 'item c']
+
+    res.render('dashboard', { itens })
 })
 
 // Define uma rota GET para a página inicial ('/').
@@ -30,13 +33,13 @@ app.get('/', (req, res) => {
         age: 28,
     }
 
-    const auth = false
+    const auth = true
 
     const approved = true;
- 
+
     // Renderiza o template 'home.handlebars' localizado na pasta de visualizações (por padrão 'views').
     // O objeto `{layout: false}` indica que não será utilizado um layout externo.
-    res.render('home', { user: user, auth, approved});
+    res.render('home', { user: user, auth, approved });
 });
 
 
