@@ -24,6 +24,10 @@ app.use(express.json())            // Configura o middleware para interpretar re
 
 app.use(express.static('public'))
 
+// Middleware express.static: Esse middleware serve para disponibilizar arquivos estáticos (como HTML, CSS, JavaScript, imagens, fontes, etc.) para o cliente.
+
+// Diretório public: Aqui, o Express serve automaticamente os arquivos que estão na pasta public. Qualquer arquivo dentro dessa pasta poderá ser acessado diretamente pelo navegador.
+
 
 app.use('/users', users)
 

@@ -8,8 +8,7 @@ const basePath = path.join(__dirname, 'meusTemplates')
 // Define o caminho base para os templates. 
 // '__dirname' representa o diretório atual, e 'path.join' cria um caminho completo para a pasta 'meusTemplates'.
 
-
-
+// Importa o módulo de roteamento para a rota /users
 const users = require('./users')
 
 //ler body
@@ -21,7 +20,7 @@ app.use(
 
 app.use(express.json())            // Configura o middleware para interpretar requisições JSON.
 
-
+// Usa o roteador de usuários para a rota /users
 app.use('/users', users)
 
 
