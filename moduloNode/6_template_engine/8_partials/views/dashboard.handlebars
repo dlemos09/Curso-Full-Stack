@@ -1,0 +1,36 @@
+<h1>Dashboard</h1>
+<a href="/">Voltar</a>
+
+<ul>
+    {{#each itens}}      <!-- Inicia um bloco de repetição "each" em Handlebars. 
+                             A expressão {{#each itens}} itera sobre o array "itens". 
+                             Para cada item do array, o bloco será executado uma vez. -->
+    
+      <li> {{ this }} </li> <!-- Cria um elemento <li> para cada item do array "itens".
+                                A expressão {{ this }} representa o item atual na iteração.
+                                Dessa forma, cada item do array será exibido dentro de um <li>. -->
+
+    {{/each}}      <!-- Fecha o bloco de repetição "each". -->
+</ul>
+
+
+
+Claro! Esse código é um exemplo de template com Handlebars, que itera sobre uma lista de itens e os exibe em uma lista não ordenada (<ul>). Vamos comentar linha a linha:
+
+handlebars
+Copiar código
+<ul>
+    {{#each itens}}      <!-- Inicia um bloco de repetição "each" em Handlebars. 
+                             A expressão {{#each itens}} itera sobre o array "itens". 
+                             Para cada item do array, o bloco será executado uma vez. -->
+    
+      <li> {{ this }} </li> <!-- Cria um elemento <li> para cada item do array "itens".
+                                A expressão {{ this }} representa o item atual na iteração.
+                                Dessa forma, cada item do array será exibido dentro de um <li>. -->
+
+    {{/each}}      <!-- Fecha o bloco de repetição "each". -->
+</ul>
+{{!-- Explicação Detalhada
+Bloco {{#each itens}} ... {{/each}}: O each é um helper do Handlebars que percorre o array itens. Esse bloco cria um <li> para cada item no array, permitindo exibir listas dinâmicas.
+
+{{ this }}: Em Handlebars, this se refere ao item atual da iteração. Portanto, {{ this }} exibe o valor do item atual dentro de cada <li>. --}}

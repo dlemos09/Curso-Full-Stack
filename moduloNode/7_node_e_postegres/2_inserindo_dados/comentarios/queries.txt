@@ -1,0 +1,22 @@
+Uma query (ou "consulta" em português) é uma instrução que enviamos para um banco de dados para buscar, inserir, atualizar ou deletar dados. Em termos simples, uma query permite que interajamos com o banco de dados, dizendo exatamente o que queremos que ele faça com as informações armazenadas.
+
+Principais Tipos de Query
+SELECT: Usada para buscar dados no banco de dados.
+
+Exemplo: SELECT * FROM books; — Busca todos os registros na tabela books.
+INSERT: Insere novos dados em uma tabela.
+
+Exemplo: INSERT INTO books (title, author, publication_year) VALUES ('Dom Quixote', 'Miguel de Cervantes', 1605); — Adiciona um novo livro à tabela books.
+UPDATE: Atualiza dados existentes.
+
+Exemplo: UPDATE books SET title = 'Dom Quixote - Edição Revisada' WHERE idbooks = 1; — Atualiza o título de um livro com o idbooks igual a 1.
+DELETE: Remove dados de uma tabela.
+
+Exemplo: DELETE FROM books WHERE idbooks = 1; — Remove o livro com idbooks igual a 1.
+Por Que Usamos Queries?
+Queries permitem:
+
+Recuperar dados específicos conforme condições definidas (ex: todos os livros de um autor).
+Modificar dados para mantê-los atualizados.
+Organizar e analisar dados para tomar decisões informadas.
+Queries são essenciais para qualquer aplicação que precise interagir com dados, como sites, sistemas de gestão ou qualquer software que armazene informações em um banco de dados.

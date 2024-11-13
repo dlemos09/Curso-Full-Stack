@@ -15,6 +15,16 @@ const app = express();
 // 'exphbs.engine()' cria uma instância do motor do Handlebars.
 app.engine('handlebars', exphbs.engine());
 
+
+//ler body
+app.use(
+    express.urlencoded({
+        extended: true,            // Configura o middleware para interpretar dados de formulários (x-www-form-urlencoded).
+    }),
+)
+
+app.use(express.json())            // Configura o middleware para interpretar requisições JSON.
+
 // Define o mecanismo de visualização padrão como 'handlebars'.
 // Isso permite que Express entenda e renderize arquivos '.handlebars' automaticamente.
 
@@ -31,6 +41,24 @@ app.get('/', (req, res) => {
     // O objeto `{layout: false}` indica que não será utilizado um layout externo.
     res.render('home');
 });
+
+app.post('/books/insertbook', async (req, res) => {
+    // Extrai os valores enviados pelo formulário
+    const { title, author, publication_year } = req.body;
+
+    // Query SQL parametrizada para evitar injeção de SQL e problemas de formatação
+    const query = `INSERT INTO books (title, author, publication_year) VALUES ($1, $2, $3)`;
+
+    try {
+        // Executa a query de inserção com os valores fornecidos
+        await pool.query(query, [title, author, publication_year]);
+        res.redirect('/');
+    } catch (err) {
+        console.log('Erro ao inserir livro:', err);
+        res.status(500).send('Erro ao inserir livro');
+    }
+});
+
 
 
 // Configura as credenciais de conexão com o banco de dados

@@ -1,0 +1,24 @@
+
+<h1>Lista de Livros</h1>
+    
+    {{#if books.length}}
+    <div class="lista_books">
+        <ul>
+            {{#each books}}
+                <li>
+                    <strong>Título:</strong> {{title}}<br>
+                    <strong>Autor:</strong> {{author}}<br>
+                    <strong>Ano de Publicação:</strong> {{publication_year}}<br>
+                </li>
+             <hr>
+            {{/each}}
+        </ul>
+        <div class="lista_btn_books">
+            <a href="/">Cadastrar Livros</a>
+        </div>
+     </div>
+
+    {{else}}
+        <p>Nenhum livro encontrado.</p>
+    {{/if}}
+

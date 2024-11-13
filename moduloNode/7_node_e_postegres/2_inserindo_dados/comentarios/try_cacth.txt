@@ -1,0 +1,12 @@
+O uso de try-catch em vez de if-else no código anterior é essencial porque estamos lidando com operações assíncronas que podem gerar erros imprevisíveis. Aqui está o motivo específico de cada escolha:
+
+1. Tratamento de Erros Imprevisíveis
+Ao usar try-catch, capturamos automaticamente qualquer erro que ocorra dentro do bloco try, incluindo falhas de conexão, problemas de sintaxe SQL ou outros erros imprevistos do banco de dados. Esse método é mais eficiente e confiável, especialmente quando trabalhamos com operações assíncronas ou de rede, que podem falhar por vários motivos (por exemplo, o servidor de banco de dados pode estar fora do ar).
+
+Se usássemos if-else, precisaríamos antecipar todos os tipos possíveis de erro (conexão, credenciais incorretas, falhas de rede) e verificar cada condição individualmente, o que tornaria o código mais complexo e menos eficiente.
+
+2. Código Mais Limpo e Organizado
+O try-catch é uma estrutura projetada especificamente para tratamento de exceções, enquanto o if-else é mais adequado para verificações de condições lógicas. Ao usar try-catch, o código se torna mais fácil de ler e entender, pois fica claro que estamos lidando com erros que podem ocorrer durante a execução.
+
+3. Melhor Desempenho em Operações Assíncronas
+Em operações assíncronas, como consultas a um banco de dados, o try-catch é uma abordagem comum porque permite capturar erros que podem ocorrer durante o tempo de execução (e não necessariamente na hora em que o código é escrito). Em vez de executar várias condições com if-else, que podem ser ineficazes para exceções imprevisíveis, try-catch permite que o código continue a execução após o tratamento do erro.

@@ -15,6 +15,16 @@ const app = express();
 // 'exphbs.engine()' cria uma instância do motor do Handlebars.
 app.engine('handlebars', exphbs.engine());
 
+
+//ler body
+app.use(
+    express.urlencoded({
+        extended: true,            // Configura o middleware para interpretar dados de formulários (x-www-form-urlencoded).
+    }),
+)
+
+app.use(express.json())            // Configura o middleware para interpretar requisições JSON.
+
 // Define o mecanismo de visualização padrão como 'handlebars'.
 // Isso permite que Express entenda e renderize arquivos '.handlebars' automaticamente.
 
@@ -30,6 +40,43 @@ app.get('/', (req, res) => {
     // Renderiza o template 'home.handlebars' localizado na pasta de visualizações (por padrão 'views').
     // O objeto `{layout: false}` indica que não será utilizado um layout externo.
     res.render('home');
+});
+
+app.post('/books/insertbook', async (req, res) => {
+    // Extrai os valores enviados pelo formulário
+    const { title, author, publication_year } = req.body;
+
+    // Query SQL parametrizada para evitar injeção de SQL e problemas de formatação
+    const query = `INSERT INTO books (title, author, publication_year) VALUES ($1, $2, $3)`;
+
+    try {
+        // Executa a query de inserção com os valores fornecidos
+        await pool.query(query, [title, author, publication_year]);
+        res.redirect('/');
+    } catch (err) {
+        console.log('Erro ao inserir livro:', err);
+        res.status(500).send('Erro ao inserir livro');
+    }
+});
+
+app.get('/books', (req, res) => {
+    // Query SQL para buscar todos os livros
+    const query = 'SELECT * FROM books';
+
+    // Executa a consulta no banco de dados
+    pool.query(query, (err, data) => {
+        if (err) {
+            console.log('Erro ao executar a query SELECT:', err);
+            res.status(500).send('Erro ao buscar livros');
+            return;
+        }
+        
+        // Armazena os resultados da consulta
+        const books = data.rows; // "data.rows" contém as linhas retornadas pelo PostgreSQL
+
+        // Renderiza a página com os dados dos livros
+        res.render('books', { books });
+    });
 });
 
 
