@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transform</title>
+
+    <style>
+    
+
+        div{
+            background-color: aqua;
+            width: 300px;
+            height: 300px;
+            outline: 1px solid #888;
+            margin: .5em auto;
+
+        }
+
+        p{
+            /* width: 50%; */
+            width: 100%;
+        }
+
+        .destaque{
+            background-color: yellow;
+        }
+
+        .div1 .destaque{
+            /* transform: translateX(50px);  é possível acrescentar valores negativos */
+            /* transform: translateY(250px);  */
+            /* transform: translate(50px, -50px); se colocar apenas um valor irá valer somente para o eixo X  */
+            /* a propriedade transform gera um contexto de empilhamento, semelhante a propriedade position relative */
+            transform: translate(50%, 100%); 
+            /* translate de 50% significa a metade do mesmo tamanho */
+
+        }
+
+
+        .div2 .destaque{
+            position: relative;
+            /* top: -50px; */
+            /* left: 50px; */
+            /* left: 50%; */
+            left: 25%;
+            /* Representa metade do elemento pai */
+            /* Apesar de visualmente o resultado ser o mesmo, ao se utilizar porcentagem nota-se a diferença. */
+
+            top: 50%;
+        }
+
+        .div3 .destaque{
+            transform: rotate(45deg);
+            /* O valor mais utilizado é em graus */
+            /* aceita números negativos */
+        }
+
+        .div4 .destaque{
+            transform: scale(1,2);
+            /* transform: scaleX(.75); */
+            /* transform: scaleY(.75); */
+        }
+
+        .div5 .destaque{
+            transform: skew(15deg, 25deg);
+            /* transform: skewX(15deg); */
+            /* transform: skewY(15deg); */
+        }
+
+        .div6{
+            background-color: orange;
+        }
+
+        .div6:hover{
+            transition: .8s;
+            transform: translate(150px) scale(2) rotate(180deg); 
+            /* transform: scale(2); */
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+
+    <div class="div1">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+        
+        <p class="destaque">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+    </div>
+
+    <div class="div2">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+        
+        <p class="destaque">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+    </div>
+
+    <!-- demonstração da propriedade rotate, skew e scale  -->
+
+    <div class="div3">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+        
+        <p class="destaque">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+    </div>
+
+    <div class="div4">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+        
+        <p class="destaque">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+    </div>
+
+    
+    <div class="div5">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+        
+        <p class="destaque">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga, quam.</p>
+    </div>
+
+
+    <div class="div6">
+     
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation</title>
+
+
+
+    <style>
+        body {
+            margin: 0;
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            height: 100vh;
+        }
+
+        div {
+            height: 200px;
+            width: 200px;
+            background-color: dodgerblue;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+
+            animation: roleta;
+            animation-duration: 3s;
+            /* animation-timing-function: ease; */
+            /* animation-timing-function: linear; */
+            animation-timing-function: ease-in-out;
+            /* animation-delay: 1s; */
+            /* define o atraso da interação */
+            animation-iteration-count: infinite;
+            /* define o numero de interações ex 1, 2, 3 infinit */
+            animation-direction: alternate;
+            /* default */
+            /* animation-fill-mode: forwards; */
+            /* define o formato final */
+
+            /* animation-play-state: running; */
+        }
+
+        div:hover {
+            animation-play-state: paused;
+        }
+
+        div p {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2em;
+        }
+
+        @keyframes roleta {
+            0% {}
+
+            50% {
+                scale: 1.6;
+                transform: rotate(0);
+                background: linear-gradient(dodgerblue, darkblue);
+                border-radius: 0;
+
+            }
+
+            100% {
+                transform: rotate(360deg);
+                background: linear-gradient(dodgerblue, darkblue, black);
+                border-radius: 50%;
+                scale: 1.6;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <p>olá mundo</p>
+    </div>
+
+</body>
+
+</html>

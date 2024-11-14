@@ -1,0 +1,58 @@
+/* article{
+    outline: 4px solid green;
+} */
+
+/* herança */
+
+/* article a{
+    color:red;
+} */
+
+/* filho adjacente  */
+/* 
+h3 + p{
+    background-color: aquamarine;
+} */
+
+
+/* filho direto */
+
+/* article a > b{
+    color: rgb(16, 135, 20);
+}
+
+h3 ~ p{
+    border: 4px dashed orange;
+}
+
+.destaque{
+    padding-left: 2rem;
+}
+article p:not(.destaque){
+    background-color: #a9a9a9;
+} */
+
+
+/* parte seletores compostos */
+
+a[href="#"]:not(.link-ok){
+    opacity: .2;
+}
+
+/*  o ^ significa: começa com  */
+a[href^="http"]{
+    color: red;
+}
+
+/* o $ significa: termina com */
+a[href$=".pdf"]{
+    color:forestgreen;
+}
+
+a[target="_blank"]{
+    text-decoration: none;
+}
+
+p:OFT{
+    background-color: green;
+}

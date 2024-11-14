@@ -1,0 +1,34 @@
+body{
+    background-color: #e5e5e5;
+}
+
+h1{
+    color: red;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif; /* acrescentar várias fontes, pois uma pode não estar instalada no computador do usuário, se necessário falar o que é serifa*/
+    font-size: 40px; /*Falar sobre unidade de medida, pixel é em relação ao monitor*/
+    font-style: normal; /*explicar a difeença entre normal e oblique*/
+}
+
+h2{
+    text-transform: lowercase; 
+    text-decoration: underline;
+}
+
+h3{
+    background-color: cadetblue;
+}
+
+p{
+    text-align: center;
+    text-indent: 28px;
+    color: #0048ff;
+    font-variant: small-caps;
+
+}
+
+a{
+    text-decoration: none;
+    font-variant: small-caps;
+    font-weight: bold;
+}

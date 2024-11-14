@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seletores de Filhos</title>
+
+    <style>
+        /* div:first-child{ */
+            /* seleciona o primeiro filho se for um parágrafo */
+            /* color: red;
+        }
+
+        div :last-child{
+            color: blue;
+        } */
+
+        p:first-child{
+            color: red;
+        }
+
+        p:last-child{
+            color: orange;
+        }
+
+        p:nth-child(1){
+            background-color: blue;
+        }
+
+        p:first-of-type{
+            background-color: cadetblue;
+        }
+
+        p:last-of-type{
+            color: orange;
+        }
+
+        p:nth-of-type(4){
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div>
+        <!-- <br> -->
+        <p>primeiro paragrafo</p>
+        <p>segundo paragrafo</p>
+        <p>terceiro paragrafo</p>
+    </div>
+
+    <hr>
+
+    <div>
+        <a href="#">primeiro link</a>
+        <p>segundo paragrafo</p>
+        <p>terceiro paragrafo</p>
+    </div>
+
+
+    <div>
+        <a href="#">primeiro link</a>
+        <p>primeiro paragrafo</p>
+        <p>segundo paragrafo</p>
+        <p>terceiro paragrafo</p>
+        <p>quarto paragrafo</p>
+    </div>
+</body>
+</html>

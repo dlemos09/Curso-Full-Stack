@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position</title>
+
+    <style>
+        #div1{
+            background-color: rgba(255, 166, 0, 0.724);
+            padding: 10px;
+            width: 90%;
+            /* height: 100px; */
+            /* quando é removido o height da div1, a altura é definida pelo conteúdo */
+            /* position: relative; */
+            position: sticky;
+            top: 0;
+        }
+        #div2{
+            background-color: rgba(105, 30, 255, 0.637);
+            padding: 10px;
+            width: 80%;
+            height: 50px;
+            /* position: relative; */
+            /* demonstrar colocando position absolut */
+            /* position: absolute; */
+            /* left: 50px;
+            bottom: 20px; */
+            overflow-y: scroll;
+
+        }
+        #div3{
+            background-color: rgba(34, 255, 0, 0.632);
+            padding: 10px;
+            width: 300px;
+            height: 30px;
+            /* position: absolute; */
+            /* nada vai acontecer pois precisa de propriedades auxiliares */
+            
+            /* bottom: 20px;
+            right: 20px; */
+            /* position: fixed; */
+            position: sticky; 
+            /* position: static; */
+            /* o pai direto precisa ter o mecanismo de scroll */
+            top: 20px;
+            right: 0px;
+
+            /* após colocar o position relative na div 3 colocar o botton e right para 0 */
+
+            /* está se relacionando com o body pois não tem outra div com posicionamento */
+        }
+    </style>
+
+</head>
+<body>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, voluptas.</p>
+
+    <!-- macete: p{}*10 -->
+
+    <div id="div1">
+        1
+        <div id="div2">
+            2
+            <div id="div3">
+                3
+            </div>
+        </div>
+    </div>
+
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id quo autem tempora fugiat labore amet eius! Cumque placeat laborum pariatur!</p>
+</body>
+</html>

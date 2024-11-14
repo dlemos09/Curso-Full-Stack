@@ -1,0 +1,31 @@
+
+h1{
+    border: 3px solid red;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 25%;
+}
+/*Serão demonstrados propriedades do display*/
+p{
+    background-color: #ccc;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 50%;
+}
+
+strong{
+    background-color: aqua;
+    padding: 7%;
+    /*display: inline-block;*/
+}
+
+i{
+    background-color: red;
+    height: 20%; /*height e width não funcionam em elementos de linha apenas para bloco*/
+    width: 6%;
+}
+
+a{
+    background-color: greenyellow;
+    padding: 8px;
+    /*visibility: hidden;*/ /*hidden omite o texto mas deixa o espaço*/
+    /*display: none;*/ /*omite além do conteúdo o espaço*/
+}

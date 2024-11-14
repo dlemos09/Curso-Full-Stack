@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANIMATION 3D</title>
+
+    <style>
+        .cena{
+            border: 2px solid #ccc;
+            width: 300px;
+            aspect-ratio: 1;
+            margin: 60px;
+        }
+        .plano{
+            background-color: rgb(0 0 0 / .3);
+            width: 200px;
+            aspect-ratio: 1;
+        }
+        #cena1{
+            perspective: 500px;
+        }
+
+        .cena1A{
+            transform: rotateY(45deg);
+            /* a ordem importa nesse caso, ao colocar translate depois rotate é diferente de colocar rotate e translate */
+            transform-style: preserve-3d;
+        }
+        .cena1B{
+            transform: rotateX(55deg);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cena1" class="cena">
+        <div class="cena1A plano">
+            <div class="cena1B plano">cena 1 B</div>
+        </div>
+    </div>
+    
+</body>
+</html>

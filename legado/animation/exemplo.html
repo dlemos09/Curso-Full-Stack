@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            height: 100vh;
+        }
+
+        .rotacao{
+         
+            width: 200px;
+            height: 200px;
+            background-color: dodgerblue;
+           
+
+            animation: rotacao;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        .rotacao p{
+            color: white;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 2em;
+        }
+
+        span{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .palavra{
+            position: absolute;
+            z-index: 2;
+            color: white;
+
+            animation: palavra;
+            font-size: 1em;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+
+        }
+
+        .quadrado{
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            margin-top: 100px;
+
+            animation: quadrado;
+            animation-duration: 3s;
+            animation-direction: alternate;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+
+        }
+
+        @keyframes quadrado {
+            0%{
+                transform: translateX(0px);
+            }
+            50%{
+                
+            }
+            100%{
+                transform: translateX(200px);
+            }
+        }
+
+        @keyframes rotacao{
+            0%{
+
+            }
+            
+            50%{
+                transform: rotate(0);
+              
+            }
+
+            100%{
+                rotate:360deg;
+                scale: 1.5;
+                border-radius: 100%;
+                background-color: crimson;
+            }
+        }
+
+        @keyframes palavra {
+            0%{
+
+            }
+            50%{
+
+            }
+            100%{
+                font-size: 3em;
+            }
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+    <span>
+        <p class="palavra">Coxinha</p>
+        <div class="rotacao">
+        </div>
+    </span>
+
+
+    <div class="quadrado">
+
+    </div>
+    
+
+    
+</body>
+</html>

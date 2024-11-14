@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>After_before</title>
+
+    <!-- O TEXTO NÃO É SELECIONAVEL -->
+    <style>
+      p::before {
+        content: "ANTES ";
+      }
+      p::after {
+        content: " DEPOIS";
+      }
+
+      div {
+        border: 3px solid red;
+        padding: 1em;
+        position: relative;
+      }
+
+      /* div::after{
+            content: "";
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            display: block;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        } */
+
+      div::before {
+        content: url(https://placehold.co/64x64/0045ff/FFFFFF.png);
+        display: inline-block;
+        /* float: left; */
+        margin-right: 1em;
+      }
+      p {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+        provident odio similique quam cumque! Excepturi necessitatibus nostrum
+        tempora dolorum sint, maiores qui quaerat ipsa impedit mollitia
+        obcaecati inventore magnam commodi corporis fugiat assumenda
+        reprehenderit a omnis cumque, consectetur ullam ad suscipit. Quae,
+        quibusdam. Corporis, praesentium ut nostrum dolorem soluta quam?
+      </p>
+    </div>
+  </body>
+</html>

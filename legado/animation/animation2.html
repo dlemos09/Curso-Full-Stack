@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation</title>
+
+
+
+    <style>
+        body {
+            margin: 0;
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            height: 100vh;
+            background-color: black;
+        }
+
+
+        .circle{
+            height: 250px;
+            width: 250px;
+            border: 6px solid red;
+            box-shadow: 0px 0px 20px red , 0px 0px 20px red inset;
+            border-radius: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+       
+
+
+        .quadrado {
+            height: 100px;
+            width: 100px;
+            border: 6px solid red;
+            box-shadow: 0px 0px 20px red , 0px 0px 20px red inset;
+            border-radius: 8px;
+            
+            animation: 2.5s quadrado ease-in-out infinite;
+            animation-direction: alternate;
+            /* animation-duration: 3s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite; */
+        }
+
+        .circle{
+            animation: 3s circle ease-in-out infinite;
+            animation-direction: alternate-reverse;
+        }
+
+       
+       
+        @keyframes quadrado {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+                border: 6px solid red;
+                box-shadow: 0px 0px 20px red , 0px 0px 20px red inset;
+            }
+
+            33% {
+                transform: rotateX(180deg) rotateY(0) rotateZ(0);
+                border: 6px solid yellow;
+                box-shadow: 0px 0px 20px yellow , 0px 0px 20px yellow inset;
+                scale: 1.5;
+                /* transform: translateX(180px); */
+
+               
+            }
+
+            67%{
+                transform: rotateX(180deg) rotateY(180deg) rotateZ(0);
+                border: 6px solid blue;
+                box-shadow: 0px 0px 20px blue , 0px 0px 20px blue inset;
+                scale: 2;
+                /* transform: translateX(-180px); */
+
+            }
+
+            100% {
+                transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
+                border: 6px solid green;
+                box-shadow: 0px 0px 20px green , 0px 0px 20px green;
+                scale: 2.8;
+            }
+        }
+
+        @keyframes circle {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+                border: 6px solid red;
+                box-shadow: 0px 0px 20px red , 0px 0px 20px red inset;
+            }
+
+            33% {
+                transform: rotateX(-180deg) rotateY(0) rotateZ(0);
+                border: 6px solid yellow;
+                box-shadow: 0px 0px 20px yellow , 0px 0px 20px yellow inset;
+                /* transform: translateX(-180px); */
+
+                scale: .9;
+
+               
+            }
+
+            67%{
+                transform: rotateX(-180deg) rotateY(-180deg) rotateZ(0);
+                border: 6px solid blue;
+                box-shadow: 0px 0px 20px blue , 0px 0px 20px blue inset;
+                scale: .5; 
+
+            }
+
+            100% {
+                transform: rotateX(-180deg) rotateY(-180deg) rotateZ(-180deg);
+                border: 6px solid hotpink;
+                box-shadow: 0px 0px 20px hotpink , 0px 0px 20px hotpink;
+                scale: .2;
+
+
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="circle">
+        <div class="quadrado">
+
+        </div>
+    </div>
+
+  
+
+</body>
+
+</html>

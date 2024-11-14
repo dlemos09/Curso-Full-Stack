@@ -1,0 +1,40 @@
+
+body{
+    /* width: 60%; */
+    margin: auto;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* background-color: black; */
+    /* background-image: url(../img/NT_114_resized_12.jpg); */
+    /* background-repeat: no-repeat; */
+    /* background-repeat: repeat-x or repeat-y; */
+    /* background-attachment: fixed; */ /* fixa a imagem */ 
+    /* background-size: contain; */
+    /* background-size: cover;
+    background-size: 1290px 600px; */
+    background: url(../img/bg.jpg) no-repeat fixed;
+}
+
+h1, h2{
+    text-align: center;
+    border: 10px groove dodgerblue;
+    padding: 10px;
+    margin-top: 100px;
+}
+
+
+p{
+    line-height: 2;
+    text-align: justify;
+}
+
+.img_youtube{
+    width: 100px;
+}
+
+.img_html5{
+    float: left;
+}
+
+.img_css3{
+    float: right;
+}

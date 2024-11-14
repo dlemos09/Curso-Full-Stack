@@ -1,0 +1,62 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: auto; /*pega o espaço que sobra*/
+    width: 60%;
+    background-color: chartreuse;
+}
+/*atalho para comentar tudo*/
+h1{
+    background-color: #6600ff;
+    color: aliceblue;
+    text-align: center;
+    /*padding-top: 20px;
+    padding-right: 10px;
+    padding-left: 30px;
+    padding-bottom: 50px;*/
+    padding: 20px 10px 30px 50px;
+}
+
+h2{
+    background-color: coral;
+    color: aliceblue;
+    padding: 18px;
+    outline: 5px solid #6600ff;
+    text-align: right;
+    
+}
+
+p{
+    background-color: #ccc;
+    padding: 16px;
+    /*margin: 0;*/
+}
+
+/*proprieade border*/
+.p1{
+    border-top: 2px solid #6600ff;
+    border-right: 20px groove yellowgreen;
+    border-bottom: 8px dotted #1effe1;
+    border-left: 8px dashed rgb(255, 30, 30);
+    /*border-radius: 9px;*/
+    /*border-top: 8px solid #69d41c;
+    border-right: 8px solid #6600ff;
+    border-bottom: 20px solid #f200ff;
+    border-left: 8px solid red;*/
+   /* width: 50%; */
+    /*height: 20%; Citar o erro da altura em porcentagem*/
+   
+    
+} 
+
+.p2{
+    margin-top: 30px;
+    border-bottom: 2px solid red ;
+    padding-bottom: 40px;
+}
+
+.p3{
+    margin: 60px;
+    background-color: aquamarine;
+    border-radius: 40px;
+    outline: 5px solid #6600ff;
+}
