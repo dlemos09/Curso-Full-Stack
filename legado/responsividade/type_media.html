@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+
+    <title>Media Types</title>
+
+    <link rel="stylesheet" href="../responsividade/type_media_print.css" media="print" />
+    <!-- é possível inserir no final também -->
+    <style>
+        /* body{
+            background-color: rgb(47, 47, 47);
+            color: rgb(214, 214, 214);
+            font-family: sans-serif;
+        } */
+        /* body{
+            background-color: yellow;
+            color: blue;
+            font-family: sans-serif;
+        } */
+
+        /* isso aqui sobreescreve todas as medias, é implicito */
+        /* @media all{
+            
+        } */
+
+        /* @media screen { */
+            body {
+                background-color: #ccc;
+                color: blue;
+                font-family: sans-serif;
+            }
+        /* } */
+
+        /* simule a impressão ctrl + p */
+        /* em seguida realize a mudança de cor de fundo e da cor da fonte */
+        /* caso a fonte não esteja azul, talvez seja o navegador  */
+
+        /* sugerido colocar no arquivo externo o @media mas para fins didáticos a demonstração foi no css interno */
+
+        /* faça a demonstração da sobreposição do media all */
+        /* @media print{
+            body{
+                color: black;
+                font-family: serif;
+            }
+        } */
+    </style>
+
+    <!-- <link rel="stylesheet" href="../responsividade/type_media_print.css" media="print" />  -->
+</head>
+
+<body class="onlyprint">
+    <h1>Media Types</h1>
+
+    <a href="https://www.senac.br/" title="Vem fazer parte do senac">SENAC</a>
+</body>
+
+</html>

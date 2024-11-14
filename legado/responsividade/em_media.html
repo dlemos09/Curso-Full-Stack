@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unidades de medida em 'em'</title>
+
+    <style>
+        body{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1,h2{
+            font-weight: lighter;
+        }
+
+        div{
+            outline: 2px solid red;
+            min-height: 80px;
+        }
+
+        div:nth-of-type(1){
+            font-size: 16px;
+            padding: 16px;
+        }
+
+        div:nth-of-type(1) b{
+            font-size: 24px;
+        }
+
+        div:nth-of-type(2){
+            /* background-color: yellow; */
+            font-size: 1em;
+            padding: 1em;
+        }
+
+        div:nth-of-type(2) b{
+            font-size: 1.5em;
+        }
+
+        div:nth-of-type(3){
+            background-color: yellow;
+            font-size: 1rem;
+            padding: 1em;
+        }
+
+        div:nth-of-type(3) b{
+            font-size: 1.5rem;
+        }
+
+        @media screen and (min-width: 53.75em) {
+            body{
+                background-color: #656363;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Unidades de medida em projetos responsivos</h1>
+
+    <h2>Pixels</h2>
+    <div>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptates?</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, debitis blanditiis adipisci, labore totam est quam  <b>neque ut nemo provident</b> natus error nesciunt quas! Id laboriosam maxime quam inventore error?</p>
+    </div>
+
+    <h2>em</h2>
+    <div>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptates?</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, debitis blanditiis adipisci, labore totam est quam <b> neque ut nemo providen</b>t natus error nesciunt quas! Id laboriosam maxime quam inventore error?</p>
+    </div>
+
+    <h2>rem</h2>
+    <div>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptates?</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, debitis blanditiis adipisci, labore totam est quam  <b>neque ut nemo provident</b> natus error nesciunt quas! Id laboriosam maxime quam inventore error?</p>
+    </div>
+    
+</body>
+</html>

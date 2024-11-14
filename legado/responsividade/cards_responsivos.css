@@ -1,0 +1,23 @@
+body{
+    background-color: dimgray;
+    font-family: sans-serif;
+
+}
+
+h1{
+    font-family: 300px;
+}
+
+.cards_container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card{
+    background-color: rgb(44, 44, 44);
+    color: white;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
