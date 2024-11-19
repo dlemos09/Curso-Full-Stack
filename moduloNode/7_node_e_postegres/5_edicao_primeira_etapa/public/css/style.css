@@ -1,0 +1,89 @@
+* {
+    font-family: Helvetica, sans-serif;
+  
+  }
+  
+  h1 {
+    text-align: center;
+  }
+
+  .menu_nav{
+   
+   
+    margin: 0 auto;
+    width: 700px;
+
+  }
+  
+  .menu_nav ul{
+  
+    width: 700px;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+
+  }
+
+  .menu_nav ul li{
+    list-style-type: none;
+    margin-left: 10px;    
+  }
+  
+  .form{
+    width: 700px;
+    margin: 0 auto;
+  }
+  
+  .form-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5em;
+  }
+  
+  .form-control label {
+    font-weight: bold;
+    margin-bottom: 0.3em;
+  }
+  
+  .form-control input {
+    padding: 5px;
+  }
+
+  .btn{
+    display: flex;
+    justify-content: space-between;
+  }
+   a{
+    background-color: rgb(34, 0, 51);
+    color: white;
+    text-decoration: none; 
+    padding: 10px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+
+  .lista_books{
+    width: 700px;
+    margin: 0 auto;
+  }
+
+  .lista_books ul li{
+    list-style-type: none;
+    margin: 0;
+  }
+  .lista_btn_books{
+    width: 700px;
+    margin: auto;
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+  }
+
+  .actions{
+    width: 700px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 10px;
+  }
