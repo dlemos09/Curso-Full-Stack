@@ -20,3 +20,11 @@ Recuperar dados específicos conforme condições definidas (ex: todos os livros
 Modificar dados para mantê-los atualizados.
 Organizar e analisar dados para tomar decisões informadas.
 Queries são essenciais para qualquer aplicação que precise interagir com dados, como sites, sistemas de gestão ou qualquer software que armazene informações em um banco de dados.
+
+Os $1, $2, $3 na query SQL representam parâmetros posicionais usados em queries parametrizadas no PostgreSQL. Eles são marcadores de posição que serão substituídos pelos valores reais fornecidos em tempo de execução.
+
+Contexto e Funcionamento
+Esses marcadores servem para inserir dinamicamente valores na query, mas com segurança e eficiência. No Node.js, quando usamos bibliotecas como pg (PostgreSQL para Node.js), o método de execução da query geralmente aceita dois argumentos:
+
+A query SQL, onde os marcadores de posição estão definidos.
+Um array de valores que será usado para substituir os marcadores na query.
