@@ -1,0 +1,11 @@
+<h1>Lista de usuários cadastrados</h1>
+
+<div class="container">
+    {{#each users}}
+        <div class="item">
+            <p>{{this.name}}</p>
+            <!-- Link para a página de detalhes do usuário, passando o ID -->
+            <a href="/users/{{this.id}}">Ver detalhes</a>
+        </div>
+    {{/each}}
+</div>

@@ -1,0 +1,11 @@
+<h1>Lista de usuários cadastrados</h1>
+
+<div class="container">
+    {{#each users}}
+        <div class="item">
+            <p>{{this.name}}</p>
+            <p>Profissão: {{this.occupation}}</p>
+            {{!-- <p>{{this.date_of_birth}}</p> --}}
+        </div>
+    {{/each}}
+</div>
