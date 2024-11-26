@@ -1,0 +1,10 @@
+<h1>Detalhes do Usuário</h1>
+<div class="detalhesUser">
+    <p><strong>Nome:</strong> {{user.name}}</p>
+    <p><strong>Ocupação:</strong> {{user.occupation}}</p>
+    <p><strong>Data de Nascimento:</strong> {{user.date_of_birth}}</p>
+    <p><strong>Newsletter:</strong> {{#if user.newsletter}}Sim{{else}}Não{{/if}}</p>
+
+    <a href="/users/edituser/{{user.id}}" class="btn_editar">Editar</a>
+</div>
+

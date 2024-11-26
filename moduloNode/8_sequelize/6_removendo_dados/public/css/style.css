@@ -1,0 +1,325 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    background-color: #333;
+    /* Cor de fundo do menu */
+    padding: 10px 20px;
+    position: relative;
+}
+
+/* Estilo do botão sanduíche */
+.menu-toggle {
+    display: none;
+    /* Escondido em telas maiores */
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle .bar {
+    background-color: white;
+    /* Cor das barras */
+    height: 4px;
+    width: 25px;
+    margin: 3px 0;
+    transition: 0.3s ease;
+    /* Transição suave */
+}
+
+/* Estilo da lista de navegação */
+.nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.nav-list li {
+    margin: 0 15px;
+}
+
+.nav-list a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-list a:hover {
+    color: #00bcd4;
+    /* Cor ao passar o mouse */
+}
+
+
+h1 {
+    text-align: center;
+}
+
+
+
+/* Estilização geral do formulário */
+form.form {
+    max-width: 400px;
+    /* Define uma largura máxima para o formulário */
+    margin: 20px auto;
+    /* Centraliza o formulário na página */
+    padding: 25px;
+    /* Espaçamento interno do formulário */
+    border: 1px solid #ccc;
+    /* Adiciona uma borda leve */
+    border-radius: 8px;
+    /* Deixa os cantos arredondados */
+    background-color: #f9f9f9;
+    /* Cor de fundo do formulário */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Adiciona um leve sombreamento */
+}
+
+/* Estilização dos controles de formulário */
+.form_control {
+    margin-bottom: 15px;
+    /* Espaçamento entre os elementos do formulário */
+    display: flex;
+    flex-direction: column;
+    /* Empilha os elementos dentro do form_control */
+}
+
+/* Rótulos (labels) */
+.form_control label {
+    margin-bottom: 5px;
+    /* Espaçamento entre o rótulo e o campo de entrada */
+    font-weight: bold;
+    /* Deixa o texto em negrito */
+    color: #333;
+    /* Cor do texto */
+}
+
+/* Campos de entrada (inputs) */
+.form_control input[type="text"],
+.form_control input[type="date"] {
+    padding: 8px;
+    /* Espaçamento interno */
+    border: 1px solid #ccc;
+    /* Borda ao redor do campo */
+    border-radius: 4px;
+    /* Bordas arredondadas */
+    font-size: 14px;
+    /* Tamanho da fonte */
+    outline: none;
+    /* Remove o contorno padrão ao focar */
+    transition: border-color 0.3s ease;
+    /* Animação suave ao alterar a borda */
+}
+
+/* Efeito ao focar nos campos */
+.form_control input[type="text"]:focus,
+.form_control input[type="date"]:focus {
+    border-color: #007BFF;
+    /* Cor da borda ao focar */
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    /* Adiciona um brilho ao redor */
+}
+
+/* Caixa de seleção (checkbox) */
+.form-checkbox {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.form-checkbox label {
+    margin-left: 8px;
+    /* Espaçamento entre a caixa e o texto */
+    font-weight: normal;
+    /* Texto regular */
+}
+
+.form-btn {
+    display: flex;
+    justify-content: end;
+}
+
+/* Botão de envio */
+input[type="submit"] {
+    padding: 10px 15px;
+    /* Tamanho do botão */
+    background-color: #007BFF;
+    /* Cor de fundo */
+    color: white;
+    /* Cor do texto */
+    border: none;
+    /* Remove a borda */
+    border-radius: 4px;
+    /* Bordas arredondadas */
+    font-size: 16px;
+    /* Tamanho da fonte */
+    cursor: pointer;
+    /* Muda o cursor para a mãozinha */
+    transition: background-color 0.3s ease;
+    /* Animação suave ao alterar a cor */
+}
+
+.excluir[type="submit"] {
+    padding: 5px 10px;
+    /* Tamanho do botão */
+    background-color: #ff0000;
+    /* Cor de fundo */
+    color: white;
+    /* Cor do texto */
+    border: none;
+    /* Remove a borda */
+    border-radius: 4px;
+    /* Bordas arredondadas */
+    font-size: 16px;
+    /* Tamanho da fonte */
+    cursor: pointer;
+    /* Muda o cursor para a mãozinha */
+    transition: background-color 0.3s ease;
+    /* Animação suave ao alterar a cor */
+}
+
+/* Efeito ao passar o mouse no botão */
+input[type="submit"]:hover {
+    background-color: #0056b3;
+    /* Cor mais escura ao passar o mouse */
+}
+
+.excluir[type="submit"]:hover {
+    background-color: #b30000;
+    /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilização para o container principal */
+.container {
+    display: flex;
+    /* Usando flexbox para organizar os itens */
+    flex-wrap: wrap;
+    /* Permite que os itens quebrem linha */
+    justify-content: center;
+    /* Centraliza os itens horizontalmente */
+    gap: 20px;
+    /* Espaçamento entre os itens */
+    padding: 20px;
+    /* Espaçamento interno no container */
+    background-color: #f9f9f9;
+    /* Cor de fundo suave */
+    border-radius: 8px;
+    /* Bordas arredondadas */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra para destacar o container */
+}
+
+.btn_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.6em;
+}
+
+.btn_container a {
+    background-color: #ccc;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn_container a:hover {
+    background-color: #333;
+    color: #ffffff;
+}
+
+/* Estilização para os itens individuais */
+.item {
+    background-color: #ffffff;
+    /* Cor de fundo dos itens */
+    border: 1px solid #ddd;
+    /* Borda leve ao redor dos itens */
+    border-radius: 8px;
+    /* Bordas arredondadas */
+    padding: 15px;
+    /* Espaçamento interno dos itens */
+    width: 200px;
+    /* Largura fixa para manter o layout consistente */
+    text-align: center;
+    /* Centraliza o texto no item */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Sombra para destacar os itens */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    /* Animações suaves */
+}
+
+/* Efeito de hover nos itens */
+.item:hover {
+    transform: translateY(-5px);
+    /* Eleva o item levemente */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Aumenta a sombra ao passar o mouse */
+}
+
+/* Estilização para os textos dentro dos itens */
+.item p {
+    font-size: 1rem;
+    /* Tamanho do texto */
+    color: #333;
+    /* Cor do texto */
+    margin: 0;
+    /* Remove espaçamentos padrão */
+    font-weight: bold;
+    /* Texto em negrito */
+}
+
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+        /* Exibe o botão sanduíche */
+    }
+
+    .nav-list {
+        display: none;
+        /* Esconde a lista inicialmente */
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        background-color: #333;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        width: 150px;
+    }
+
+    .nav-list li {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .nav-list.active {
+        display: flex;
+        /* Exibe o menu ao ativar */
+    }
+}
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        justify-content: space-around;
+        /* Ajusta a distribuição dos itens em telas menores */
+        gap: 10px;
+        /* Reduz o espaçamento entre os itens */
+    }
+
+    .item {
+        width: 150px;
+        /* Reduz a largura dos itens em telas menores */
+        padding: 10px;
+        /* Reduz o espaçamento interno */
+    }
+}
