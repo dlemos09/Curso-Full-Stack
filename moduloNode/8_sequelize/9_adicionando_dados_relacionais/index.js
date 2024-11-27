@@ -146,40 +146,34 @@ app.delete('/users/delete/:id', async (req, res) => {
 // Rota para editar um usuário específico
 app.get('/users/edituser/:id', async (req, res) => {
     try {
-        const id = req.params.id; // Obtém o ID do usuário a partir dos parâmetros da URL
+        const id = req.params.id;
 
-        console.log('ID capturado:', id); // Log para verificar o ID capturado
-
-        // Validação do ID: verifica se o ID foi fornecido e se é um número válido
         if (!id || isNaN(id)) {
-            return res.status(400).send('ID inválido.'); // Retorna um erro 400 se o ID for inválido
+            return res.status(400).send('ID inválido.');
         }
 
-        // Busca o usuário no banco de dados pelo ID, incluindo os endereços associados
         const user = await User.findByPk(id, {
-            include: [
-                {
-                    model: Address, // Inclui o modelo Address na consulta
-                    as: 'Addresses', // Use o alias definido no relacionamento
-
-                },
-            ],
+            include: {
+                model: Address,
+                as: 'Addresses',
+            },
         });
 
-        // Verifica se o usuário foi encontrado
         if (!user) {
-            return res.status(404).send('Usuário não encontrado.'); // Retorna um erro 404 se o usuário não existir
+            return res.status(404).send('Usuário não encontrado.');
         }
 
-        // Renderiza o template edituser, passando o objeto do usuário
-        // O método toJSON converte o objeto do Sequelize em um objeto JavaScript puro
+        // Log para verificar os dados
+        console.log('Usuário encontrado:', JSON.stringify(user, null, 2));
+
         res.render('edituser', { user: user.toJSON() });
     } catch (error) {
-        // Captura e trata erros inesperados
-        console.error('Erro ao buscar usuário para edição:', error); // Log detalhado do erro
-        res.status(500).send('Erro ao carregar o formulário de edição.'); // Retorna um erro 500 no caso de falha no servidor
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).send('Erro interno do servidor.');
     }
 });
+
+
 
 
 // Rota para atualizar um usuário específico
