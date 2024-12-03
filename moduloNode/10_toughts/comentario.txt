@@ -1,0 +1,30 @@
+1º Inicie o projeto -> npm init -y
+2º Instale as depedências -> npm i bcryptjs connect-flash cookie-parser cookie-session express express-flash express-session sequelize pg nodemon session-file-store dotenv express-handlebars
+
+A seguir tem um comentário detalhado de cada depedência.
+
+1.	bcryptjs: Biblioteca para criptografia de senhas. Permite gerar hashes seguros e compará-los, essencial para autenticação de usuários.
+
+2.	connect-flash: Middleware para exibir mensagens temporárias entre requisições, como mensagens de erro ou sucesso.
+
+3.	cookie-parser: Middleware usado para analisar cookies nas requisições. Facilita o acesso e manipulação de cookies no servidor.
+
+4.	cookie-session: Middleware que armazena sessões em cookies no cliente, útil para gerenciamento de sessões leves.
+
+5.	express: Framework web minimalista e poderoso, usado para criar aplicações e APIs com facilidade.
+
+6.	express-flash: Extensão do connect-flash, específica para uso com o framework Express.
+
+7.	express-session: Middleware para gerenciar sessões no servidor. As sessões são armazenadas no servidor e sincronizadas com os cookies do cliente.
+
+8.	nodemon: Ferramenta para desenvolvimento que reinicia automaticamente o servidor sempre que detecta alterações no código.
+
+9.	pg: Driver para integrar e manipular bancos de dados PostgreSQL usando Node.js.
+
+10.	sequelize: ORM (Object-Relational Mapper) que simplifica o acesso e manipulação de bancos de dados relacionais, como PostgreSQL, através de modelos em JavaScript.
+
+11.	session-file-store: Armazena sessões do express-session em arquivos no sistema local, útil para persistência temporária de sessões.
+
+12. dotenv: permite trabalhar com variáveis de ambiente.
+
+13. express-handlebars: permite trabalhar com arquivos .handlebars (template-engine)
