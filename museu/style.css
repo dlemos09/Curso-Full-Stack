@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #ffedd8;
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+}
+
+/* estilo da nav bar */
+
+header {
+  display: flex;
+  background-color: #583101;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  position: fixed;
+  margin: 0;
+}
+
+header h1 {
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+h1 span {
+  color: #ffa600;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+nav ul li {
+  padding: 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+nav ul li a:hover {
+  border-bottom: 1px solid;
+}
+
+/*estilo do container */
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 20px;
+  margin-top: 6em;
+}
+
+.container_history {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.history_location {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Estilo do article */
+
+article {
+  color: #6f4518;
+  margin: 20px;
+}
+
+article h2 {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  border-bottom: 2px solid #58310195;
+}
+
+.about {
+  display: flex;
+  justify-content: space-between;
+  width: 700px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+.about p {
+  font-size: 1em;
+}
+
+p span {
+  color: #583101;
+  font-weight: bold;
+}
+
+.paragrafo {
+  width: 800px;
+  margin-left: 80px;
+  height: 320px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #f3d5b5 #583101;
+}
+
+/* estilo do aside */
+
+.content_right {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+}
+
+.calender_visit {
+  width: 350px;
+  color: #ffedd8;
+  background-color: #6f4518;
+  margin-top: 10px;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calender_visit h3 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calender_visit label {
+  font-size: 0.8em;
+}
+
+.calender_visit input[type="number"] {
+  width: 35px;
+}
+
+.calender_visit p a {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8em;
+  padding: 20px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #a47148;
+  margin-top: 20px;
+  display: block;
+}
+
+/* estilo do footer */
+
+footer {
+  background-color: #ffedd8;
+  padding: 20px;
+  text-align: center;
+  color: #6f4518;
+}
+
+footer ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+footer ul li {
+  display: inline;
+  margin: 0 10px;
+  color: #d4a276;
+  font-weight: bold;
+}
+
+footer ul li:hover {
+  color: #a47148;
+}
+
+footer p {
+  margin-top: 10px;
+  color: #bc8a5f;
+  font-size: 14px;
+}

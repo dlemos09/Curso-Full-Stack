@@ -22,32 +22,27 @@ nav ul{
     list-style-type: none;
     text-align: center;
     padding: 0;
-}
-
-nav ul li{
-    display: inline-block;
-    margin: 0px 10px;   
-    border: 1px solid rgba(31, 50, 112, 0.3);
-    border-radius: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    
 }
 
 nav ul li a{
     text-decoration: none;
     color: #00008b;
     border-radius: 5px;
-    padding: 15px 20px;
-    display: block;
     text-transform: uppercase;
     border-radius: 10px;
     font-size: 16px;
     letter-spacing: 2px;
+    padding: 10px;
+    border: 1px solid ;
     
 }
 
 a:hover{
     background-color: #00008b;
     color: #f0f8ff;
-    font-weight: bold;
     transition: 0.5s;
 }
 
@@ -55,7 +50,7 @@ a:hover{
 /* Estilo do article */
 
 h1{
-    font-size: 80px;
+    font-size: 3em;
     text-align: center;
     text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
     color: #D89F8B;
@@ -119,11 +114,18 @@ h1{
 /* produtos */
 
 .secao_produtos{
-    width: auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.produto_img img{
+    width: 250px;
 }
 
 .produto_img{
-    border: 2px solid rgb(0, 0, 139, 0.7);
+    border: 2px solid #00008bb3;
     border-radius: 10px;
     padding: 10px;
     margin-left:10%;
@@ -131,10 +133,11 @@ h1{
     margin-bottom: 5%;
     display: inline-block;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    
 }
 .produto_img:hover{
     transition: 0.3s;
-    box-shadow: 0 16px 32px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 16px 32px 0 #00000080;
 }
 
 .produto_img img{
