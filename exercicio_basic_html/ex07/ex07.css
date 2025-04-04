@@ -59,6 +59,7 @@ a.header__nav--active{
 .pricing {
     display: flex;
     gap: 16px;
+    margin-bottom: 10px;
 }
 
 .pricing-plan{
