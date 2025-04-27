@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula 07</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <!-- Assim como em outras aulas, nesta aula estou utilizando abreviação Emmet
+
+    "Emmet" refere-se a um conjunto de abreviações e atalhos que permitem escrever código HTML, CSS e outras linguagens de programação de forma mais rápida e eficiente 
+    
+    exemplo: div.container>p.text-center essa abreviação forma
+
+        <div class="container">
+           <p class="text-center"></p>
+        </div>
+    -->
+
+    <div class="container">
+      <h1 class="Display-5 text-center">Trabalhando com Imagens</h1>
+
+      <img
+        src="../aula07/img/rect.svg"
+        alt="Imagem-Responsiva"
+        class="img-fluid"
+      />
+
+      <br />
+      <hr />
+
+      <img
+        src="../aula07/img/rect.svg"
+        alt="Imagem-Responsiva"
+        class="img-thumbnail"
+      />
+
+      <br />
+      <hr />
+
+      <img
+        src="../aula07/img/rect.svg"
+        alt="Imagem-Responsiva"
+        class="img-fluid rounded"
+      />
+
+      <br />
+      <hr />
+
+      <img
+        src="../aula07/img/quad.svg"
+        alt="Imagem-Responsiva"
+        class="img-thumbnail"
+      />
+
+      <br />
+      <hr />
+
+      <!-- img.img-thumbnail.float-start[src="../img/quad.svg"]+p.lead -->
+      <img
+        src="../aula07/img/quad.svg"
+        alt=""
+        class="img-thumbnail float-start me-3"
+      />
+      <p class="lead">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur
+        delectus quidem non tempora maiores! Dicta, quam! Excepturi praesentium
+        necessitatibus quia dicta. Laudantium ipsam dolorum reiciendis
+        voluptates pariatur, provident vel sint rem voluptate nostrum porro
+        corporis minima, ut accusantium, modi sit necessitatibus quaerat
+        explicabo nihil ducimus. Ipsum reiciendis quidem provident sed?
+      </p>
+
+      <!-- figure.figure>img.img-fluid.rounded[src="../aula07/img/quad.svg"]+figcaption.figcaption.text-end{Legenda da figura} -->
+    </div>
+
+    <br>
+    <hr>
+
+    <div class="container text-center">
+      <figure class="figure">
+        <img
+          src="../aula07/img/quad.svg"
+          alt="quadrado"
+          class="img-fluid rounded"
+        />
+        <figcaption class="figcaption text-end">Legenda da figura</figcaption>
+      </figure>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
