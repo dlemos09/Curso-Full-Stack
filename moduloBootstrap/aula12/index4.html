@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" defer></script>
+  <title>Formulário de endereço</title>
+</head>
+
+<body>
+
+  <div class=" container p-5 border border-secondary-subtle my-5 shadow">
+    <form action="" method="post" class="needs-validation" novalidate>
+      <h1 class="display-3 text-center text-lg-start text-primary my-1">
+        Endereço
+      </h1>
+
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-7">
+          <label for="logradouro" class="form-label">Logradouro</label>
+          <input placeholder="Digite o logradouro" type="text" class="form-control" id="logradouro" required />
+          <div class="invalid-feedback">
+            Este campo é obrigatório!
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+          <div class="valid-feedback">
+            Logradouro informado corretamente
+          </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <label for="numero" class="form-label">Número</label>
+          <input type="text" class="form-control" id="numero" />
+        </div>
+
+        <div class="col-6 col-md-3">
+          <label for="complemento" class="form-label">Complemento</label>
+          <input type="text" class="form-control" id="complemento" />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="bairro" class="form-label">Bairro</label>
+          <input type="text" class="form-control" id="bairro" />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="cidade" class="form-label">Cidade</label>
+          <input type="text" class="form-control" id="cidade" />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="estado" class="form-label">Estado</label>
+          <input type="text" class="form-control" id="estado" />
+        </div>
+
+        <div class="col-12 col-md-2">
+          <label for="cep" class="form-label">CEP</label>
+          <input type="text" class="form-control" id="cep" required />
+        </div>
+
+        <div class="mb-3 col-12 ms-2 form-check">
+          <input type="checkbox" class="form-check-input" id="termos" />
+          <label class="form-check-label" for="termos">Aceito os termos de uso</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const forms = document.querySelectorAll(".needs-validation");
+
+      Array.from(forms).forEach((form) => {
+        form.addEventListener(
+          "submit",
+          (event) => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            form.classList.add("was-validated");
+          },
+          false
+        );
+      });
+    })();
+  </script>
+</body>
+
+</html>
