@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM</title>
+
+    <style>
+        body{
+            background-color: rgb(61, 61, 194);
+            color: white;
+            font: normal 18pt Arial, Helvetica, sans-serif;
+        }
+        h1{
+            text-align: center;
+        }
+        span{
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Iniciando estudos com DOM</h1>
+
+    <p>Aqui vai o resultado</p>
+
+
+    <p>Apredendo a usar <span><strong>DOM</strong></span>  em javascript</p>
+
+    <div id="msg">
+        Clique em mim
+    </div>
+
+    <div name="sms">
+        Clique em mim
+    </div>
+    
+    <script>
+
+        let corpo = window.document.body
+
+        let p1 = window.document.getElementsByTagName('p')[1]
+
+        // document.write(p1.innerText)
+
+        // window.document.write(p1.innerHTML)
+
+        // p1.style.color = 'red'
+
+        // corpo.style.background = 'black'
+
+        // window.document.write('Olá mundo')
+
+        // window.document.write(window.navigator.appName)
+
+        // window.document.write(window.document.URL)
+
+        // window.alert(p1.innerText)
+
+        // let d = window.document.getElementById('msg')
+        
+        // d.style.background = 'yellow'
+
+        // let f = window.document.getElementsByName('sms')[0]
+
+        // f.style.color = 'hotpink'
+
+        let d = window.document.querySelector('div#msg')
+
+        d.style.color = 'yellow'
+
+
+
+
+    </script>
+</body>
+</html>

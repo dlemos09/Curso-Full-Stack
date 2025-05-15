@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventListener</title>
+
+    <style>
+         body {
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      div#area {
+        font: normal 20pt Arial;
+        background-color: rgb(42, 138, 42);
+        color: white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
+    </style>
+</head>
+
+<body>
+    <div id="area">
+        Interaja
+    </div>
+
+    <script>
+
+        let a = window.document.getElementById('area')
+        a.addEventListener('click', clicar)
+        a.addEventListener('mouseenter', entrar)
+        a.addEventListener('mouseout', sair)
+
+
+        function clicar() {
+            let a = document.getElementById("area");
+            a.innerText = "Clicou!!";
+            a.style.background = "red";
+        }
+
+        function entrar() {
+            let a = document.getElementById("area");
+            a.innerText = "Entrou!!";
+            a.style.background = "purple";
+        }
+
+        function sair() {
+            let a = document.getElementById("area");
+            a.innerText = "saiu!!";
+            a.style.background = "blue";
+        }
+
+      
+    </script>
+</body>
+
+</html>

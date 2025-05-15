@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventos DOM</title>
+
+    <style>
+      body {
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      div#area {
+        font: normal 20pt Arial;
+        background-color: rgb(42, 138, 42);
+        color: white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
+
+      div#area2 {
+        font: normal 20pt Arial;
+        background-color: rgb(42, 138, 42);
+        color: white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
+
+      div#area3 {
+        font: normal 20pt Arial;
+        background-color: rgb(42, 138, 42);
+        color: white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
+      div#area4 {
+        font: normal 20pt Arial;
+        background-color: rgb(42, 138, 42);
+        color: white;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="area" onclick="clicarArea()">Interaja</div>
+    <div id="area2" onmouseenter="dentroArea2()">Interaja</div>
+    <div id="area3" onmouseleave="foraArea3()">Interaja</div>
+    <div
+      id="area4"
+      onclick="clicarArea4()"
+      onmouseenter="dentroArea4()"
+      onmouseleave="foraArea4()"
+    >
+      Interaja
+    </div>
+
+    <script>
+      function clicarArea() {
+        let a = document.getElementById("area");
+        a.innerText = "Clicou!!";
+        a.style.background = "red";
+      }
+
+      function dentroArea2() {
+        let b = document.getElementById("area2");
+        b.innerText = "Dentro!!";
+        b.style.background = "purple";
+      }
+
+      function foraArea3() {
+        let c = document.getElementById("area3");
+        c.innerText = "Fora!!";
+        c.style.background = "dodgerblue";
+      }
+
+      function clicarArea4() {
+        let d = document.getElementById("area4");
+        d.innerText = "Clicou!!";
+        d.style.background = "red";
+      }
+
+      function dentroArea4() {
+        let d = document.getElementById("area4");
+        d.innerText = "Dentro!!";
+        d.style.background = "purple";
+      }
+
+      function foraArea4() {
+        let d = document.getElementById("area4");
+        d.innerText = "Fora!!";
+        d.style.background = "dodgerblue";
+      }
+    </script>
+  </body>
+</html>
