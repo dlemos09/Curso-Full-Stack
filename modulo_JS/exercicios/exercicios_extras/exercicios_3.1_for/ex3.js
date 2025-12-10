@@ -1,1 +1,0 @@
-// Enunciado: Usando for e if, imprima apenas os números pares entre 1 e 20.
