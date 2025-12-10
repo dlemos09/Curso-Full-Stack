@@ -1,0 +1,35 @@
+Aula 03 – Arrays e Métodos Funcionais
+
+Conteúdo Teórico
+- Arrays: criação, mutabilidade, imutabilidade, métodos fundamentais.
+- Métodos funcionais: map, filter, reduce, find, some, every, sort.
+- Imutabilidade e performance; shallow vs deep copy.
+
+Exemplos
+const numeros = [1,2,3,4,5];
+console.log(numeros.map(n => n*2));
+console.log(numeros.filter(n => n%2===0));
+console.log(numeros.reduce((acc,n)=>acc+n,0));
+
+const pessoas = [
+  {nome:"Ana", idade:28},
+  {nome:"Bruno", idade:17},
+  {nome:"Carla", idade:35}
+];
+console.log(pessoas.find(p=>p.idade<18));
+console.log(pessoas.every(p=>p.idade>0));
+
+// cópias
+const copia = [...numeros];
+const ordenado = [...numeros].sort((a,b)=>a-b);
+
+Exercícios
+- Básico: duplique valores com map; filtre pares; some com reduce.
+- Intermediário: agrupe objetos por chave; calcule médias com reduce.
+- Avançado: implemente seu próprio map/filter/reduce; ordenação estável customizada.
+
+Atividade Real
+- Processar lista CSV simples em memória e gerar estatísticas.
+
+Resumo
+- Arrays e métodos funcionais para processamento declarativo.

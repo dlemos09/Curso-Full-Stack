@@ -1,0 +1,51 @@
+Aula 02 – Controle de Fluxo e Funções
+
+Conteúdo Teórico
+- Estruturas: if/else, switch, while, do...while, for, for...of, for...in.
+- Funções: declaração, expressão, arrow functions, parâmetros default, rest/spread.
+- Retorno, escopo de função, closures, IIFE.
+
+Demonstrações e Exemplos
+// Controle de fluxo
+const nota = 85;
+if (nota >= 90) {
+  console.log("A");
+} else if (nota >= 80) {
+  console.log("B");
+} else {
+  console.log("C");
+}
+
+// switch
+const dia = 3;
+switch (dia) {
+  case 1: console.log("Seg"); break;
+  case 2: console.log("Ter"); break;
+  case 3: console.log("Qua"); break;
+  default: console.log("Outro");
+}
+
+// Funções
+function soma(a, b = 0) { return a + b; }
+const mult = function(a, b) { return a * b; };
+const div = (a, b) => a / b;
+
+// Closure
+function contador() {
+  let c = 0;
+  return () => ++c;
+}
+const next = contador();
+console.log(next()); // 1
+console.log(next()); // 2
+
+Exercícios
+- Básico: reescreva if/else como switch; crie 3 funções com formas diferentes.
+- Intermediário: implemente contador com reset usando closure; use rest/spread.
+- Avançado: função memoizada para operações caras; compose de funções pequenas.
+
+Atividade Real
+- Pequeno módulo de utilidades com funções puras e testes rápidos no Node.
+
+Resumo
+- Vimos estruturas e funções, preparando o terreno para arrays e objetos.

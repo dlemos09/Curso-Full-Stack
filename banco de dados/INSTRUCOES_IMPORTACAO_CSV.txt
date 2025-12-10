@@ -1,0 +1,580 @@
+================================================================================
+              GUIA DE IMPORTAÇÃO DE ARQUIVOS CSV NO DBEAVER/POSTGRESQL
+                        Curso Intensivo - Banco de Dados
+================================================================================
+
+ÍNDICE:
+1. Visão Geral
+2. Método 1: Importação via DBeaver (Interface Gráfica)
+3. Método 2: Comando COPY do PostgreSQL
+4. Método 3: Comando \copy do psql
+5. Tratamento de Erros Comuns
+6. Validação dos Dados Importados
+
+================================================================================
+                            1. VISÃO GERAL
+================================================================================
+
+ARQUIVOS CSV DISPONÍVEIS:
+├── clientes.csv ............ 20 registros de clientes
+├── produtos.csv ............ 30 registros de produtos  
+├── pedidos.csv ............. 17 registros de pedidos
+└── itens_pedido.csv ........ 24 registros de itens de pedidos
+
+PRÉ-REQUISITOS:
+✓ PostgreSQL instalado e em execução
+✓ DBeaver instalado e conectado ao banco "loja_virtual"
+✓ Schemas criados (vendas, estoque, auditoria)
+✓ Tabelas criadas conforme scripts.sql
+✓ Arquivos CSV na pasta: d:\banco de dados\
+
+IMPORTANTE:
+⚠️ Execute o arquivo scripts.sql ANTES de importar os CSVs
+⚠️ Os CSVs já contêm IDs sequenciais
+⚠️ Após importar, você deve atualizar as sequences do PostgreSQL
+
+ORDEM DE IMPORTAÇÃO (respeitar dependências):
+1. clientes.csv (não depende de ninguém)
+2. produtos.csv (depende de categorias, mas categorias já vêm do scripts.sql)
+3. pedidos.csv (depende de clientes)
+4. itens_pedido.csv (depende de pedidos e produtos)
+
+================================================================================
+                2. MÉTODO 1: IMPORTAÇÃO VIA DBEAVER (RECOMENDADO)
+================================================================================
+
+Este é o método mais VISUAL e FÁCIL para iniciantes.
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ PASSO 1: PREPARAR O AMBIENTE                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+1.1. Abra o DBeaver
+1.2. Conecte-se ao banco de dados "loja_virtual"
+1.3. No Database Navigator (painel esquerdo), expanda:
+     loja_virtual > Schemas > vendas > Tables
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ PASSO 2: IMPORTAR CLIENTES                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+2.1. Clique com botão DIREITO na tabela "clientes"
+2.2. Selecione: Import Data
+
+2.3. Na tela "Choose source":
+     - Selecione: CSV
+     - Clique em [Next]
+
+2.4. Na tela "CSV Settings":
+     - Input files: Clique em [Add] e selecione "d:\banco de dados\clientes.csv"
+     - Encoding: UTF-8
+     - Header: ☑️ Header (first line)
+     - Delimiter: , (vírgula)
+     - Quote character: " (aspas duplas)
+     - Clique em [Next]
+
+2.5. Na tela "Choose tables":
+     - Target table: vendas.clientes (já deve estar selecionado)
+     - Clique em [Next]
+
+2.6. Na tela "Columns mapping":
+     - Verifique se as colunas do CSV estão mapeadas corretamente:
+       
+       SOURCE (CSV)         →  TARGET (Tabela)
+       ════════════════════    ════════════════════
+       id_cliente           →  id_cliente
+       nome                 →  nome
+       email                →  email
+       cpf                  →  cpf
+       telefone             →  telefone
+       data_nascimento      →  data_nascimento
+       limite_credito       →  limite_credito
+       status_ativo         →  status_ativo
+
+     - Se alguma coluna estiver errada, ajuste manualmente
+     - Clique em [Next]
+
+2.7. Na tela "Data load settings":
+     - Insert method: INSERT (recomendado para primeira carga)
+     - ☑️ Skip errors (se quiser ignorar linhas com erro)
+     - ☐ Disable keys (deixe desmarcado)
+     - Clique em [Next]
+
+2.8. Na tela "Confirm":
+     - Revise as configurações
+     - Clique em [Proceed]
+
+2.9. Aguarde a importação
+     - Uma barra de progresso aparecerá
+     - Ao final, verá mensagem: "Data transfer completed successfully"
+     - Clique em [Finish]
+
+2.10. AJUSTAR A SEQUENCE:
+      Execute no SQL Editor:
+      
+      SELECT setval('vendas.clientes_id_cliente_seq', 
+                    (SELECT MAX(id_cliente) FROM vendas.clientes));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ PASSO 3: IMPORTAR PRODUTOS                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+3.1. Repita o processo acima para a tabela "produtos"
+3.2. Arquivo: d:\banco de dados\produtos.csv
+3.3. Target table: vendas.produtos
+3.4. Mapping:
+     
+     id_produto           →  id_produto
+     nome                 →  nome
+     descricao            →  descricao
+     preco                →  preco
+     id_categoria         →  id_categoria
+     estoque_minimo       →  estoque_minimo
+     quantidade_estoque   →  quantidade_estoque
+     ativo                →  ativo
+
+3.5. Ajustar sequence:
+     
+     SELECT setval('vendas.produtos_id_produto_seq', 
+                   (SELECT MAX(id_produto) FROM vendas.produtos));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ PASSO 4: IMPORTAR PEDIDOS                                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+4.1. Tabela: vendas.pedidos
+4.2. Arquivo: d:\banco de dados\pedidos.csv
+4.3. Mapping:
+     
+     id_pedido      →  id_pedido
+     id_cliente     →  id_cliente
+     data_pedido    →  data_pedido
+     status         →  status
+     observacoes    →  observacoes
+
+4.4. IMPORTANTE: A coluna "valor_total" NÃO está no CSV
+     - Ela será calculada automaticamente pelos triggers
+     - Ou manualmente após importar itens_pedido
+
+4.5. Ajustar sequence:
+     
+     SELECT setval('vendas.pedidos_id_pedido_seq', 
+                   (SELECT MAX(id_pedido) FROM vendas.pedidos));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ PASSO 5: IMPORTAR ITENS_PEDIDO                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+5.1. Tabela: vendas.itens_pedido
+5.2. Arquivo: d:\banco de dados\itens_pedido.csv
+5.3. Mapping:
+     
+     id_item         →  id_item
+     id_pedido       →  id_pedido
+     id_produto      →  id_produto
+     quantidade      →  quantidade
+     preco_unitario  →  preco_unitario
+     desconto        →  desconto
+
+5.4. Ajustar sequence:
+     
+     SELECT setval('vendas.itens_pedido_id_item_seq', 
+                   (SELECT MAX(id_item) FROM vendas.itens_pedido));
+
+5.5. Após importar, ATUALIZAR os valores totais dos pedidos:
+     
+     SELECT vendas.atualizar_valor_total_pedido(id_pedido) 
+     FROM vendas.pedidos;
+
+================================================================================
+                    3. MÉTODO 2: COMANDO COPY DO POSTGRESQL
+================================================================================
+
+Este método é mais RÁPIDO mas requer permissões de SUPERUSUÁRIO.
+
+CARACTERÍSTICAS:
+✓ Muito rápido para grandes volumes
+✓ Requer acesso de leitura ao arquivo no servidor
+✓ Precisa ser executado como superusuário (postgres)
+✗ Não funciona se PostgreSQL estiver em Docker sem volumes mapeados
+
+SINTAXE BÁSICA:
+
+COPY schema.tabela (coluna1, coluna2, ...)
+FROM 'caminho/completo/arquivo.csv'
+DELIMITER ',' 
+CSV HEADER;
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ EXEMPLO: IMPORTAR CLIENTES COM COPY                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Conecte-se como superusuário (postgres)
+-- No DBeaver: abra SQL Editor e execute:
+
+COPY vendas.clientes (
+    id_cliente,
+    nome,
+    email,
+    cpf,
+    telefone,
+    data_nascimento,
+    limite_credito,
+    status_ativo
+)
+FROM 'd:/banco de dados/clientes.csv'
+DELIMITER ',' 
+CSV HEADER
+ENCODING 'UTF8';
+
+-- ATENÇÃO: Use / (barra) mesmo no Windows!
+-- ATENÇÃO: Caminho completo é obrigatório
+
+-- Ajustar sequence:
+SELECT setval('vendas.clientes_id_cliente_seq', 
+              (SELECT MAX(id_cliente) FROM vendas.clientes));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ EXEMPLO: IMPORTAR PRODUTOS COM COPY                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COPY vendas.produtos (
+    id_produto,
+    nome,
+    descricao,
+    preco,
+    id_categoria,
+    estoque_minimo,
+    quantidade_estoque,
+    ativo
+)
+FROM 'd:/banco de dados/produtos.csv'
+DELIMITER ',' 
+CSV HEADER
+ENCODING 'UTF8';
+
+SELECT setval('vendas.produtos_id_produto_seq', 
+              (SELECT MAX(id_produto) FROM vendas.produtos));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ EXEMPLO: IMPORTAR PEDIDOS COM COPY                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COPY vendas.pedidos (
+    id_pedido,
+    id_cliente,
+    data_pedido,
+    status,
+    observacoes
+)
+FROM 'd:/banco de dados/pedidos.csv'
+DELIMITER ',' 
+CSV HEADER
+ENCODING 'UTF8';
+
+SELECT setval('vendas.pedidos_id_pedido_seq', 
+              (SELECT MAX(id_pedido) FROM vendas.pedidos));
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ EXEMPLO: IMPORTAR ITENS_PEDIDO COM COPY                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COPY vendas.itens_pedido (
+    id_item,
+    id_pedido,
+    id_produto,
+    quantidade,
+    preco_unitario,
+    desconto
+)
+FROM 'd:/banco de dados/itens_pedido.csv'
+DELIMITER ',' 
+CSV HEADER
+ENCODING 'UTF8';
+
+SELECT setval('vendas.itens_pedido_id_item_seq', 
+              (SELECT MAX(id_item) FROM vendas.itens_pedido));
+
+-- Atualizar valores totais
+SELECT vendas.atualizar_valor_total_pedido(id_pedido) 
+FROM vendas.pedidos;
+
+================================================================================
+                    4. MÉTODO 3: COMANDO \copy DO psql
+================================================================================
+
+Este método funciona com USUÁRIO NORMAL (não precisa ser superusuário).
+
+CARACTERÍSTICAS:
+✓ Não precisa de permissões especiais
+✓ Lê arquivo do cliente (máquina onde psql está rodando)
+✓ Ligeiramente mais lento que COPY
+✓ Só funciona no psql (terminal)
+
+COMO USAR:
+
+1. Abra o terminal/PowerShell
+2. Conecte ao banco:
+   
+   psql -U postgres -d loja_virtual
+
+3. Execute os comandos \copy:
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ IMPORTAR TODOS OS CSVs COM \copy                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Clientes
+\copy vendas.clientes (id_cliente, nome, email, cpf, telefone, data_nascimento, limite_credito, status_ativo) FROM 'd:/banco de dados/clientes.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('vendas.clientes_id_cliente_seq', (SELECT MAX(id_cliente) FROM vendas.clientes));
+
+-- Produtos
+\copy vendas.produtos (id_produto, nome, descricao, preco, id_categoria, estoque_minimo, quantidade_estoque, ativo) FROM 'd:/banco de dados/produtos.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('vendas.produtos_id_produto_seq', (SELECT MAX(id_produto) FROM vendas.produtos));
+
+-- Pedidos
+\copy vendas.pedidos (id_pedido, id_cliente, data_pedido, status, observacoes) FROM 'd:/banco de dados/pedidos.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('vendas.pedidos_id_pedido_seq', (SELECT MAX(id_pedido) FROM vendas.pedidos));
+
+-- Itens Pedido
+\copy vendas.itens_pedido (id_item, id_pedido, id_produto, quantidade, preco_unitario, desconto) FROM 'd:/banco de dados/itens_pedido.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('vendas.itens_pedido_id_item_seq', (SELECT MAX(id_item) FROM vendas.itens_pedido));
+
+-- Atualizar valores
+SELECT vendas.atualizar_valor_total_pedido(id_pedido) FROM vendas.pedidos;
+
+================================================================================
+                    5. TRATAMENTO DE ERROS COMUNS
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ERRO: "could not open file for reading: Permission denied"                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CAUSA: PostgreSQL não tem permissão de leitura no arquivo
+
+SOLUÇÃO:
+1. Mova o arquivo para uma pasta pública (ex: C:\temp\)
+2. Ou use \copy em vez de COPY
+3. Ou no Windows, dê permissão de leitura ao usuário "postgres"
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ERRO: "invalid input syntax for type integer"                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CAUSA: Dado no CSV não corresponde ao tipo da coluna
+
+SOLUÇÕES:
+1. Verifique se o CSV está com encoding UTF-8
+2. Abra o CSV em editor de texto e verifique se há caracteres estranhos
+3. Verifique se colunas numéricas não têm texto
+4. Verifique separador decimal (use . não ,)
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ERRO: "duplicate key value violates unique constraint"                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CAUSA: Tentando inserir valor duplicado em coluna UNIQUE ou PRIMARY KEY
+
+SOLUÇÕES:
+1. Limpe a tabela antes: DELETE FROM vendas.clientes;
+2. Ou use TRUNCATE: TRUNCATE vendas.clientes RESTART IDENTITY CASCADE;
+3. Verifique se não há duplicatas no próprio CSV
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ERRO: "violates foreign key constraint"                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CAUSA: Tentando referenciar um ID que não existe na tabela pai
+
+SOLUÇÕES:
+1. Importe na ordem correta (pais antes de filhos)
+2. Verifique se categorias existem antes de importar produtos
+3. Verifique se clientes existem antes de importar pedidos
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ERRO: "violates check constraint"                                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CAUSA: Dado viola uma regra CHECK
+
+EXEMPLOS:
+- Preço negativo (violando chk_produtos_preco_positivo)
+- Data de nascimento inválida (violando chk_cliente_maior_idade)
+- Status inválido (violando chk_pedidos_status)
+
+SOLUÇÃO:
+1. Corrija os dados no CSV
+2. Ou temporariamente desabilite a constraint:
+   
+   ALTER TABLE vendas.produtos DISABLE TRIGGER ALL;
+   -- importar
+   ALTER TABLE vendas.produtos ENABLE TRIGGER ALL;
+
+================================================================================
+                    6. VALIDAÇÃO DOS DADOS IMPORTADOS
+================================================================================
+
+Após importar, execute estas queries para validar:
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Verificar quantidade de registros
+-- ════════════════════════════════════════════════════════════════════════
+
+SELECT 'clientes' AS tabela, COUNT(*) AS total FROM vendas.clientes
+UNION ALL
+SELECT 'produtos', COUNT(*) FROM vendas.produtos
+UNION ALL
+SELECT 'pedidos', COUNT(*) FROM vendas.pedidos
+UNION ALL
+SELECT 'itens_pedido', COUNT(*) FROM vendas.itens_pedido;
+
+-- Resultado esperado:
+-- tabela         | total
+-- ───────────────┼──────
+-- clientes       |    20
+-- produtos       |    30
+-- pedidos        |    17
+-- itens_pedido   |    24
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Verificar integridade referencial
+-- ════════════════════════════════════════════════════════════════════════
+
+-- Produtos órfãos (sem categoria ou categoria inválida)
+SELECT id_produto, nome, id_categoria
+FROM vendas.produtos p
+WHERE id_categoria IS NOT NULL 
+  AND NOT EXISTS (
+      SELECT 1 FROM vendas.categorias c 
+      WHERE c.id_categoria = p.id_categoria
+  );
+-- Deve retornar 0 linhas
+
+-- Pedidos órfãos (sem cliente)
+SELECT id_pedido, id_cliente
+FROM vendas.pedidos p
+WHERE NOT EXISTS (
+    SELECT 1 FROM vendas.clientes c 
+    WHERE c.id_cliente = p.id_cliente
+);
+-- Deve retornar 0 linhas
+
+-- Itens órfãos (sem pedido ou produto)
+SELECT id_item, id_pedido, id_produto
+FROM vendas.itens_pedido ip
+WHERE NOT EXISTS (SELECT 1 FROM vendas.pedidos WHERE id_pedido = ip.id_pedido)
+   OR NOT EXISTS (SELECT 1 FROM vendas.produtos WHERE id_produto = ip.id_produto);
+-- Deve retornar 0 linhas
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Verificar valores totais dos pedidos
+-- ════════════════════════════════════════════════════════════════════════
+
+SELECT 
+    p.id_pedido,
+    p.valor_total AS valor_na_tabela,
+    SUM(ip.quantidade * ip.preco_unitario * (1 - ip.desconto/100)) AS valor_calculado,
+    p.valor_total - SUM(ip.quantidade * ip.preco_unitario * (1 - ip.desconto/100)) AS diferenca
+FROM vendas.pedidos p
+INNER JOIN vendas.itens_pedido ip ON p.id_pedido = ip.id_pedido
+GROUP BY p.id_pedido, p.valor_total
+HAVING ABS(p.valor_total - SUM(ip.quantidade * ip.preco_unitario * (1 - ip.desconto/100))) > 0.01;
+
+-- Deve retornar 0 linhas (ou diferenças mínimas devido a arredondamento)
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Verificar constraints
+-- ════════════════════════════════════════════════════════════════════════
+
+-- Produtos com preço inválido
+SELECT * FROM vendas.produtos WHERE preco <= 0;
+
+-- Clientes menores de idade
+SELECT nome, data_nascimento, calcular_idade(data_nascimento) AS idade
+FROM vendas.clientes
+WHERE data_nascimento > CURRENT_DATE - INTERVAL '18 years';
+
+-- Pedidos com status inválido
+SELECT * FROM vendas.pedidos 
+WHERE status NOT IN ('pendente', 'processando', 'enviado', 'entregue', 'cancelado');
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Consultas de resumo
+-- ════════════════════════════════════════════════════════════════════════
+
+-- Top 5 clientes por valor de compras
+SELECT 
+    c.nome,
+    COUNT(p.id_pedido) AS qtd_pedidos,
+    SUM(p.valor_total) AS total_gasto
+FROM vendas.clientes c
+LEFT JOIN vendas.pedidos p ON c.id_cliente = p.id_cliente
+GROUP BY c.id_cliente, c.nome
+ORDER BY total_gasto DESC NULLS LAST
+LIMIT 5;
+
+-- Produtos mais vendidos
+SELECT 
+    pr.nome,
+    SUM(ip.quantidade) AS total_vendido
+FROM vendas.produtos pr
+INNER JOIN vendas.itens_pedido ip ON pr.id_produto = ip.id_produto
+GROUP BY pr.id_produto, pr.nome
+ORDER BY total_vendido DESC
+LIMIT 5;
+
+================================================================================
+                            SCRIPT DE IMPORTAÇÃO COMPLETO
+================================================================================
+
+Copie e cole este script completo no DBeaver (método COPY):
+
+-- ════════════════════════════════════════════════════════════════════════
+-- IMPORTAÇÃO COMPLETA VIA COPY
+-- ════════════════════════════════════════════════════════════════════════
+
+-- Limpar dados existentes (CUIDADO!)
+TRUNCATE vendas.itens_pedido CASCADE;
+TRUNCATE vendas.pedidos CASCADE;
+TRUNCATE vendas.produtos CASCADE;
+TRUNCATE vendas.clientes CASCADE;
+
+-- Importar clientes
+COPY vendas.clientes (id_cliente, nome, email, cpf, telefone, data_nascimento, limite_credito, status_ativo)
+FROM 'd:/banco de dados/clientes.csv' DELIMITER ',' CSV HEADER ENCODING 'UTF8';
+
+-- Importar produtos
+COPY vendas.produtos (id_produto, nome, descricao, preco, id_categoria, estoque_minimo, quantidade_estoque, ativo)
+FROM 'd:/banco de dados/produtos.csv' DELIMITER ',' CSV HEADER ENCODING 'UTF8';
+
+-- Importar pedidos
+COPY vendas.pedidos (id_pedido, id_cliente, data_pedido, status, observacoes)
+FROM 'd:/banco de dados/pedidos.csv' DELIMITER ',' CSV HEADER ENCODING 'UTF8';
+
+-- Importar itens pedido
+COPY vendas.itens_pedido (id_item, id_pedido, id_produto, quantidade, preco_unitario, desconto)
+FROM 'd:/banco de dados/itens_pedido.csv' DELIMITER ',' CSV HEADER ENCODING 'UTF8';
+
+-- Ajustar sequences
+SELECT setval('vendas.clientes_id_cliente_seq', (SELECT MAX(id_cliente) FROM vendas.clientes));
+SELECT setval('vendas.produtos_id_produto_seq', (SELECT MAX(id_produto) FROM vendas.produtos));
+SELECT setval('vendas.pedidos_id_pedido_seq', (SELECT MAX(id_pedido) FROM vendas.pedidos));
+SELECT setval('vendas.itens_pedido_id_item_seq', (SELECT MAX(id_item) FROM vendas.itens_pedido));
+
+-- Atualizar valores totais dos pedidos
+SELECT vendas.atualizar_valor_total_pedido(id_pedido) FROM vendas.pedidos;
+
+-- Validar
+SELECT 'clientes' AS tabela, COUNT(*) AS total FROM vendas.clientes
+UNION ALL SELECT 'produtos', COUNT(*) FROM vendas.produtos
+UNION ALL SELECT 'pedidos', COUNT(*) FROM vendas.pedidos
+UNION ALL SELECT 'itens_pedido', COUNT(*) FROM vendas.itens_pedido;
+
+================================================================================
+                                    FIM
+================================================================================

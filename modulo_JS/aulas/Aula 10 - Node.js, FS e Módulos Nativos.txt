@@ -1,0 +1,26 @@
+Aula 10 – Node.js, Sistema de Arquivos e Módulos Nativos
+
+Conteúdo Teórico
+- Node runtime, módulos nativos (fs, path, os, http).
+- Leitura e escrita de arquivos; streams.
+- CLI com process.argv e fs/promises.
+
+Exemplos
+import { promises as fs } from 'fs';
+const main = async () => {
+  await fs.writeFile('out.txt', 'Olá');
+  const txt = await fs.readFile('out.txt', 'utf-8');
+  console.log(txt);
+};
+main();
+
+Exercícios
+- Básico: ler e escrever JSON.
+- Intermediário: CLI que formata texto a partir de arquivo.
+- Avançado: processar arquivo grande com streams e pipeline.
+
+Atividade Real
+- Mini ETL local: ler CSV, transformar e gerar relatório.
+
+Resumo
+- Node permite automação e ferramentas de linha de comando poderosas.

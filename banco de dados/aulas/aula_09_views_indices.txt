@@ -1,0 +1,271 @@
+================================================================================
+                              AULA 09 - DIA 9
+                  VIEWS, MATERIALIZED VIEWS E ÍNDICES
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Criar e gerenciar VIEWs
+✓ Usar MATERIALIZED VIEWs para performance
+✓ Entender tipos de índices (B-Tree, GIN, GIST)
+✓ Criar índices estratégicos
+✓ Analisar performance com EXPLAIN
+
+CRONOGRAMA:
+13:30-13:45 → Revisão | 13:45-14:45 → Views
+14:45-15:30 → Materialized Views | 15:30-15:45 → Intervalo
+15:45-17:00 → Índices e Performance | 17:00-17:30 → Exercícios
+
+================================================================================
+PARTE 1: VIEWS
+================================================================================
+
+-- VIEW: query salva como "tabela virtual"
+
+CREATE VIEW vw_funcionarios_completo AS
+SELECT 
+    f.id,
+    f.nome,
+    f.salario,
+    d.nome AS departamento,
+    c.titulo AS cargo
+FROM funcionarios f
+LEFT JOIN departamentos d ON f.departamento_id = d.id
+LEFT JOIN cargos c ON f.cargo_id = c.id;
+
+-- Usar a view:
+SELECT * FROM vw_funcionarios_completo WHERE salario > 5000;
+
+/*
+💡 VANTAGENS DAS VIEWS:
+   - Simplificam queries complexas
+   - Segurança (ocultar colunas sensíveis)
+   - Padronização (todos usam mesma lógica)
+   - Manutenção (alterar view altera para todos)
+*/
+
+-- Alterar view:
+CREATE OR REPLACE VIEW vw_funcionarios_completo AS
+SELECT 
+    f.id,
+    f.nome,
+    f.salario,
+    f.email,  -- Nova coluna
+    d.nome AS departamento
+FROM funcionarios f
+LEFT JOIN departamentos d ON f.departamento_id = d.id;
+
+-- Remover view:
+DROP VIEW vw_funcionarios_completo;
+
+-- View com parâmetros (usando WHERE):
+CREATE VIEW vw_produtos_ativos AS
+SELECT * FROM produtos WHERE ativo = TRUE;
+
+SELECT * FROM vw_produtos_ativos WHERE preco > 100;
+
+================================================================================
+PARTE 2: MATERIALIZED VIEWS
+================================================================================
+
+-- MATERIALIZED VIEW: armazena RESULTADO fisicamente
+
+CREATE MATERIALIZED VIEW mv_vendas_categoria AS
+SELECT 
+    c.nome AS categoria,
+    COUNT(ip.id) AS total_itens,
+    SUM(ip.quantidade * ip.preco_unitario) AS receita
+FROM categorias c
+LEFT JOIN produtos p ON c.id = p.categoria_id
+LEFT JOIN itens_pedido ip ON p.id = ip.produto_id
+GROUP BY c.id, c.nome;
+
+-- Consultar (muito rápido, dados já calculados):
+SELECT * FROM mv_vendas_categoria ORDER BY receita DESC;
+
+-- Atualizar dados:
+REFRESH MATERIALIZED VIEW mv_vendas_categoria;
+
+/*
+📊 VIEW vs MATERIALIZED VIEW:
+
+VIEW:
+   - Executa query toda vez
+   - Sempre dados atualizados
+   - Lenta se query for complexa
+
+MATERIALIZED VIEW:
+   - Armazena resultado (snapshot)
+   - Muito rápida para consultar
+   - Precisa REFRESH para atualizar
+   - Usa espaço em disco
+*/
+
+-- REFRESH em background (não bloqueia):
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_vendas_categoria;
+-- Requer índice UNIQUE
+
+-- Criar índice na materialized view:
+CREATE UNIQUE INDEX idx_mv_vendas_cat ON mv_vendas_categoria(categoria);
+
+-- Remover:
+DROP MATERIALIZED VIEW mv_vendas_categoria;
+
+================================================================================
+PARTE 3: ÍNDICES
+================================================================================
+
+-- ÍNDICE: estrutura para acelerar buscas
+
+-- Índice simples (B-Tree - padrão):
+CREATE INDEX idx_produtos_nome ON produtos(nome);
+
+-- Agora buscas por nome são MUITO mais rápidas:
+SELECT * FROM produtos WHERE nome = 'Notebook';
+
+-- Índice composto (múltiplas colunas):
+CREATE INDEX idx_pedidos_cliente_data 
+ON pedidos(cliente_id, data_pedido);
+
+-- Otimiza queries como:
+SELECT * FROM pedidos 
+WHERE cliente_id = 10 AND data_pedido > '2024-01-01';
+
+-- Índice UNIQUE (também acelera + garante unicidade):
+CREATE UNIQUE INDEX idx_funcionarios_cpf ON funcionarios(cpf);
+
+-- Índice parcial (apenas parte dos dados):
+CREATE INDEX idx_produtos_ativos_preco 
+ON produtos(preco) 
+WHERE ativo = TRUE;
+-- Indexa apenas produtos ativos (economiza espaço)
+
+/*
+⚠️ QUANDO CRIAR ÍNDICES:
+   ✓ Colunas usadas em WHERE frequentemente
+   ✓ Colunas usadas em JOIN
+   ✓ Colunas usadas em ORDER BY
+   ✗ Tabelas pequenas (< 1000 linhas)
+   ✗ Colunas que mudam muito (INSERT/UPDATE fica lento)
+*/
+
+-- Remover índice:
+DROP INDEX idx_produtos_nome;
+
+-- Listar índices de uma tabela:
+SELECT indexname, indexdef 
+FROM pg_indexes 
+WHERE tablename = 'produtos';
+
+================================================================================
+PARTE 4: TIPOS DE ÍNDICES
+================================================================================
+
+-- B-TREE (padrão) - melhor para:
+-- =, <, >, <=, >=, BETWEEN, IN, ORDER BY
+CREATE INDEX idx_produtos_preco ON produtos(preco);
+
+-- GIN (Generalized Inverted Index) - melhor para:
+-- Arrays, JSONB, full-text search
+CREATE INDEX idx_documentos_tags ON documentos USING GIN(tags);
+-- tags é um array
+
+-- GIST (Generalized Search Tree) - melhor para:
+-- Dados geométricos, busca de texto
+CREATE INDEX idx_locais_geometria ON locais USING GIST(geometria);
+
+-- HASH - apenas para =
+CREATE INDEX idx_usuarios_email ON usuarios USING HASH(email);
+
+================================================================================
+PARTE 5: EXPLAIN - ANALISAR PERFORMANCE
+================================================================================
+
+-- EXPLAIN: mostra plano de execução
+
+EXPLAIN SELECT * FROM produtos WHERE preco > 100;
+
+-- Resultado mostra:
+-- - Seq Scan = varredura completa (lento)
+-- - Index Scan = usa índice (rápido)
+-- - cost = estimativa de custo
+
+-- EXPLAIN ANALYZE: executa E analisa
+EXPLAIN ANALYZE SELECT * FROM produtos WHERE nome LIKE '%Notebook%';
+
+-- Mostra tempo real de execução
+
+/*
+📊 INTERPRETAR EXPLAIN:
+
+Seq Scan → Varredura completa (SEM índice)
+   - Lê toda a tabela
+   - Lento para tabelas grandes
+
+Index Scan → Usa índice
+   - Muito mais rápido
+   - Ideal para buscas específicas
+
+Bitmap Index Scan → Combina múltiplos índices
+   - Usa vários índices juntos
+
+Cost: 0.00..100.50
+   - Primeiro número: custo inicial
+   - Segundo: custo total estimado
+   - Menor = melhor
+*/
+
+-- Exemplo comparando com/sem índice:
+
+-- SEM índice:
+EXPLAIN ANALYZE SELECT * FROM produtos WHERE categoria_id = 5;
+-- Seq Scan | cost=0.00..50.00 | tempo=15ms
+
+-- Criar índice:
+CREATE INDEX idx_produtos_categoria ON produtos(categoria_id);
+
+-- COM índice:
+EXPLAIN ANALYZE SELECT * FROM produtos WHERE categoria_id = 5;
+-- Index Scan | cost=0.00..8.50 | tempo=2ms
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+💪 EXERCÍCIO 1: Views (10 min)
+Crie views para:
+a) Produtos com estoque baixo (< mínimo)
+b) Funcionários com dados completos (join com depto e cargo)
+c) Pedidos do mês atual com dados do cliente
+
+💪 EXERCÍCIO 2: Materialized Views (10 min)
+a) Criar MV com vendas por dia do último ano
+b) MV com ranking de produtos mais vendidos
+c) REFRESH as MVs criadas
+
+💪 EXERCÍCIO 3: Índices (15 min)
+a) Criar índices em colunas usadas em WHERE
+b) Índice composto para (cliente_id, data_pedido)
+c) Índice parcial em produtos ativos
+d) Comparar performance com EXPLAIN antes/depois
+
+💪 DESAFIO:
+Otimizar query lenta:
+- Identifique gargalos com EXPLAIN
+- Crie índices apropriados
+- Meça melhoria de performance
+
+RESUMO:
+• VIEW → query virtual, sempre atualizada
+• MATERIALIZED VIEW → snapshot físico, precisa REFRESH
+• Índices aceleram buscas (WHERE, JOIN, ORDER BY)
+• B-Tree (padrão), GIN (arrays/JSON), GIST (geo), HASH
+• EXPLAIN mostra plano de execução
+• EXPLAIN ANALYZE executa e mede tempo real
+
+TAREFA: Estudar para Projeto 1 | PRÓXIMA AULA: Projeto Prático Integrado
+
+================================================================================
+FIM DA AULA 09
+================================================================================

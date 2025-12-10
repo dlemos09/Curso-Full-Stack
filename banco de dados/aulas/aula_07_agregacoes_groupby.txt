@@ -1,0 +1,260 @@
+================================================================================
+                              AULA 07 - DIA 7
+                  FUNÇÕES AGREGADAS E AGRUPAMENTOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Usar COUNT, SUM, AVG, MAX, MIN
+✓ Agrupar dados com GROUP BY
+✓ Filtrar grupos com HAVING
+✓ Combinar agregações com JOIN
+
+CRONOGRAMA:
+13:30-13:45 → Revisão | 13:45-14:45 → Funções Agregadas
+14:45-15:30 → GROUP BY | 15:30-15:45 → Intervalo
+15:45-17:00 → HAVING e prática | 17:00-17:30 → Exercícios
+
+================================================================================
+PARTE 1: FUNÇÕES AGREGADAS
+================================================================================
+
+-- COUNT: Contar linhas
+SELECT COUNT(*) FROM produtos;  -- Total de linhas
+SELECT COUNT(descricao) FROM produtos;  -- Conta apenas NÃO nulos
+SELECT COUNT(DISTINCT categoria_id) FROM produtos;  -- Valores únicos
+
+-- SUM: Somar valores numéricos
+SELECT SUM(valor_total) FROM pedidos;  -- Total de vendas
+SELECT SUM(quantidade) FROM itens_pedido WHERE produto_id = 1;
+
+-- AVG: Média
+SELECT AVG(preco) FROM produtos;  -- Preço médio
+SELECT AVG(salario) FROM funcionarios WHERE ativo = TRUE;
+
+-- MAX e MIN: Maior e menor
+SELECT MAX(preco) FROM produtos;  -- Produto mais caro
+SELECT MIN(data_admissao) FROM funcionarios;  -- Funcionário mais antigo
+
+-- Combinar várias:
+SELECT 
+    COUNT(*) AS total_produtos,
+    SUM(estoque) AS estoque_total,
+    AVG(preco) AS preco_medio,
+    MAX(preco) AS mais_caro,
+    MIN(preco) AS mais_barato
+FROM produtos;
+
+/*
+💡 AGREGAÇÕES IGNORAM NULL:
+   AVG, SUM, MAX, MIN não contam valores NULL
+   COUNT(*) conta todas as linhas
+   COUNT(coluna) conta apenas não-nulos
+*/
+
+================================================================================
+PARTE 2: GROUP BY - AGRUPAR DADOS
+================================================================================
+
+-- GROUP BY: agrupa linhas com valores iguais
+
+-- Total de produtos por categoria:
+SELECT 
+    categoria_id,
+    COUNT(*) AS total_produtos
+FROM produtos
+GROUP BY categoria_id;
+
+-- Média salarial por departamento:
+SELECT 
+    departamento_id,
+    AVG(salario) AS media_salarial,
+    COUNT(*) AS total_funcionarios
+FROM funcionarios
+GROUP BY departamento_id;
+
+-- Vendas por mês:
+SELECT 
+    EXTRACT(MONTH FROM data_pedido) AS mes,
+    SUM(valor_total) AS total_vendas,
+    COUNT(*) AS qtd_pedidos
+FROM pedidos
+WHERE EXTRACT(YEAR FROM data_pedido) = 2024
+GROUP BY EXTRACT(MONTH FROM data_pedido)
+ORDER BY mes;
+
+-- GROUP BY com múltiplas colunas:
+SELECT 
+    departamento_id,
+    cargo,
+    COUNT(*) AS total,
+    AVG(salario) AS media
+FROM funcionarios
+GROUP BY departamento_id, cargo;
+
+/*
+⚠️ REGRA: Toda coluna no SELECT (que não é agregação) 
+   DEVE estar no GROUP BY!
+   
+   ❌ SELECT categoria, nome, COUNT(*) GROUP BY categoria
+   ✅ SELECT categoria, COUNT(*) GROUP BY categoria
+*/
+
+================================================================================
+PARTE 3: HAVING - FILTRAR GRUPOS
+================================================================================
+
+-- HAVING: filtra DEPOIS do GROUP BY (WHERE filtra ANTES)
+
+-- Categorias com mais de 10 produtos:
+SELECT 
+    categoria_id,
+    COUNT(*) AS total
+FROM produtos
+GROUP BY categoria_id
+HAVING COUNT(*) > 10;
+
+-- Departamentos com média salarial acima de 5000:
+SELECT 
+    departamento_id,
+    AVG(salario) AS media
+FROM funcionarios
+GROUP BY departamento_id
+HAVING AVG(salario) > 5000;
+
+-- WHERE vs HAVING:
+SELECT 
+    categoria_id,
+    COUNT(*) AS total
+FROM produtos
+WHERE ativo = TRUE  -- Filtra ANTES de agrupar
+GROUP BY categoria_id
+HAVING COUNT(*) > 5;  -- Filtra DEPOIS de agrupar
+
+/*
+📚 DIFERENÇA WHERE vs HAVING:
+   
+   WHERE → filtra LINHAS (antes do agrupamento)
+   HAVING → filtra GRUPOS (depois do agrupamento)
+   
+   WHERE pode usar colunas normais
+   HAVING geralmente usa funções agregadas
+*/
+
+================================================================================
+PARTE 4: AGREGAÇÕES COM JOIN
+================================================================================
+
+-- Combinar GROUP BY com JOIN:
+
+-- Total de vendas por cliente:
+SELECT 
+    c.nome,
+    COUNT(p.id) AS total_pedidos,
+    SUM(p.valor_total) AS total_gasto
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id
+GROUP BY c.id, c.nome
+ORDER BY total_gasto DESC;
+
+-- Produtos mais vendidos:
+SELECT 
+    prod.nome,
+    SUM(ip.quantidade) AS total_vendido
+FROM produtos prod
+INNER JOIN itens_pedido ip ON prod.id = ip.produto_id
+GROUP BY prod.id, prod.nome
+ORDER BY total_vendido DESC
+LIMIT 10;
+
+-- Vendas por categoria com nome da categoria:
+SELECT 
+    cat.nome AS categoria,
+    COUNT(ip.id) AS itens_vendidos,
+    SUM(ip.quantidade * ip.preco_unitario) AS receita
+FROM categorias cat
+LEFT JOIN produtos p ON cat.id = p.categoria_id
+LEFT JOIN itens_pedido ip ON p.id = ip.produto_id
+GROUP BY cat.id, cat.nome;
+
+================================================================================
+EXEMPLOS PRÁTICOS COMPLETOS
+================================================================================
+
+-- Relatório de vendas mensal com estatísticas:
+SELECT 
+    TO_CHAR(data_pedido, 'YYYY-MM') AS mes_ano,
+    COUNT(*) AS qtd_pedidos,
+    COUNT(DISTINCT cliente_id) AS clientes_unicos,
+    SUM(valor_total) AS receita_total,
+    AVG(valor_total) AS ticket_medio,
+    MAX(valor_total) AS maior_venda,
+    MIN(valor_total) AS menor_venda
+FROM pedidos
+WHERE status = 'PAGO'
+GROUP BY TO_CHAR(data_pedido, 'YYYY-MM')
+ORDER BY mes_ano DESC;
+
+-- Top categorias por receita:
+SELECT 
+    c.nome AS categoria,
+    COUNT(DISTINCT p.id) AS produtos_categoria,
+    SUM(ip.quantidade) AS unidades_vendidas,
+    SUM(ip.quantidade * ip.preco_unitario) AS receita,
+    AVG(ip.preco_unitario) AS preco_medio_venda
+FROM categorias c
+INNER JOIN produtos p ON c.id = p.categoria_id
+INNER JOIN itens_pedido ip ON p.id = ip.produto_id
+GROUP BY c.id, c.nome
+HAVING SUM(ip.quantidade * ip.preco_unitario) > 10000
+ORDER BY receita DESC;
+
+/*
+💡 TO_CHAR: formata datas
+   'YYYY-MM' = 2024-12
+   'Month YYYY' = December 2024
+   'DD/MM/YYYY' = 15/12/2024
+*/
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+💪 EXERCÍCIO 1: Estatísticas Básicas (10 min)
+a) Quantos produtos existem no total?
+b) Qual é o preço médio dos produtos?
+c) Quantos funcionários por departamento?
+d) Soma total de salários por departamento
+
+💪 EXERCÍCIO 2: Agrupamentos (15 min)
+a) Total de vendas por mês em 2024
+b) Produtos com estoque abaixo da média
+c) Categorias com mais de 5 produtos
+d) Clientes que gastaram mais de R$ 1000
+
+💪 EXERCÍCIO 3: Relatórios Complexos (15 min)
+a) Top 10 produtos mais vendidos (nome, quantidade, receita)
+b) Funcionários por departamento com média salarial acima de 4000
+c) Vendas por dia da semana (use EXTRACT(DOW FROM data))
+
+💪 DESAFIO:
+Crie um dashboard de vendas mostrando:
+- Total de pedidos e receita
+- Ticket médio
+- Top 5 produtos
+- Top 5 clientes
+- Crescimento mês a mês (compare com mês anterior)
+
+RESUMO:
+• COUNT, SUM, AVG, MAX, MIN → funções agregadas
+• GROUP BY → agrupar linhas
+• HAVING → filtrar grupos
+• WHERE antes do GROUP BY, HAVING depois
+• Combine com JOIN para relatórios poderosos
+
+TAREFA: Exercícios 61-70 | PRÓXIMA AULA: Subconsultas e CTEs
+
+================================================================================
+FIM DA AULA 07
+================================================================================

@@ -1,0 +1,23 @@
+Aula 11 – Testes Automatizados com Jest
+
+Conteúdo Teórico
+- Tipos de teste: unitário, integração, end-to-end.
+- Jest: configuração, matchers, mocks, cobertura.
+- Boas práticas: funções puras, isolamento, TDD básico.
+
+Exemplos
+// soma.test.js
+test('soma 2+3=5', ()=>{
+  expect(2+3).toBe(5);
+});
+
+Exercícios
+- Básico: crie 3 testes para funções simples.
+- Intermediário: mock de módulo e teste de fluxo.
+- Avançado: cobertura mínima e CI local com scripts.
+
+Atividade Real
+- Configurar suite de testes para utilitários do projeto.
+
+Resumo
+- Testes dão confiança e aceleram manutenção.

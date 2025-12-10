@@ -1,0 +1,628 @@
+================================================================================
+                              AULA 05 - DIA 5
+                    CONSULTAS BÁSICAS E FILTROS AVANÇADOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 (4 horas)
+DATA: _____/_____/_____
+
+================================================================================
+                            OBJETIVOS DA AULA
+================================================================================
+
+Ao final desta aula, você será capaz de:
+✓ Dominar filtros com WHERE usando operadores complexos
+✓ Usar LIKE, ILIKE para busca de padrões
+✓ Aplicar IN, BETWEEN, IS NULL eficientemente
+✓ Ordenar e paginar resultados (ORDER BY, LIMIT, OFFSET)
+✓ Entender DISTINCT e trabalhar com duplicatas
+
+================================================================================
+                          CRONOGRAMA DA AULA
+================================================================================
+
+13:30 - 13:45 (15 min) → Revisão Geral Semana 1
+13:45 - 14:45 (60 min) → Operadores e Filtros WHERE
+14:45 - 15:30 (45 min) → LIKE, IN, BETWEEN
+15:30 - 15:45 (15 min) → ☕ INTERVALO
+15:45 - 17:00 (75 min) → ORDER BY, LIMIT, DISTINCT
+17:00 - 17:30 (30 min) → Revisão Semana 1 + Exercícios
+
+================================================================================
+     PARTE 1: OPERADORES EM WHERE (13:45 - 14:45)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.1 OPERADORES DE COMPARAÇÃO                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Operadores básicos:
+=   -- Igual
+<>  -- Diferente (também pode usar !=)
+>   -- Maior que
+<   -- Menor que
+>=  -- Maior ou igual
+<=  -- Menor ou igual
+
+-- Exemplos práticos:
+SELECT * FROM produtos WHERE preco > 100;
+SELECT * FROM funcionarios WHERE salario >= 3000;
+SELECT * FROM clientes WHERE ativo = TRUE;
+SELECT * FROM pedidos WHERE status <> 'CANCELADO';
+
+/*
+   💡 CURIOSIDADE - COMPARAÇÃO COM NULL:
+   NULL não é igual a nada, nem a NULL!
+   
+   ❌ WHERE idade = NULL     -- ERRADO! Não funciona
+   ✅ WHERE idade IS NULL    -- CORRETO!
+   ✅ WHERE idade IS NOT NULL
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.2 OPERADORES LÓGICOS (AND, OR, NOT)                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- AND: TODAS as condições devem ser verdadeiras
+SELECT * FROM produtos 
+WHERE preco > 100 AND estoque > 0 AND ativo = TRUE;
+
+-- OR: PELO MENOS UMA condição deve ser verdadeira
+SELECT * FROM clientes 
+WHERE cidade = 'São Paulo' OR cidade = 'Rio de Janeiro';
+
+-- NOT: Nega a condição
+SELECT * FROM funcionarios 
+WHERE NOT departamento_id = 1;
+-- Mesmoesultado:
+SELECT * FROM funcionarios WHERE departamento_id <> 1;
+
+-- Combinando com parênteses (precedência):
+SELECT * FROM produtos 
+WHERE (categoria = 'Eletrônicos' OR categoria = 'Informática')
+  AND preco < 1000
+  AND estoque > 0;
+
+/*
+   ⚠️ ORDEM DE PRECEDÊNCIA (sem parênteses):
+   1º) NOT
+   2º) AND
+   3º) OR
+   
+   Exemplo:
+   WHERE a OR b AND c
+   É interpretado como: a OR (b AND c)
+   
+   💡 DICA: Use parênteses para clareza!
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.3 OPERADORES ARITMÉTICOS EM WHERE                                       ║
+╚════════════════════════════════════════════════════════════════════════════╗
+
++   -- Adição
+-   -- Subtração
+*   -- Multiplicação
+/   -- Divisão
+%   -- Módulo (resto da divisão)
+^   -- Potência
+
+-- Exemplos práticos:
+SELECT nome, preco, preco * 0.10 AS desconto
+FROM produtos 
+WHERE preco * 0.90 < 500;  -- Produtos que com 10% off ficam abaixo de 500
+
+SELECT * FROM pedidos 
+WHERE valor_total % 10 = 0;  -- Valores múltiplos de 10
+
+SELECT * FROM funcionarios 
+WHERE salario / 12 > 5000;  -- Salário mensal acima de 5000
+
+/*
+   💡 SOBRE O SÍMBOLO % (PORCENTAGEM):
+   
+   Em PostgreSQL, % tem DOIS usos:
+   
+   1) OPERADOR ARITMÉTICO (Módulo/Resto):
+      10 % 3 = 1  (resto da divisão de 10 por 3)
+      
+   2) CURINGA NO LIKE (veremos a seguir):
+      WHERE nome LIKE '%Silva%'
+      
+   O contexto define qual uso!
+*/
+
+
+================================================================================
+     PARTE 2: LIKE E PADRÕES (14:45 - 15:30)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.1 LIKE - BUSCA POR PADRÃO                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Curingas:
+%   -- Qualquer sequência de caracteres (0 ou mais)
+_   -- Exatamente UM caractere
+
+-- Começa com 'João':
+SELECT * FROM clientes WHERE nome LIKE 'João%';
+-- Resultado: João Silva, João Pedro, João...
+
+-- Termina com 'Silva':
+SELECT * FROM clientes WHERE nome LIKE '%Silva';
+-- Resultado: João Silva, Maria Silva, Pedro Silva...
+
+-- Contém 'Silva' em qualquer posição:
+SELECT * FROM clientes WHERE nome LIKE '%Silva%';
+-- Resultado: João Silva, Silva Costa, Maria da Silva...
+
+-- Exatamente 5 caracteres:
+SELECT * FROM codigos WHERE codigo LIKE '_____';  -- 5 underscores
+
+-- Começa com A ou B, 3 caracteres no total:
+SELECT * FROM produtos WHERE nome LIKE 'A__' OR nome LIKE 'B__';
+
+-- CPF parcial (formato: ___.___.___-__):
+SELECT * FROM clientes WHERE cpf LIKE '123.%';
+
+/*
+   💡 LIKE é CASE SENSITIVE (diferencia maiúscula/minúscula)
+   'João' ≠ 'joão'
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.2 ILIKE - LIKE SEM CASE SENSITIVE (PostgreSQL)                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- ILIKE ignora maiúsculas/minúsculas:
+SELECT * FROM clientes WHERE nome ILIKE '%silva%';
+-- Encontra: Silva, SILVA, silva, SiLvA
+
+-- Buscar email sem se preocupar com case:
+SELECT * FROM usuarios WHERE email ILIKE '%@GMAIL.COM';
+-- Encontra: user@gmail.com, USER@GMAIL.COM, etc.
+
+/*
+   💡 DIFERENÇA:
+   LIKE  → 'João' encontra 'João', não encontra 'joão'
+   ILIKE → 'João' encontra 'João', 'JOÃO', 'joão', 'JoÃo'
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.3 NOT LIKE / NOT ILIKE                                                  ║
+╚════════════════════════════════════════════════════════════════════════════╗
+
+-- Nomes que NÃO começam com 'A':
+SELECT * FROM clientes WHERE nome NOT LIKE 'A%';
+
+-- Emails que NÃO são Gmail:
+SELECT * FROM usuarios WHERE email NOT ILIKE '%@gmail.com';
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.4 SIMILAR TO - EXPRESSÕES REGULARES SIMPLIFICADAS                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- SIMILAR TO usa sintaxe parecida com regex:
+SELECT * FROM produtos WHERE codigo SIMILAR TO '[A-Z]{3}-[0-9]{4}';
+-- Encontra: ABC-1234, XYZ-9999
+
+-- Telefone: (11) 98765-4321
+SELECT * FROM contatos 
+WHERE telefone SIMILAR TO '\([0-9]{2}\) [0-9]{5}-[0-9]{4}';
+
+
+================================================================================
+     PARTE 3: IN, BETWEEN, NULL (15:30 - 15:45 antes do intervalo)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.1 IN - LISTA DE VALORES                                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Buscar múltiplos valores específicos:
+SELECT * FROM produtos 
+WHERE categoria IN ('Eletrônicos', 'Informática', 'Games');
+
+-- É equivalente a:
+SELECT * FROM produtos 
+WHERE categoria = 'Eletrônicos' 
+   OR categoria = 'Informática' 
+   OR categoria = 'Games';
+
+-- NOT IN (excluir valores):
+SELECT * FROM pedidos 
+WHERE status NOT IN ('CANCELADO', 'DEVOLVIDO');
+
+-- IN com subconsulta (veremos melhor em aulas futuras):
+SELECT * FROM produtos 
+WHERE categoria_id IN (SELECT id FROM categorias WHERE ativo = TRUE);
+
+/*
+   💡 IN é mais legível e performático que múltiplos OR!
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.2 BETWEEN - INTERVALO DE VALORES                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Produtos entre R$ 100 e R$ 500:
+SELECT * FROM produtos 
+WHERE preco BETWEEN 100 AND 500;
+
+-- É equivalente a:
+SELECT * FROM produtos 
+WHERE preco >= 100 AND preco <= 500;
+
+-- NOT BETWEEN:
+SELECT * FROM produtos 
+WHERE preco NOT BETWEEN 100 AND 500;
+-- (preco < 100 OU preco > 500)
+
+-- BETWEEN com datas:
+SELECT * FROM pedidos 
+WHERE data_pedido BETWEEN '2024-01-01' AND '2024-12-31';
+
+-- Idades entre 18 e 25:
+SELECT * FROM pessoas 
+WHERE idade BETWEEN 18 AND 25;
+
+/*
+   💡 BETWEEN é INCLUSIVO (inclui os extremos)
+   BETWEEN 10 AND 20 inclui 10 e 20
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.3 IS NULL / IS NOT NULL                                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Clientes sem email cadastrado:
+SELECT * FROM clientes WHERE email IS NULL;
+
+-- Produtos com descrição preenchida:
+SELECT * FROM produtos WHERE descricao IS NOT NULL;
+
+-- ⚠️ NUNCA USE = NULL ou <> NULL!
+-- ❌ WHERE email = NULL     -- ERRADO! Sempre retorna 0 linhas
+-- ✅ WHERE email IS NULL    -- CORRETO!
+
+-- Contar NULLs:
+SELECT COUNT(*) FROM clientes WHERE telefone IS NULL;
+
+-- COALESCE: substituir NULL por valor padrão
+SELECT nome, COALESCE(email, 'Sem email') AS email
+FROM clientes;
+
+/*
+   💡 NULL significa "ausência de valor"
+   - NULL ≠ 0 (zero)
+   - NULL ≠ '' (string vazia)
+   - NULL ≠ FALSE
+   - NULL é simplesmente "desconhecido"
+*/
+
+
+================================================================================
+     PARTE 4: ORDENAÇÃO E PAGINAÇÃO (15:45 - 17:00)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.1 ORDER BY - ORDENAR RESULTADOS                                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Ordenar crescente (ASC - padrão):
+SELECT * FROM produtos ORDER BY preco;
+SELECT * FROM produtos ORDER BY preco ASC;  -- Mesma coisa
+
+-- Ordenar decrescente (DESC):
+SELECT * FROM produtos ORDER BY preco DESC;
+
+-- Ordenar por múltiplas colunas:
+SELECT * FROM funcionarios 
+ORDER BY departamento_id, salario DESC;
+-- 1º ordena por departamento (crescente)
+-- 2º dentro de cada departamento, ordena por salário (decrescente)
+
+-- Ordenar por expressão:
+SELECT nome, preco, preco * 0.90 AS preco_desconto
+FROM produtos 
+ORDER BY preco * 0.90;
+
+-- Ordenar por posição da coluna no SELECT (não recomendado):
+SELECT nome, preco FROM produtos ORDER BY 2;  -- Ordena pela 2ª coluna (preco)
+
+/*
+   💡 ASC vs DESC:
+   ASC  = Ascending  = Crescente = A→Z, 1→9, Jan→Dez
+   DESC = Descending = Decrescente = Z→A, 9→1, Dez→Jan
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.2 NULLS FIRST / NULLS LAST                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Por padrão, PostgreSQL coloca NULLs no final em ASC:
+SELECT * FROM clientes ORDER BY email;
+-- emails → NULLs por último
+
+-- Forçar NULLs primeiro:
+SELECT * FROM clientes ORDER BY email NULLS FIRST;
+
+-- Em DESC, NULLs vêm primeiro por padrão:
+SELECT * FROM produtos ORDER BY desconto DESC;
+-- NULLs primeiro → valores decrescentes
+
+-- Forçar NULLs por último em DESC:
+SELECT * FROM produtos ORDER BY desconto DESC NULLS LAST;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.3 LIMIT - LIMITAR QUANTIDADE DE RESULTADOS                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Buscar apenas os 10 primeiros:
+SELECT * FROM produtos LIMIT 10;
+
+-- Top 5 produtos mais caros:
+SELECT * FROM produtos ORDER BY preco DESC LIMIT 5;
+
+-- Top 10 clientes que mais compraram:
+SELECT cliente_id, SUM(valor_total) AS total_gasto
+FROM pedidos 
+GROUP BY cliente_id 
+ORDER BY total_gasto DESC 
+LIMIT 10;
+
+/*
+   💡 LIMIT é executado APÓS ORDER BY
+   Então primeiro ordena, depois pega os N primeiros
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.4 OFFSET - PULAR LINHAS (PAGINAÇÃO)                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Pular as primeiras 10 linhas:
+SELECT * FROM produtos OFFSET 10;
+
+-- Paginação: página 1 (10 primeiros):
+SELECT * FROM produtos ORDER BY id LIMIT 10 OFFSET 0;
+
+-- Página 2 (do 11º ao 20º):
+SELECT * FROM produtos ORDER BY id LIMIT 10 OFFSET 10;
+
+-- Página 3 (do 21º ao 30º):
+SELECT * FROM produtos ORDER BY id LIMIT 10 OFFSET 20;
+
+-- Fórmula geral para paginação:
+-- LIMIT tamanho_pagina OFFSET (numero_pagina - 1) * tamanho_pagina
+
+/*
+   Exemplo: 50 itens por página, mostrar página 3:
+   LIMIT 50 OFFSET 100  (pula 100, mostra 50)
+*/
+
+-- Forma alternativa (sintaxe SQL padrão):
+SELECT * FROM produtos ORDER BY id OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.5 DISTINCT - ELIMINAR DUPLICATAS                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Listar cidades sem repetição:
+SELECT DISTINCT cidade FROM clientes;
+
+-- Se há clientes em SP, RJ, SP, BH, RJ
+-- Resultado: SP, RJ, BH (sem duplicatas)
+
+-- DISTINCT em múltiplas colunas (combinação única):
+SELECT DISTINCT cidade, estado FROM clientes;
+
+-- Contar valores distintos:
+SELECT COUNT(DISTINCT categoria_id) FROM produtos;
+-- Quantas categorias diferentes existem nos produtos?
+
+-- DISTINCT com ORDER BY:
+SELECT DISTINCT categoria 
+FROM produtos 
+ORDER BY categoria;
+
+/*
+   💡 DISTINCT vs GROUP BY:
+   
+   DISTINCT → apenas elimina duplicatas
+   GROUP BY → agrupa e permite funções agregadas (COUNT, SUM)
+   
+   -- Mesma coisa:
+   SELECT DISTINCT cidade FROM clientes;
+   SELECT cidade FROM clientes GROUP BY cidade;
+   
+   -- GROUP BY permite mais:
+   SELECT cidade, COUNT(*) 
+   FROM clientes 
+   GROUP BY cidade;
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.6 COMBINANDO TUDO                                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Query complexa combinando tudo:
+SELECT DISTINCT 
+    categoria,
+    COUNT(*) AS total_produtos,
+    AVG(preco) AS preco_medio
+FROM produtos 
+WHERE ativo = TRUE
+  AND preco BETWEEN 50 AND 500
+  AND nome ILIKE '%notebook%'
+  AND estoque IS NOT NULL
+GROUP BY categoria
+HAVING COUNT(*) > 5
+ORDER BY preco_medio DESC
+LIMIT 10
+OFFSET 0;
+
+/*
+   📚 ORDEM DE EXECUÇÃO (lógica interna):
+   
+   1. FROM      → De onde vem os dados
+   2. WHERE     → Filtrar linhas
+   3. GROUP BY  → Agrupar
+   4. HAVING    → Filtrar grupos
+   5. SELECT    → Escolher colunas
+   6. DISTINCT  → Eliminar duplicatas
+   7. ORDER BY  → Ordenar
+   8. LIMIT     → Limitar quantidade
+   9. OFFSET    → Pular linhas
+*/
+
+
+================================================================================
+                    EXERCÍCIOS PRÁTICOS (17:00 - 17:30)
+================================================================================
+
+💪 EXERCÍCIO 1: FILTROS VARIADOS (10 min)
+
+Dada a tabela "funcionarios":
+
+a) Listar funcionários com salário entre 3000 e 7000
+b) Buscar funcionários cujo nome contém 'Silva' ou 'Santos'
+c) Encontrar funcionários do departamento 1, 2 ou 3
+d) Listar funcionários SEM email cadastrado
+e) Buscar funcionários admitidos em 2023 ou 2024
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 2: LIKE E PADRÕES (10 min)
+
+a) Buscar produtos cujo nome começa com 'Not' (Notebook, Notícias...)
+b) Encontrar emails do domínio '@gmail.com' (ignore maiúsculas)
+c) Listar CPFs que começam com '123'
+d) Buscar códigos de produto no formato: ABC-####
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 3: ORDENAÇÃO E TOP N (10 min)
+
+a) Top 5 produtos mais caros
+b) Top 10 clientes por ordem alfabética
+c) 5 funcionários com menor salário (exclua NULLs)
+d) Produtos ordenados por estoque (menores primeiro), depois por preço
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 4: PAGINAÇÃO (10 min)
+
+Implemente paginação na tabela "produtos":
+- 20 produtos por página
+- Crie queries para: página 1, 2, 3, 4, 5
+- Ordene por nome
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 DESAFIO EXTRA:
+
+Relatório de produtos:
+- Apenas ativos
+- Preço entre 100 e 1000
+- Nome NÃO contém 'usado'
+- Estoque > 0
+- Ordenar por: categoria, depois preço (decrescente)
+- Mostrar apenas: categoria, nome, preço, estoque
+- Limitar a 50 resultados
+- Pular os primeiros 10
+
+
+================================================================================
+                      REVISÃO GERAL - SEMANA 1
+================================================================================
+
+🎓 CONTEÚDO DA SEMANA 1 (Dias 1-5):
+
+DIA 1: Introdução e Conceitos
+   ✓ SGBD, modelo relacional, ACID
+   ✓ Instalação PostgreSQL + DBeaver
+   ✓ CREATE DATABASE, CREATE TABLE
+   ✓ INSERT, SELECT, UPDATE, DELETE básicos
+
+DIA 2: Tipos de Dados e Constraints
+   ✓ INTEGER, SERIAL, DECIMAL, VARCHAR, TEXT, DATE, BOOLEAN
+   ✓ NOT NULL, DEFAULT, UNIQUE, CHECK
+
+DIA 3: Relacionamentos
+   ✓ PRIMARY KEY, FOREIGN KEY
+   ✓ Relacionamentos 1:N, N:N
+   ✓ ON DELETE, ON UPDATE (CASCADE, SET NULL, RESTRICT)
+   ✓ ALTER TABLE, DROP, TRUNCATE
+
+DIA 4: DML e Transações
+   ✓ INSERT RETURNING, ON CONFLICT
+   ✓ UPDATE e DELETE avançados
+   ✓ BEGIN, COMMIT, ROLLBACK, SAVEPOINT
+
+DIA 5: Consultas e Filtros (HOJE)
+   ✓ WHERE com operadores
+   ✓ LIKE, ILIKE, IN, BETWEEN, IS NULL
+   ✓ ORDER BY, LIMIT, OFFSET
+   ✓ DISTINCT
+
+📚 PREPARE-SE PARA SEMANA 2:
+   - Próxima semana: JOINs, agregações, subconsultas
+   - Revise relacionamentos (FK)
+   - Pratique filtros e ordenação
+
+================================================================================
+                              RESUMO DA AULA
+================================================================================
+
+✅ OPERADORES:
+   • Comparação: =, <>, >, <, >=, <=
+   • Lógicos: AND, OR, NOT
+   • Aritméticos: +, -, *, /, %, ^
+
+✅ PADRÕES:
+   • LIKE '%texto%' (case sensitive)
+   • ILIKE '%texto%' (ignora case)
+   • Curingas: % (qualquer), _ (um caractere)
+
+✅ INTERVALOS:
+   • IN (val1, val2, ...) → lista
+   • BETWEEN min AND max → intervalo
+   • IS NULL / IS NOT NULL → valores nulos
+
+✅ ORDENAÇÃO:
+   • ORDER BY coluna ASC/DESC
+   • NULLS FIRST / NULLS LAST
+
+✅ LIMITAÇÃO:
+   • LIMIT n → primeiros N
+   • OFFSET n → pular N
+   • DISTINCT → sem duplicatas
+
+📚 TAREFA PARA CASA:
+   1. Exercícios 41-50 da lista geral
+   2. Revisar TODO conteúdo da Semana 1
+   3. Preparar dúvidas para próxima semana
+
+🔜 PRÓXIMA AULA (SEMANA 2):
+   JOINs - Relacionando Tabelas
+   - INNER JOIN, LEFT JOIN, RIGHT JOIN
+   - FULL OUTER JOIN, CROSS JOIN
+   - SELF JOIN
+   - JOIN com múltiplas tabelas
+
+================================================================================
+                            FIM DA AULA 05
+================================================================================

@@ -1,0 +1,487 @@
+================================================================================
+                              AULA 11 - DIA 11
+                        FUNÇÕES E PROCEDIMENTOS ARMAZENADOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Criar funções SQL personalizadas
+✓ Desenvolver funções em PL/pgSQL
+✓ Implementar procedimentos armazenados
+✓ Utilizar parâmetros IN, OUT, INOUT
+
+CRONOGRAMA:
+13:30-14:30 → Funções SQL
+14:30-15:30 → PL/pgSQL Básico
+15:30-15:45 → Intervalo
+15:45-16:30 → Procedimentos
+16:30-17:30 → Prática
+
+================================================================================
+1. FUNÇÕES SQL
+================================================================================
+
+CONCEITO:
+Funções SQL são blocos de código reutilizáveis que retornam valores.
+Podem ser usadas em SELECT, WHERE, etc.
+
+SINTAXE BÁSICA:
+CREATE OR REPLACE FUNCTION nome_funcao(parametros)
+RETURNS tipo_retorno
+LANGUAGE SQL
+AS $$
+    -- código SQL aqui
+$$;
+
+--------------------------------------------------------------------------------
+EXEMPLO 1: Função Simples
+--------------------------------------------------------------------------------
+
+-- Função para calcular desconto
+CREATE OR REPLACE FUNCTION calcular_desconto(
+    preco DECIMAL,
+    percentual DECIMAL
+)
+RETURNS DECIMAL
+LANGUAGE SQL
+AS $$
+    SELECT ROUND(preco * (1 - percentual/100), 2);
+$$;
+
+-- 💡 $$ é o delimitador de string, evita problemas com aspas internas
+-- 💡 ROUND(valor, 2) arredonda para 2 casas decimais
+
+-- Usando a função:
+SELECT 
+    nome,
+    preco,
+    calcular_desconto(preco, 10) AS preco_com_10porcento,
+    calcular_desconto(preco, 25) AS preco_com_25porcento
+FROM produtos;
+
+--------------------------------------------------------------------------------
+EXEMPLO 2: Função com Múltiplos Parâmetros
+--------------------------------------------------------------------------------
+
+-- Calcular frete baseado em peso e distância
+CREATE OR REPLACE FUNCTION calcular_frete(
+    peso_kg DECIMAL,
+    distancia_km INTEGER,
+    taxa_base DECIMAL DEFAULT 5.00
+)
+RETURNS DECIMAL
+LANGUAGE SQL
+AS $$
+    SELECT taxa_base + (peso_kg * 0.50) + (distancia_km * 0.10);
+$$;
+
+-- 💡 DEFAULT 5.00 → parâmetro opcional com valor padrão
+
+-- Uso:
+SELECT calcular_frete(2.5, 100);         -- usa taxa_base padrão
+SELECT calcular_frete(2.5, 100, 8.00);   -- taxa_base customizada
+
+--------------------------------------------------------------------------------
+EXEMPLO 3: Função que Retorna Tabela
+--------------------------------------------------------------------------------
+
+-- Retornar produtos de uma categoria
+CREATE OR REPLACE FUNCTION produtos_categoria(cat_id INTEGER)
+RETURNS TABLE(
+    produto_nome VARCHAR,
+    preco DECIMAL,
+    estoque INTEGER
+)
+LANGUAGE SQL
+AS $$
+    SELECT nome, preco, estoque
+    FROM produtos
+    WHERE categoria_id = cat_id
+    AND ativo = TRUE
+    ORDER BY nome;
+$$;
+
+-- 💡 RETURNS TABLE → função retorna conjunto de linhas
+-- 💡 Pode ser usada como uma tabela virtual
+
+-- Uso:
+SELECT * FROM produtos_categoria(3);
+
+================================================================================
+2. FUNÇÕES PL/pgSQL
+================================================================================
+
+CONCEITO:
+PL/pgSQL é a linguagem procedural do PostgreSQL.
+Permite: variáveis, condicionais, loops, tratamento de erros.
+
+SINTAXE:
+CREATE OR REPLACE FUNCTION nome(parametros)
+RETURNS tipo
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    -- declaração de variáveis
+BEGIN
+    -- lógica da função
+    RETURN valor;
+END;
+$$;
+
+--------------------------------------------------------------------------------
+EXEMPLO 4: Função com Variáveis
+--------------------------------------------------------------------------------
+
+-- Calcular total do pedido com desconto progressivo
+CREATE OR REPLACE FUNCTION total_pedido_com_desconto(pedido_id INTEGER)
+RETURNS DECIMAL
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_total DECIMAL;
+    v_desconto DECIMAL := 0;  -- := atribui valor inicial
+BEGIN
+    -- Calcular total
+    SELECT SUM(quantidade * preco_unitario)
+    INTO v_total  -- INTO coloca resultado na variável
+    FROM itens_pedido
+    WHERE itens_pedido.pedido_id = total_pedido_com_desconto.pedido_id;
+    
+    -- Desconto progressivo
+    IF v_total > 1000 THEN
+        v_desconto := 0.15;  -- 15%
+    ELSIF v_total > 500 THEN
+        v_desconto := 0.10;  -- 10%
+    ELSIF v_total > 200 THEN
+        v_desconto := 0.05;  -- 5%
+    END IF;
+    
+    RETURN ROUND(v_total * (1 - v_desconto), 2);
+END;
+$$;
+
+-- 💡 DECLARE → seção de declaração de variáveis
+-- 💡 := → operador de atribuição
+-- 💡 INTO → captura resultado de SELECT em variável
+
+-- Uso:
+SELECT 
+    id,
+    total_pedido_com_desconto(id) AS total_final
+FROM pedidos;
+
+--------------------------------------------------------------------------------
+EXEMPLO 5: Função com LOOP
+--------------------------------------------------------------------------------
+
+-- Calcular juros compostos
+CREATE OR REPLACE FUNCTION calcular_juros_compostos(
+    valor_inicial DECIMAL,
+    taxa_mensal DECIMAL,
+    meses INTEGER
+)
+RETURNS DECIMAL
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_valor DECIMAL := valor_inicial;
+    v_mes INTEGER := 1;
+BEGIN
+    WHILE v_mes <= meses LOOP
+        v_valor := v_valor * (1 + taxa_mensal/100);
+        v_mes := v_mes + 1;
+    END LOOP;
+    
+    RETURN ROUND(v_valor, 2);
+END;
+$$;
+
+-- 💡 WHILE ... LOOP → estrutura de repetição
+-- 💡 Útil para cálculos iterativos
+
+-- Uso:
+SELECT calcular_juros_compostos(1000, 2, 12);  -- R$ 1000 a 2% a.m. por 12 meses
+
+--------------------------------------------------------------------------------
+EXEMPLO 6: Função com EXCEPTION
+--------------------------------------------------------------------------------
+
+-- Buscar produto com tratamento de erro
+CREATE OR REPLACE FUNCTION buscar_preco_produto(produto_id INTEGER)
+RETURNS DECIMAL
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_preco DECIMAL;
+BEGIN
+    SELECT preco INTO STRICT v_preco
+    FROM produtos
+    WHERE id = produto_id;
+    
+    RETURN v_preco;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE NOTICE 'Produto % não encontrado', produto_id;
+        RETURN 0;
+    WHEN TOO_MANY_ROWS THEN
+        RAISE EXCEPTION 'Múltiplos produtos encontrados!';
+END;
+$$;
+
+-- 💡 STRICT → garante exatamente 1 linha (senão lança exceção)
+-- 💡 EXCEPTION → bloco de tratamento de erros
+-- 💡 RAISE NOTICE → mensagem de aviso
+-- 💡 RAISE EXCEPTION → interrompe execução
+
+-- Uso:
+SELECT buscar_preco_produto(999);  -- produto inexistente
+
+================================================================================
+3. PARÂMETROS OUT E INOUT
+================================================================================
+
+CONCEITO:
+- IN: entrada (padrão)
+- OUT: saída (retorna valor)
+- INOUT: entrada e saída
+
+--------------------------------------------------------------------------------
+EXEMPLO 7: Parâmetros OUT
+--------------------------------------------------------------------------------
+
+-- Estatísticas de cliente
+CREATE OR REPLACE FUNCTION estatisticas_cliente(
+    IN cliente_id INTEGER,
+    OUT total_pedidos INTEGER,
+    OUT valor_total DECIMAL,
+    OUT ticket_medio DECIMAL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    SELECT 
+        COUNT(*),
+        COALESCE(SUM(valor_total), 0),
+        COALESCE(AVG(valor_total), 0)
+    INTO total_pedidos, valor_total, ticket_medio
+    FROM pedidos
+    WHERE pedidos.cliente_id = estatisticas_cliente.cliente_id;
+END;
+$$;
+
+-- 💡 OUT → parâmetros de saída, não precisa RETURN
+-- 💡 Função retorna RECORD (registro com múltiplos valores)
+
+-- Uso:
+SELECT * FROM estatisticas_cliente(5);
+
+-- Ou capturar valores:
+SELECT total_pedidos, ticket_medio 
+FROM estatisticas_cliente(5);
+
+--------------------------------------------------------------------------------
+EXEMPLO 8: Parâmetro INOUT
+--------------------------------------------------------------------------------
+
+-- Aplicar aumento percentual
+CREATE OR REPLACE FUNCTION aplicar_aumento(
+    INOUT valor DECIMAL,
+    percentual DECIMAL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    valor := valor * (1 + percentual/100);
+END;
+$$;
+
+-- 💡 INOUT → valor entra, é modificado e retorna
+
+-- Uso:
+SELECT aplicar_aumento(100.00, 10);  -- retorna 110.00
+
+================================================================================
+4. PROCEDIMENTOS ARMAZENADOS (PROCEDURES)
+================================================================================
+
+CONCEITO:
+Diferente de funções, procedures:
+- NÃO retornam valores (usam OUT se precisar)
+- Podem fazer COMMIT/ROLLBACK
+- Úteis para operações de modificação de dados
+
+SINTAXE:
+CREATE OR REPLACE PROCEDURE nome(parametros)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- código
+END;
+$$;
+
+--------------------------------------------------------------------------------
+EXEMPLO 9: Procedure Simples
+--------------------------------------------------------------------------------
+
+-- Procedure para atualizar estoque
+CREATE OR REPLACE PROCEDURE atualizar_estoque(
+    p_produto_id INTEGER,
+    p_quantidade INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE produtos
+    SET estoque = estoque + p_quantidade,
+        data_atualizacao = CURRENT_TIMESTAMP
+    WHERE id = p_produto_id;
+    
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Produto % não encontrado', p_produto_id;
+    END IF;
+    
+    RAISE NOTICE 'Estoque atualizado com sucesso';
+END;
+$$;
+
+-- 💡 CALL → executa procedure (diferente de SELECT para funções)
+-- 💡 IF NOT FOUND → verifica se UPDATE afetou alguma linha
+
+-- Uso:
+CALL atualizar_estoque(10, 50);  -- adiciona 50 unidades
+
+--------------------------------------------------------------------------------
+EXEMPLO 10: Procedure com Transação
+--------------------------------------------------------------------------------
+
+-- Processar pedido completo
+CREATE OR REPLACE PROCEDURE processar_pedido(
+    p_pedido_id INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_item RECORD;
+BEGIN
+    -- Atualizar status do pedido
+    UPDATE pedidos
+    SET status = 'PROCESSANDO'
+    WHERE id = p_pedido_id;
+    
+    -- Dar baixa no estoque de cada item
+    FOR v_item IN 
+        SELECT produto_id, quantidade 
+        FROM itens_pedido 
+        WHERE pedido_id = p_pedido_id
+    LOOP
+        UPDATE produtos
+        SET estoque = estoque - v_item.quantidade
+        WHERE id = v_item.produto_id;
+        
+        -- Verificar se há estoque
+        IF (SELECT estoque FROM produtos WHERE id = v_item.produto_id) < 0 THEN
+            RAISE EXCEPTION 'Estoque insuficiente para produto %', v_item.produto_id;
+        END IF;
+    END LOOP;
+    
+    -- Confirmar pedido
+    UPDATE pedidos
+    SET status = 'CONFIRMADO'
+    WHERE id = p_pedido_id;
+    
+    RAISE NOTICE 'Pedido % processado com sucesso', p_pedido_id;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Erro ao processar pedido: %', SQLERRM;
+        RAISE;
+END;
+$$;
+
+-- 💡 FOR ... LOOP → itera sobre resultados de SELECT
+-- 💡 RECORD → tipo que armazena linha completa
+-- 💡 SQLERRM → mensagem do erro
+
+-- Uso:
+CALL processar_pedido(15);
+
+================================================================================
+5. FUNÇÕES ÚTEIS DO SISTEMA
+================================================================================
+
+-- Listar todas as funções criadas:
+SELECT 
+    routine_name AS funcao,
+    routine_type AS tipo
+FROM information_schema.routines
+WHERE routine_schema = 'public'
+ORDER BY routine_name;
+
+-- Ver código de uma função:
+SELECT prosrc 
+FROM pg_proc 
+WHERE proname = 'nome_da_funcao';
+
+-- Apagar função:
+DROP FUNCTION IF EXISTS nome_funcao;
+
+-- Apagar procedure:
+DROP PROCEDURE IF EXISTS nome_procedure;
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+EXERCÍCIO 1: Função de Validação [MÉDIO - 20 min]
+Criar função que valida CPF (aceita apenas formato XXX.XXX.XXX-XX).
+Retornar TRUE se válido, FALSE caso contrário.
+
+DICA: Use expressões regulares ou verificação de tamanho.
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 2: Função de Relatório [MÉDIO - 25 min]
+Criar função que retorna produtos mais vendidos em um período.
+Parâmetros: data_inicio, data_fim, limite
+Retornar: nome_produto, quantidade_vendida, receita
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 3: Procedure de Manutenção [AVANÇADO - 30 min]
+Criar procedure que:
+1. Desativa produtos sem estoque
+2. Remove avaliações antigas (mais de 2 anos)
+3. Atualiza estatísticas de vendas
+4. Registra log das operações em tabela de auditoria
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 4: Função Recursiva [AVANÇADO - 35 min]
+Criar função que calcula desconto em cadeia:
+- Se cliente tem mais de 10 pedidos: 10%
+- Se pedido > R$ 500: +5%
+- Se cliente indicou 3+ amigos: +3%
+- Desconto máximo: 20%
+
+Retornar desconto final aplicável.
+
+================================================================================
+BOAS PRÁTICAS
+================================================================================
+
+✓ Use nomes descritivos para funções
+✓ Comente o propósito de cada função
+✓ Trate exceções adequadamente
+✓ Valide parâmetros de entrada
+✓ Use transações quando necessário
+✓ Prefixe variáveis (v_, p_) para evitar conflitos
+✓ Teste funções isoladamente antes de usar em produção
+✓ Documente parâmetros e valores de retorno
+
+TAREFA: Criar 5 funções úteis para seu projeto | PRÓXIMA AULA: Triggers
+
+================================================================================
+FIM DA AULA 11
+================================================================================

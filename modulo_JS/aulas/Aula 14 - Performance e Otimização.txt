@@ -1,0 +1,22 @@
+Aula 14 – Performance e Otimização
+
+Conteúdo Teórico
+- Medição: console.time, Performance API.
+- Algoritmos: complexidade temporal/espacial.
+- Técnicas: memoization, lazy, batching, web workers.
+
+Exemplos
+console.time('reduce');
+[...Array(1e5)].reduce((a,_,i)=>a+i,0);
+console.timeEnd('reduce');
+
+Exercícios
+- Básico: medir tempos de funções.
+- Intermediário: memoizar função pesada.
+- Avançado: dividir trabalho com worker.
+
+Atividade Real
+- Profiling de mini app e otimização dirigida por métricas.
+
+Resumo
+- Otimização deve ser guiada por medidas e impactos reais.

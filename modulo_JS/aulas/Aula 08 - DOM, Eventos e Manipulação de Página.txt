@@ -1,0 +1,26 @@
+Aula 08 – DOM, Eventos e Manipulação de Página
+
+Conteúdo Teórico
+- DOM: seleção, criação, atualização, remoção.
+- Eventos: addEventListener, propagação, delegação.
+- Acessibilidade básica: roles, ARIA, foco.
+
+Exemplos (HTML + JS)
+// JS
+const btn = document.querySelector('#btn');
+btn.addEventListener('click', (e)=>{
+  const li = document.createElement('li');
+  li.textContent = 'Item';
+  document.querySelector('#lista').appendChild(li);
+});
+
+Exercícios
+- Básico: criar lista dinâmica; remover itens.
+- Intermediário: delegação de eventos para lista grande.
+- Avançado: componente acessível com teclado e ARIA.
+
+Atividade Real
+- Mini todo list com persistência em localStorage.
+
+Resumo
+- DOM e eventos permitem interfaces interativas e acessíveis.

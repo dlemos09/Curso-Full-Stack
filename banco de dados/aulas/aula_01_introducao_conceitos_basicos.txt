@@ -1,0 +1,764 @@
+================================================================================
+                              AULA 01 - DIA 1
+          INTRODUÇÃO + INSTALAÇÃO + CONCEITOS BÁSICOS DE BANCO DE DADOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 (4 horas)
+INSTRUTOR: [Nome do Professor]
+DATA: _____/_____/_____
+
+================================================================================
+                            OBJETIVOS DA AULA
+================================================================================
+
+Ao final desta aula, você será capaz de:
+✓ Compreender o que são bancos de dados relacionais
+✓ Instalar e configurar PostgreSQL e DBeaver
+✓ Executar seus primeiros comandos SQL
+✓ Entender conceitos fundamentais: tabelas, linhas, colunas, chaves
+
+================================================================================
+                          CRONOGRAMA DA AULA
+================================================================================
+
+13:30 - 13:45 (15 min) → Apresentação e Boas-vindas
+13:45 - 14:45 (60 min) → Parte 1: Conceitos Fundamentais
+14:45 - 15:30 (45 min) → Parte 2: Instalação PostgreSQL + DBeaver
+15:30 - 15:45 (15 min) → ☕ INTERVALO
+15:45 - 17:00 (75 min) → Parte 3: Primeiros Comandos SQL (Prática)
+17:00 - 17:30 (30 min) → Exercícios Práticos + Revisão
+
+================================================================================
+     PARTE 1: CONCEITOS FUNDAMENTAIS (13:45 - 14:45)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.1 O QUE É UM BANCO DE DADOS?                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 DEFINIÇÃO:
+   Um banco de dados é uma coleção organizada de informações estruturadas,
+   armazenadas eletronicamente em um sistema computacional.
+
+📌 ANALOGIA:
+   Pense em um arquivo Excel gigante, mas:
+   - Muito mais rápido
+   - Permite múltiplos usuários simultâneos
+   - Garante integridade dos dados
+   - Suporta milhões de registros
+
+📌 HIERARQUIA DOS DADOS:
+   
+   DADO → INFORMAÇÃO → CONHECIMENTO
+   
+   • DADO: Valor bruto (ex: "25")
+   • INFORMAÇÃO: Dado com contexto (ex: "25 anos de idade")
+   • CONHECIMENTO: Informação aplicada (ex: "Cliente jovem, ofertar produtos X")
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.2 SISTEMAS DE ARQUIVOS vs SGBD                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+❌ SISTEMAS DE ARQUIVOS (Excel, CSV, TXT):
+   - Redundância de dados
+   - Difícil manutenção
+   - Sem controle de concorrência
+   - Falta de segurança
+   - Sem recuperação de falhas
+
+✅ SGBD (Sistema Gerenciador de Banco de Dados):
+   - Elimina redundância
+   - Integridade de dados
+   - Controle de acesso
+   - Backup e recuperação
+   - Múltiplos usuários simultâneos
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.3 BANCO DE DADOS RELACIONAL                                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📖 HISTÓRIA:
+   Criado por Edgar F. Codd em 1970 (IBM)
+   Base: Teoria dos Conjuntos e Álgebra Relacional
+
+🔑 CONCEITOS-CHAVE:
+
+   ┌─────────────────────────────────────────────┐
+   │ TABELA (Relação)                            │
+   ├─────┬─────────────┬───────┬─────────────────┤
+   │ ID  │ NOME        │ IDADE │ CIDADE          │ ← ATRIBUTOS (Colunas)
+   ├─────┼─────────────┼───────┼─────────────────┤
+   │ 1   │ João Silva  │ 30    │ São Paulo       │ ← TUPLA (Linha/Registro)
+   │ 2   │ Maria Costa │ 25    │ Rio de Janeiro  │
+   └─────┴─────────────┴───────┴─────────────────┘
+
+   VOCABULÁRIO:
+   • TABELA = Conjunto de dados sobre uma entidade (Clientes, Produtos)
+   • COLUNA = Atributo/característica (Nome, Idade, Preço)
+   • LINHA = Um registro específico (Cliente "João Silva")
+   • CHAVE PRIMÁRIA (PK) = Identificador único de cada linha
+   • CHAVE ESTRANGEIRA (FK) = Referência a outra tabela
+
+🔗 RELACIONAMENTOS:
+
+   1:1 (Um para Um)
+   Exemplo: Pessoa → CPF (uma pessoa tem um CPF único)
+
+   1:N (Um para Muitos)
+   Exemplo: Cliente → Pedidos (um cliente faz vários pedidos)
+
+   N:N (Muitos para Muitos)
+   Exemplo: Alunos → Cursos (alunos cursam várias disciplinas)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.4 PROPRIEDADES ACID                                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Um SGBD relacional garante ACID:
+
+🅰️ ATOMICITY (Atomicidade)
+   Transação é "tudo ou nada"
+   Exemplo: Transferência bancária - se debitar mas não creditar, ROLLBACK!
+
+🅲 CONSISTENCY (Consistência)
+   Dados sempre válidos segundo regras definidas
+   Exemplo: Saldo nunca pode ser negativo (se houver essa regra)
+
+🅸 ISOLATION (Isolamento)
+   Transações simultâneas não interferem entre si
+   Exemplo: Dois caixas vendendo o último produto - apenas um consegue
+
+🅳 DURABILITY (Durabilidade)
+   Dados confirmados persistem mesmo com falha
+   Exemplo: Após COMMIT, dados sobrevivem a queda de energia
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.5 SQL - STRUCTURED QUERY LANGUAGE                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 O QUE É SQL?
+   Linguagem padrão para gerenciar bancos de dados relacionais
+   Criada nos anos 70, padronizada pela ANSI/ISO
+
+📌 CATEGORIAS DO SQL:
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ DDL - Data Definition Language (Definição)              │
+   │ • CREATE, ALTER, DROP, TRUNCATE                         │
+   │ • Define estrutura (tabelas, índices, etc.)             │
+   └─────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ DML - Data Manipulation Language (Manipulação)          │
+   │ • INSERT, UPDATE, DELETE, SELECT                        │
+   │ • Manipula dados dentro das tabelas                     │
+   └─────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ DCL - Data Control Language (Controle)                  │
+   │ • GRANT, REVOKE                                         │
+   │ • Controla permissões de acesso                         │
+   └─────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ TCL - Transaction Control Language (Transações)         │
+   │ • BEGIN, COMMIT, ROLLBACK, SAVEPOINT                    │
+   │ • Controla transações                                   │
+   └─────────────────────────────────────────────────────────┘
+
+💡 CURIOSIDADE:
+   SQL é DECLARATIVO, não imperativo!
+   Você diz "O QUE" quer, não "COMO" fazer.
+   Exemplo: "SELECT * FROM clientes WHERE cidade = 'São Paulo'"
+   (Você não precisa dizer como percorrer a tabela, o SGBD decide!)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.6 POR QUE POSTGRESQL?                                                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+✅ Open Source e Gratuito
+✅ Conformidade total com padrões SQL (ANSI SQL)
+✅ Performance excelente (milhões de transações/segundo)
+✅ Extensível (pode criar seus próprios tipos de dados)
+✅ Suporta JSON, XML, Arrays, GIS, Full-Text Search
+✅ Usado por: Apple, Netflix, Instagram, Reddit, Spotify
+
+🆚 COMPARAÇÃO RÁPIDA:
+
+   PostgreSQL → Recursos avançados, conformidade, extensibilidade
+   MySQL → Popular, simples, rápido para leitura
+   SQL Server → Microsoft, integração Windows, enterprise
+   Oracle → Enterprise, muito caro, robusto
+
+
+================================================================================
+     PARTE 2: INSTALAÇÃO E CONFIGURAÇÃO (14:45 - 15:30)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.1 INSTALANDO POSTGRESQL                                                  ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+🪟 WINDOWS:
+
+   1. Acesse: https://www.postgresql.org/download/windows/
+   2. Baixe o instalador (recomendado: versão 14 ou superior)
+   3. Execute o instalador
+   4. Configurações importantes:
+      - Porta: 5432 (padrão)
+      - Senha do superusuário "postgres": ANOTE ESSA SENHA!
+      - Locale: Portuguese, Brazil
+   5. Deixe marcado: PostgreSQL Server, pgAdmin 4, Command Line Tools
+   6. Após instalação, verifique se o serviço está rodando:
+      • Pressione Win+R → services.msc
+      • Procure "postgresql-x64-14" → Status deve ser "Em execução"
+
+🐧 LINUX (Ubuntu/Debian):
+
+   # Atualizar lista de pacotes
+   sudo apt update
+   
+   # Instalar PostgreSQL e ferramentas
+   sudo apt install postgresql postgresql-contrib
+   
+   # Verificar status do serviço
+   sudo systemctl status postgresql
+   
+   # Trocar para usuário postgres
+   sudo -i -u postgres
+   
+   # Abrir console do PostgreSQL
+   psql
+   
+   # Definir senha do usuário postgres
+   ALTER USER postgres PASSWORD 'sua_senha_aqui';
+   
+   # Sair
+   \q
+
+🍎 MAC (via Homebrew):
+
+   # Instalar Homebrew (se não tiver)
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   
+   # Instalar PostgreSQL
+   brew install postgresql@14
+   
+   # Iniciar serviço
+   brew services start postgresql@14
+   
+   # Conectar
+   psql postgres
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.2 INSTALANDO DBEAVER                                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+DBeaver é uma ferramenta gráfica (GUI) para gerenciar bancos de dados.
+
+📥 INSTALAÇÃO:
+
+   1. Acesse: https://dbeaver.io/download/
+   2. Baixe a versão "Community Edition" (gratuita)
+   3. Instale normalmente
+   4. Execute o DBeaver
+
+🔌 CRIAR CONEXÃO COM POSTGRESQL:
+
+   1. No DBeaver, clique em: Database → New Database Connection
+   2. Selecione: PostgreSQL
+   3. Clique em: Next
+   4. Preencha:
+      - Host: localhost
+      - Port: 5432
+      - Database: postgres
+      - Username: postgres
+      - Password: [a senha que você definiu]
+   5. Clique em: Test Connection
+   6. Se aparecer "Download driver files", clique em Download
+   7. Se conectar com sucesso, clique em: Finish
+
+🎯 TOUR PELA INTERFACE:
+
+   ┌────────────────────────────────────────────────────────┐
+   │ [Database Navigator] │ [SQL Editor]                    │
+   │  ├─ postgres          │                                 │
+   │  │  ├─ Databases      │  /* Digite SQL aqui */          │
+   │  │  ├─ Schemas        │                                 │
+   │  │  └─ Tables         │  SELECT * FROM tabela;          │
+   │                       │                                 │
+   │                       │  [Ctrl+Enter para executar]     │
+   ├───────────────────────┴─────────────────────────────────┤
+   │ [Resultados / Properties / Log]                         │
+   └────────────────────────────────────────────────────────┘
+
+⌨️ ATALHOS ÚTEIS:
+
+   Ctrl + Enter → Executar query sob o cursor
+   Ctrl + \ → Executar script inteiro
+   Ctrl + Space → Autocomplete
+   F3 → Abrir definição de objeto
+   F4 → Editar dados da tabela
+   Ctrl + Shift + E → Explicar plano de execução
+
+
+================================================================================
+     PARTE 3: PRIMEIROS COMANDOS SQL (15:45 - 17:00)
+================================================================================
+
+💡 SOBRE COMENTÁRIOS EM SQL:
+
+   -- Este é um comentário de linha única (dois hífens)
+   
+   /* 
+      Este é um comentário
+      de múltiplas linhas
+      Útil para bloquear código temporariamente
+   */
+   
+   SELECT * FROM tabela;  -- Comentário no final da linha
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.1 LISTAR BANCOS DE DADOS EXISTENTES                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Método 1: Query SQL
+SELECT datname FROM pg_database;
+
+/* 
+   Explicação:
+   - SELECT: comando para consultar
+   - datname: nome da coluna (database name)
+   - FROM: de onde vem os dados
+   - pg_database: tabela do sistema que lista bancos
+*/
+
+-- Método 2: Comando do psql (terminal)
+-- \l  (contra-barra + L minúsculo)
+
+-- Resultado esperado:
+--   datname
+-- -----------
+--   postgres    ← Banco padrão
+--   template0   ← Template (não use)
+--   template1   ← Template (não use)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.2 CRIAR SEU PRIMEIRO BANCO DE DADOS                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Criar banco
+CREATE DATABASE meu_primeiro_bd;
+
+/*
+   Regras para nomes:
+   ✓ Pode: letras, números, underscore (_)
+   ✗ Evite: espaços, acentos, caracteres especiais
+   ✓ Bom: cliente_db, vendas2024, sistema_escolar
+   ✗ Ruim: "banco de dados", café-db
+*/
+
+-- Adicionar descrição (opcional mas recomendado)
+COMMENT ON DATABASE meu_primeiro_bd 
+IS 'Banco de dados para aprendizado de SQL';
+
+-- Ver comentário
+SELECT pg_catalog.shobj_description(d.oid, 'pg_database') AS descricao
+FROM pg_catalog.pg_database d
+WHERE datname = 'meu_primeiro_bd';
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.3 CONECTAR A UM BANCO DE DADOS                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- No psql (terminal):
+\c meu_primeiro_bd
+
+-- No DBeaver:
+-- Use o dropdown no topo da janela ou
+-- clique com botão direito no banco → "Set Active"
+
+💡 IMPORTANTE: Sempre verifique em qual banco você está conectado!
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.4 CRIAR SUA PRIMEIRA TABELA                                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Sintaxe básica do CREATE TABLE
+CREATE TABLE pessoas (
+    id INTEGER PRIMARY KEY,
+    nome VARCHAR(100),
+    idade INTEGER
+);
+
+/*
+   📚 EXPLICAÇÃO LINHA POR LINHA:
+   
+   CREATE TABLE → Comando para criar tabela
+   pessoas → Nome da tabela (use nomes no plural)
+   
+   id INTEGER → Coluna "id" do tipo número inteiro
+   PRIMARY KEY → Marca como chave primária (única e obrigatória)
+   
+   nome VARCHAR(100) → Coluna de texto com até 100 caracteres
+      • VARCHAR = Variable Character (tamanho variável)
+      • VARCHAR(100) aceita de 0 a 100 caracteres
+   
+   idade INTEGER → Coluna numérica inteira
+*/
+
+-- Verificar se tabela foi criada
+\dt  -- No psql
+-- Ou veja no Database Navigator do DBeaver
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.5 INSERIR DADOS NA TABELA (INSERT)                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Inserir uma linha
+INSERT INTO pessoas (id, nome, idade) 
+VALUES (1, 'João Silva', 30);
+
+/*
+   Anatomia do INSERT:
+   - INSERT INTO pessoas → tabela destino
+   - (id, nome, idade) → colunas que receberão valores
+   - VALUES (1, 'João Silva', 30) → valores correspondentes
+   
+   ⚠️ ATENÇÃO:
+   - Textos vão entre aspas simples: 'João'
+   - Números sem aspas: 30
+   - A ordem dos valores deve corresponder à ordem das colunas
+*/
+
+-- Inserir múltiplas linhas de uma vez (mais eficiente!)
+INSERT INTO pessoas (id, nome, idade) VALUES
+    (2, 'Maria Santos', 25),
+    (3, 'Pedro Oliveira', 35),
+    (4, 'Ana Costa', 28),
+    (5, 'Carlos Souza', 42);
+
+-- Mensagem de sucesso: INSERT 0 5
+-- (Significa: 5 linhas inseridas)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.6 CONSULTAR DADOS (SELECT)                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Selecionar TODAS as colunas e TODAS as linhas
+SELECT * FROM pessoas;
+
+/*
+   O asterisco (*) significa "todas as colunas"
+   
+   Resultado:
+    id │      nome       │ idade
+   ────┼─────────────────┼───────
+     1 │ João Silva      │    30
+     2 │ Maria Santos    │    25
+     3 │ Pedro Oliveira  │    35
+     4 │ Ana Costa       │    28
+     5 │ Carlos Souza    │    42
+*/
+
+-- Selecionar apenas colunas específicas
+SELECT nome, idade FROM pessoas;
+
+/*
+   Resultado:
+         nome       │ idade
+   ─────────────────┼───────
+    João Silva      │    30
+    Maria Santos    │    25
+    Pedro Oliveira  │    35
+    Ana Costa       │    28
+    Carlos Souza    │    42
+*/
+
+-- Selecionar apenas nomes
+SELECT nome FROM pessoas;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.7 FILTRAR DADOS COM WHERE                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Buscar pessoas com idade maior que 30
+SELECT nome, idade 
+FROM pessoas 
+WHERE idade > 30;
+
+/*
+   Operadores de comparação:
+   =  → igual a
+   <> ou != → diferente de
+   >  → maior que
+   <  → menor que
+   >= → maior ou igual
+   <= → menor ou igual
+   
+   Resultado:
+         nome       │ idade
+   ─────────────────┼───────
+    Pedro Oliveira  │    35
+    Carlos Souza    │    42
+*/
+
+-- Buscar pessoa específica pelo nome
+SELECT * FROM pessoas WHERE nome = 'Ana Costa';
+
+-- Buscar pessoas com idade entre 25 e 35
+SELECT nome, idade 
+FROM pessoas 
+WHERE idade >= 25 AND idade <= 35;
+
+-- Forma mais elegante usando BETWEEN
+SELECT nome, idade 
+FROM pessoas 
+WHERE idade BETWEEN 25 AND 35;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.8 ORDENAR RESULTADOS (ORDER BY)                                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Ordenar por idade (crescente é o padrão)
+SELECT nome, idade 
+FROM pessoas 
+ORDER BY idade;
+
+/*
+   Resultado (do mais novo ao mais velho):
+         nome       │ idade
+   ─────────────────┼───────
+    Maria Santos    │    25
+    Ana Costa       │    28
+    João Silva      │    30
+    Pedro Oliveira  │    35
+    Carlos Souza    │    42
+*/
+
+-- Ordenar por idade decrescente
+SELECT nome, idade 
+FROM pessoas 
+ORDER BY idade DESC;  -- DESC = Descending (decrescente)
+
+-- ASC = Ascending (crescente) - é o padrão, pode omitir
+
+-- Ordenar por nome alfabeticamente
+SELECT nome, idade 
+FROM pessoas 
+ORDER BY nome;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.9 ATUALIZAR DADOS (UPDATE)                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Atualizar a idade de uma pessoa específica
+UPDATE pessoas 
+SET idade = 31 
+WHERE nome = 'João Silva';
+
+/*
+   ⚠️ MUITO IMPORTANTE:
+   - SEMPRE use WHERE no UPDATE!
+   - Sem WHERE, TODAS as linhas serão atualizadas!
+   
+   Anatomia:
+   - UPDATE pessoas → tabela a atualizar
+   - SET idade = 31 → nova atribuição
+   - WHERE nome = 'João Silva' → condição (qual linha)
+*/
+
+-- Verificar a alteração
+SELECT * FROM pessoas WHERE nome = 'João Silva';
+-- idade agora deve ser 31
+
+-- ⚠️ EXEMPLO DO QUE NÃO FAZER:
+-- UPDATE pessoas SET idade = 99;
+-- (Isso colocaria 99 em TODAS as idades!)
+
+-- Atualizar múltiplas colunas ao mesmo tempo
+UPDATE pessoas 
+SET 
+    idade = 26,
+    nome = 'Maria Santos Silva'
+WHERE id = 2;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.10 DELETAR DADOS (DELETE)                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Deletar uma pessoa específica
+DELETE FROM pessoas WHERE id = 5;
+
+/*
+   ⚠️ SUPER IMPORTANTE:
+   - SEMPRE use WHERE no DELETE!
+   - Sem WHERE, TODA a tabela será esvaziada!
+   
+   Não há "Ctrl+Z" no SQL!
+   Use transações (veremos depois) para maior segurança.
+*/
+
+-- Verificar que Carlos Souza foi removido
+SELECT * FROM pessoas;
+
+-- ⚠️ NUNCA FAÇA ISSO (a menos que tenha CERTEZA):
+-- DELETE FROM pessoas;
+-- (Deleta TUDO!)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.11 CURIOSIDADES E SÍMBOLOS SQL                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 PONTO-E-VÍRGULA (;)
+   Termina um comando SQL
+   SELECT * FROM pessoas;
+   
+   No DBeaver, se executar com Ctrl+Enter, pode omitir
+   Mas em scripts, SEMPRE use!
+
+📌 ASPAS SIMPLES vs DUPLAS
+   'texto' → Strings/textos literais
+   "nome_coluna" → Identificadores (quando nome é palavra reservada)
+   
+   SELECT 'João' AS nome;  -- 'João' é um valor fixo
+   SELECT nome FROM pessoas;  -- nome é uma coluna
+
+📌 CASE SENSITIVE?
+   Comandos SQL: NÃO (SELECT = select = SeLeCt)
+   Nomes de tabelas/colunas no Postgres: NÃO (por padrão)
+   Valores em strings: SIM ('João' ≠ 'joão')
+
+📌 NULL
+   Representa ausência de valor (não é zero, não é vazio)
+   SELECT * FROM pessoas WHERE idade IS NULL;
+   ⚠️ Use "IS NULL", não "= NULL"
+
+📌 COMENT ÁRIOS
+   -- Comentário de linha
+   /* Bloco de comentário */
+
+
+================================================================================
+                    EXERCÍCIOS PRÁTICOS (17:00 - 17:30)
+================================================================================
+
+💪 EXERCÍCIO 1: CRIAR BANCO E TABELA DE ALUNOS (15 min)
+
+Faça o seguinte:
+
+1. Crie um banco de dados chamado "escola"
+2. Conecte-se a ele
+3. Crie uma tabela "alunos" com as seguintes colunas:
+   - matricula (INTEGER, chave primária)
+   - nome (VARCHAR 150)
+   - curso (VARCHAR 50)
+   - nota_final (INTEGER)
+
+DICA: Use o modelo da tabela "pessoas" como referência.
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 2: INSERIR DADOS (10 min)
+
+Insira os seguintes alunos na tabela:
+
+| Matrícula | Nome                | Curso           | Nota Final |
+|-----------|---------------------|-----------------|------------|
+| 1001      | Pedro Alves         | Informática     | 85         |
+| 1002      | Julia Mendes        | Administração   | 92         |
+| 1003      | Roberto Carlos      | Informática     | 78         |
+| 1004      | Fernanda Lima       | Contabilidade   | 88         |
+| 1005      | Marcos Vinicius     | Informática     | 95         |
+
+DICA: Use INSERT com múltiplas linhas!
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 3: CONSULTAS (15 min)
+
+Execute as seguintes consultas:
+
+a) Liste todos os alunos ordenados por nome
+b) Mostre apenas os alunos do curso de Informática
+c) Encontre alunos com nota final maior ou igual a 90
+d) Mostre nome e nota dos alunos, ordenado por nota (maior primeiro)
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 4: ATUALIZAÇÃO E DELEÇÃO (10 min)
+
+a) Atualize a nota do aluno "Roberto Carlos" para 82
+b) Delete o aluno com matrícula 1004
+c) Verifique se as alterações foram aplicadas (SELECT)
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 DESAFIO EXTRA (Opcional):
+
+Crie uma tabela "professores" com:
+- id (chave primária)
+- nome
+- disciplina
+- salario (use tipo DECIMAL(10,2) para valores monetários)
+
+Insira 3 professores e faça consultas variadas.
+
+
+================================================================================
+                              REVISÃO DA AULA
+================================================================================
+
+✅ O QUE APRENDEMOS HOJE:
+
+   1. Conceitos: SGBD, modelo relacional, ACID, SQL
+   2. Instalação: PostgreSQL + DBeaver
+   3. Comandos básicos:
+      • CREATE DATABASE
+      • CREATE TABLE
+      • INSERT INTO ... VALUES
+      • SELECT ... FROM ... WHERE ... ORDER BY
+      • UPDATE ... SET ... WHERE
+      • DELETE FROM ... WHERE
+   4. Boas práticas:
+      • Sempre use WHERE em UPDATE e DELETE
+      • Comente seu código
+      • Nomes claros para tabelas e colunas
+
+📚 TAREFA PARA CASA:
+
+   1. Ler a documentação oficial do PostgreSQL (Capítulo 1)
+      https://www.postgresql.org/docs/14/tutorial.html
+   
+   2. Explorar a interface do DBeaver
+   
+   3. Fazer os exercícios 1-10 da lista geral de exercícios
+   
+   4. (Opcional) Assistir: "PostgreSQL Tutorial for Beginners"
+
+🔜 PRÓXIMA AULA:
+   DDL - Tipos de Dados e Constraints Avançadas
+   - SERIAL, DATE, TIMESTAMP, BOOLEAN
+   - NOT NULL, UNIQUE, CHECK, DEFAULT
+   - Modificar tabelas com ALTER TABLE
+
+================================================================================
+                            FIM DA AULA 01
+================================================================================

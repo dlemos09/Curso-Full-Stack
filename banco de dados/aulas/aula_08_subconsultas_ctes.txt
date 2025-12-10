@@ -1,0 +1,265 @@
+================================================================================
+                              AULA 08 - DIA 8
+                      SUBCONSULTAS E CTEs (WITH)
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Usar subconsultas em SELECT, FROM, WHERE
+✓ Trabalhar com EXISTS e IN
+✓ Criar CTEs (Common Table Expressions) com WITH
+✓ Usar CTEs recursivas
+
+CRONOGRAMA:
+13:30-13:45 → Revisão | 13:45-14:45 → Subconsultas básicas
+14:45-15:30 → EXISTS e correlacionadas | 15:30-15:45 → Intervalo
+15:45-17:00 → CTEs e recursivas | 17:00-17:30 → Exercícios
+
+================================================================================
+PARTE 1: SUBCONSULTAS EM WHERE
+================================================================================
+
+-- Subconsulta retorna VALOR ÚNICO:
+SELECT * FROM produtos 
+WHERE preco > (SELECT AVG(preco) FROM produtos);
+-- Produtos acima da média de preço
+
+-- Subconsulta com IN (múltiplos valores):
+SELECT * FROM funcionarios
+WHERE departamento_id IN (
+    SELECT id FROM departamentos WHERE ativo = TRUE
+);
+
+-- NOT IN:
+SELECT * FROM clientes
+WHERE id NOT IN (
+    SELECT DISTINCT cliente_id FROM pedidos
+);
+-- Clientes que nunca compraram
+
+/*
+⚠️ CUIDADO COM NULL EM NOT IN:
+   Se subconsulta retornar NULL, NOT IN pode dar resultado inesperado!
+   Use EXISTS quando possível.
+*/
+
+================================================================================
+PARTE 2: EXISTS E NOT EXISTS
+================================================================================
+
+-- EXISTS: verifica se subconsulta retorna alguma linha
+
+-- Clientes que fizeram pelo menos um pedido:
+SELECT c.nome
+FROM clientes c
+WHERE EXISTS (
+    SELECT 1 FROM pedidos p 
+    WHERE p.cliente_id = c.id
+);
+
+-- NOT EXISTS: clientes sem pedidos
+SELECT c.nome
+FROM clientes c
+WHERE NOT EXISTS (
+    SELECT 1 FROM pedidos p 
+    WHERE p.cliente_id = c.id
+);
+
+/*
+💡 EXISTS é mais eficiente que IN/NOT IN:
+   - Para de buscar assim que encontra uma linha
+   - Melhor com grandes volumes de dados
+   - Não tem problema com NULL
+*/
+
+================================================================================
+PARTE 3: SUBCONSULTAS CORRELACIONADAS
+================================================================================
+
+-- Correlacionada: subconsulta usa valor da query externa
+
+-- Funcionários que ganham acima da média do SEU departamento:
+SELECT nome, salario, departamento_id
+FROM funcionarios f1
+WHERE salario > (
+    SELECT AVG(salario) 
+    FROM funcionarios f2 
+    WHERE f2.departamento_id = f1.departamento_id
+);
+
+-- Produtos com preço acima da média da SUA categoria:
+SELECT nome, preco, categoria_id
+FROM produtos p1
+WHERE preco > (
+    SELECT AVG(preco) 
+    FROM produtos p2 
+    WHERE p2.categoria_id = p1.categoria_id
+);
+
+================================================================================
+PARTE 4: SUBCONSULTAS NO FROM (DERIVED TABLES)
+================================================================================
+
+-- Subconsulta cria "tabela temporária":
+
+SELECT categoria, media_preco
+FROM (
+    SELECT 
+        categoria_id AS categoria,
+        AVG(preco) AS media_preco
+    FROM produtos
+    GROUP BY categoria_id
+) AS sub
+WHERE media_preco > 100;
+
+-- Útil para simplificar queries complexas:
+SELECT 
+    vendas_mes.mes,
+    vendas_mes.total,
+    vendas_mes.total / 30 AS media_dia
+FROM (
+    SELECT 
+        EXTRACT(MONTH FROM data_pedido) AS mes,
+        SUM(valor_total) AS total
+    FROM pedidos
+    GROUP BY EXTRACT(MONTH FROM data_pedido)
+) AS vendas_mes;
+
+================================================================================
+PARTE 5: CTEs - COMMON TABLE EXPRESSIONS (WITH)
+================================================================================
+
+-- CTE: versão mais legível de subconsulta
+
+WITH vendas_categoria AS (
+    SELECT 
+        categoria_id,
+        SUM(quantidade) AS total_vendido
+    FROM produtos p
+    JOIN itens_pedido ip ON p.id = ip.produto_id
+    GROUP BY categoria_id
+)
+SELECT * FROM vendas_categoria
+WHERE total_vendido > 100;
+
+-- Múltiplas CTEs:
+WITH 
+    clientes_ativos AS (
+        SELECT * FROM clientes WHERE ativo = TRUE
+    ),
+    pedidos_2024 AS (
+        SELECT * FROM pedidos WHERE EXTRACT(YEAR FROM data_pedido) = 2024
+    )
+SELECT 
+    c.nome,
+    COUNT(p.id) AS total_pedidos
+FROM clientes_ativos c
+LEFT JOIN pedidos_2024 p ON c.id = p.cliente_id
+GROUP BY c.nome;
+
+/*
+💡 VANTAGENS DAS CTEs:
+   - Mais legíveis que subconsultas aninhadas
+   - Podem ser referenciadas múltiplas vezes
+   - Facilitam manutenção
+   - Suportam recursão
+*/
+
+================================================================================
+PARTE 6: CTEs RECURSIVAS
+================================================================================
+
+-- CTE Recursiva: para hierarquias e árvores
+
+-- Exemplo: hierarquia de funcionários (gerente → subordinados)
+WITH RECURSIVE hierarquia AS (
+    -- Caso base: gerentes sem superior
+    SELECT id, nome, gerente_id, 1 AS nivel
+    FROM funcionarios
+    WHERE gerente_id IS NULL
+    
+    UNION ALL
+    
+    -- Caso recursivo: subordinados
+    SELECT f.id, f.nome, f.gerente_id, h.nivel + 1
+    FROM funcionarios f
+    INNER JOIN hierarquia h ON f.gerente_id = h.id
+)
+SELECT * FROM hierarquia ORDER BY nivel, nome;
+
+-- Gerar sequência de números:
+WITH RECURSIVE numeros AS (
+    SELECT 1 AS n
+    UNION ALL
+    SELECT n + 1 FROM numeros WHERE n < 10
+)
+SELECT * FROM numeros;
+-- Resultado: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+
+================================================================================
+EXEMPLOS PRÁTICOS
+================================================================================
+
+-- Dashboard de vendas com CTEs:
+WITH 
+    vendas_mes AS (
+        SELECT 
+            EXTRACT(MONTH FROM data_pedido) AS mes,
+            SUM(valor_total) AS total
+        FROM pedidos
+        WHERE EXTRACT(YEAR FROM data_pedido) = 2024
+        GROUP BY EXTRACT(MONTH FROM data_pedido)
+    ),
+    melhores_clientes AS (
+        SELECT 
+            cliente_id,
+            SUM(valor_total) AS total_gasto
+        FROM pedidos
+        GROUP BY cliente_id
+        ORDER BY total_gasto DESC
+        LIMIT 10
+    )
+SELECT 
+    vm.mes,
+    vm.total AS receita_mensal,
+    (SELECT COUNT(*) FROM melhores_clientes) AS top_clientes
+FROM vendas_mes vm;
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+💪 EXERCÍCIO 1: Subconsultas Básicas (10 min)
+a) Produtos com preço acima da média geral
+b) Funcionários do departamento com mais funcionários
+c) Pedidos com valor acima da média
+d) Clientes que nunca compraram (NOT IN ou NOT EXISTS)
+
+💪 EXERCÍCIO 2: Correlacionadas (15 min)
+a) Funcionários com salário acima da média do seu cargo
+b) Produtos mais caros que a média da sua categoria
+c) Último pedido de cada cliente (use MAX)
+
+💪 EXERCÍCIO 3: CTEs (15 min)
+a) Criar CTE com vendas por categoria, depois filtrar
+b) Usar 2+ CTEs para criar relatório de vendas
+c) CTE recursiva para gerar calendário de 30 dias
+
+💪 DESAFIO:
+Crie hierarquia completa de categorias (categoria → subcategoria → 
+sub-subcategoria) usando CTE recursiva.
+
+RESUMO:
+• Subconsultas em WHERE, FROM, SELECT
+• IN / NOT IN → múltiplos valores
+• EXISTS / NOT EXISTS → verificar existência (mais eficiente)
+• Correlacionadas → usam valor da query externa
+• CTEs (WITH) → subconsultas nomeadas e legíveis
+• CTEs recursivas → hierarquias e sequências
+
+TAREFA: Exercícios 71-75 | PRÓXIMA AULA: Views, Materialized Views, Índices
+
+================================================================================
+FIM DA AULA 08
+================================================================================

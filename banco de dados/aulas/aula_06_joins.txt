@@ -1,0 +1,170 @@
+================================================================================
+                              AULA 06 - DIA 6
+                        JOINS - RELACIONANDO TABELAS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Dominar todos os tipos de JOIN
+✓ Combinar dados de múltiplas tabelas
+✓ Usar aliases para simplificar queries
+✓ Entender diferenças entre INNER, LEFT, RIGHT, FULL, CROSS, SELF JOIN
+
+CRONOGRAMA:
+13:30-13:45 → Revisão | 13:45-14:45 → INNER e LEFT JOIN
+14:45-15:30 → RIGHT, FULL, CROSS | 15:30-15:45 → Intervalo
+15:45-17:00 → SELF JOIN e prática | 17:00-17:30 → Exercícios
+
+================================================================================
+PARTE 1: INNER JOIN
+================================================================================
+
+-- INNER JOIN: retorna apenas linhas com correspondência EM AMBAS as tabelas
+
+SELECT 
+    f.nome AS funcionario,
+    d.nome AS departamento
+FROM funcionarios f
+INNER JOIN departamentos d ON f.departamento_id = d.id;
+
+-- Apenas funcionários que TÊM departamento
+-- Funcionários sem departamento (NULL) NÃO aparecem
+
+-- JOIN com múltiplas tabelas:
+SELECT 
+    c.nome AS cliente,
+    p.data_pedido,
+    prod.nome AS produto,
+    ip.quantidade
+FROM clientes c
+INNER JOIN pedidos p ON c.id = p.cliente_id
+INNER JOIN itens_pedido ip ON p.id = ip.pedido_id
+INNER JOIN produtos prod ON ip.produto_id = prod.id;
+
+/*
+💡 ALIASES (f, d, c, p):
+   - Simplificam a escrita
+   - Obrigatórios quando há colunas com mesmo nome
+   - Convenção: primeiras letras da tabela
+*/
+
+================================================================================
+PARTE 2: LEFT JOIN (LEFT OUTER JOIN)
+================================================================================
+
+-- LEFT JOIN: retorna TODAS as linhas da tabela da ESQUERDA + correspondências
+
+SELECT 
+    c.nome AS cliente,
+    p.id AS pedido_id,
+    p.valor_total
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id;
+
+-- Resultado: TODOS os clientes, mesmo sem pedidos
+-- Clientes sem pedidos terão NULL nas colunas de pedidos
+
+-- Encontrar clientes SEM pedidos:
+SELECT c.nome
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id
+WHERE p.id IS NULL;
+
+================================================================================
+PARTE 3: RIGHT JOIN E FULL OUTER JOIN
+================================================================================
+
+-- RIGHT JOIN: oposto do LEFT (todas da direita)
+SELECT 
+    p.id,
+    c.nome
+FROM pedidos p
+RIGHT JOIN clientes c ON p.cliente_id = c.id;
+-- Mesma coisa que LEFT JOIN invertendo ordem das tabelas
+
+-- FULL OUTER JOIN: TODAS as linhas de AMBAS
+SELECT 
+    f.nome,
+    d.nome
+FROM funcionarios f
+FULL OUTER JOIN departamentos d ON f.departamento_id = d.id;
+-- Mostra: funcionários sem depto + deptos sem funcionários + correspondências
+
+================================================================================
+PARTE 4: CROSS JOIN (PRODUTO CARTESIANO)
+================================================================================
+
+-- CROSS JOIN: combina CADA linha da tabela A com CADA linha da tabela B
+
+SELECT 
+    c.nome AS cor,
+    t.nome AS tamanho
+FROM cores c
+CROSS JOIN tamanhos t;
+
+-- Se cores = [Azul, Verde] e tamanhos = [P, M, G]
+-- Resultado:
+-- Azul-P, Azul-M, Azul-G, Verde-P, Verde-M, Verde-G
+
+/*
+⚠️ CUIDADO: CROSS JOIN pode gerar MUITAS linhas!
+   1000 produtos × 1000 clientes = 1.000.000 linhas!
+*/
+
+================================================================================
+PARTE 5: SELF JOIN (TABELA COM ELA MESMA)
+================================================================================
+
+-- SELF JOIN: juntar tabela consigo mesma (usar aliases diferentes!)
+
+-- Exemplo: hierarquia de funcionários (funcionário → gerente)
+SELECT 
+    f.nome AS funcionario,
+    g.nome AS gerente
+FROM funcionarios f
+LEFT JOIN funcionarios g ON f.gerente_id = g.id;
+
+-- Encontrar pares de funcionários do mesmo departamento:
+SELECT 
+    f1.nome AS funcionario1,
+    f2.nome AS funcionario2,
+    f1.departamento_id
+FROM funcionarios f1
+INNER JOIN funcionarios f2 
+    ON f1.departamento_id = f2.departamento_id
+    AND f1.id < f2.id;  -- Evita duplicatas (A-B = B-A)
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+💪 EXERCÍCIO 1: Sistema de Vendas (15 min)
+Crie queries com JOIN para:
+a) Listar todos os pedidos com nome do cliente
+b) Mostrar produtos vendidos com nome do cliente que comprou
+c) Encontrar clientes que NUNCA fizeram pedidos (LEFT JOIN + IS NULL)
+
+💪 EXERCÍCIO 2: Relatórios (15 min)
+a) Total de vendas por categoria de produto (JOIN + GROUP BY)
+b) Funcionários e seus gerentes (SELF JOIN)
+c) Produtos e categorias, incluindo produtos sem categoria
+
+💪 EXERCÍCIO 3: Queries Complexas (20 min)
+a) 3+ tabelas: pedido → cliente → cidade + produto → categoria
+b) Encontrar departamentos sem funcionários (RIGHT/FULL JOIN)
+c) Todos os alunos e todas as disciplinas (CROSS JOIN)
+
+RESUMO:
+• INNER JOIN → apenas correspondências
+• LEFT JOIN → todas da esquerda + correspondências
+• RIGHT JOIN → todas da direita + correspondências
+• FULL JOIN → todas de ambas
+• CROSS JOIN → todas as combinações
+• SELF JOIN → tabela consigo mesma
+
+TAREFA: Exercícios 51-60 | PRÓXIMA AULA: Funções Agregadas e GROUP BY
+
+================================================================================
+FIM DA AULA 06
+================================================================================

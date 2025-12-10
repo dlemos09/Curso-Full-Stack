@@ -1,0 +1,24 @@
+Aula 06 – Módulos, NPM e Estrutura de Projeto
+
+Conteúdo Teórico
+- ES Modules vs CommonJS; import/export.
+- NPM: package.json, scripts, deps/devDeps, semver.
+- Estrutura de projeto: src, test, dist; padrões.
+
+Exemplos
+// moduleA.js
+export function soma(a,b){ return a+b; }
+// main.js
+import { soma } from './moduleA.js';
+console.log(soma(2,3));
+
+Exercícios
+- Básico: crie dois módulos e importe/exporte funções.
+- Intermediário: inicialize package.json; scripts para build/test.
+- Avançado: publique pacote local no npm (simulado) e versionamento semver.
+
+Atividade Real
+- Scaffold de projeto com scripts úteis e documentação inicial.
+
+Resumo
+- Módulos e NPM organizam e automatizam seu fluxo de trabalho.

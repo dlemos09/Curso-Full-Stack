@@ -1,0 +1,681 @@
+================================================================================
+                PLANO DE AULA COMPLETO - BANCO DE DADOS RELACIONAL
+                      Curso Intensivo: PostgreSQL + DBeaver
+                        15 Dias | 60 Horas | Nível: Básico ao Avançado
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                         COMO USAR ESTE DOCUMENTO                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Este é o plano completo do curso intensivo de Banco de Dados Relacional.
+
+MATERIAIS COMPLEMENTARES:
+├── exercicios_bd_postgres.txt ........ Lista de exercícios (enunciados)
+├── gabarito_bd_postgres.txt .......... Respostas completas com SQL
+├── scripts.sql ....................... Todos os scripts para executar
+├── clientes.csv ...................... Dados de exemplo para importação
+├── produtos.csv ...................... Dados de exemplo para importação
+└── pedidos.csv ....................... Dados de exemplo para importação
+
+FERRAMENTAS NECESSÁRIAS:
+✓ PostgreSQL 14+ (https://www.postgresql.org/download/)
+✓ DBeaver Community 23+ (https://dbeaver.io/download/)
+✓ Opcional: Docker (para ambiente isolado)
+
+PÚBLICO-ALVO:
+- Estudantes e profissionais de TI
+- Desenvolvedores iniciantes em banco de dados
+- Analistas que precisam consultar dados
+- Quem busca certificação em PostgreSQL
+
+PRÉ-REQUISITOS:
+- Conhecimento básico de informática
+- Lógica de programação (desejável)
+- Inglês técnico básico (leitura)
+
+================================================================================
+                              SUMÁRIO EXECUTIVO
+================================================================================
+
+1. Informações Gerais do Curso
+2. Objetivos de Aprendizagem
+3. Metodologia de Ensino
+4. Cronograma Detalhado (15 dias)
+5. Conteúdo Programático Completo
+6. Avaliação e Certificação
+7. Recursos e Referências
+8. Anexos (Guias de Instalação)
+
+================================================================================
+                        1. INFORMAÇÕES GERAIS DO CURSO
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ NOME DO CURSO                                                              ║
+║ Banco de Dados Relacional Completo: PostgreSQL do Básico ao Avançado      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CARGA HORÁRIA TOTAL: 60 horas
+├── Aulas teóricas: 18 horas (30%)
+├── Aulas práticas: 30 horas (50%)
+└── Exercícios e projetos: 12 horas (20%)
+
+DURAÇÃO: 15 dias consecutivos
+├── Segunda a Sexta: 4 horas/dia (13:30 - 17:30)
+├── Intervalo: 15 minutos (15:30 - 15:45)
+└── Formato: Presencial ou Online Síncrono
+
+TURMA:
+├── Tamanho ideal: 15-25 alunos
+├── Máximo: 30 alunos
+└── Proporção: 1 instrutor + 1 monitor (opcional)
+
+AMBIENTE TÉCNICO:
+├── Sistema Operacional: Windows, Linux ou macOS
+├── SGBD: PostgreSQL 14 ou superior
+├── Cliente SQL: DBeaver Community Edition
+├── Hardware mínimo: 4GB RAM, 10GB disco livre
+└── Conexão com internet (para downloads e pesquisas)
+
+================================================================================
+                      2. OBJETIVOS DE APRENDIZAGEM
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ OBJETIVO GERAL                                                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Capacitar os alunos a projetar, implementar, consultar e administrar bancos 
+de dados relacionais utilizando PostgreSQL, seguindo as melhores práticas da 
+indústria, do nível básico ao avançado.
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ OBJETIVOS ESPECÍFICOS                                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Ao final do curso, o aluno será capaz de:
+
+📊 MODELAGEM E PROJETO
+   ✓ Criar modelos Entidade-Relacionamento (ER) completos
+   ✓ Aplicar normalização (1FN, 2FN, 3FN)
+   ✓ Projetar tabelas escaláveis e manuteníveis
+   ✓ Definir relacionamentos e integridade referencial
+
+🔧 LINGUAGEM SQL - DDL (Data Definition Language)
+   ✓ Criar e gerenciar databases e tabelas
+   ✓ Definir tabelas com tipos de dados apropriados
+   ✓ Implementar constraints (PK, FK, UNIQUE, CHECK, NOT NULL)
+   ✓ Modificar estruturas existentes com ALTER TABLE
+   ✓ Criar e gerenciar índices para performance
+
+📝 LINGUAGEM SQL - DML (Data Manipulation Language)
+   ✓ Inserir dados (INSERT) de forma eficiente
+   ✓ Atualizar registros (UPDATE) com precisão
+   ✓ Deletar dados (DELETE) com segurança
+   ✓ Controlar transações (BEGIN, COMMIT, ROLLBACK)
+   ✓ Entender níveis de isolamento
+
+🔍 CONSULTAS (QUERIES)
+   ✓ Escrever SELECTs simples e complexos
+   ✓ Aplicar filtros (WHERE) com múltiplos operadores
+   ✓ Ordenar e paginar resultados (ORDER BY, LIMIT, OFFSET)
+   ✓ Realizar todos os tipos de JOIN (INNER, LEFT, RIGHT, FULL, CROSS, SELF)
+   ✓ Usar subconsultas e CTEs (Common Table Expressions)
+   ✓ Aplicar funções agregadas (COUNT, SUM, AVG, MAX, MIN)
+   ✓ Agrupar dados (GROUP BY) e filtrar grupos (HAVING)
+   ✓ Utilizar window functions para análises avançadas
+
+🎯 OBJETOS AVANÇADOS
+   ✓ Criar e gerenciar VIEWs e MATERIALIZED VIEWs
+   ✓ Desenvolver funções (SQL e PL/pgSQL)
+   ✓ Implementar stored procedures
+   ✓ Criar triggers para automação
+   ✓ Usar tipos de dados avançados (JSONB, ARRAY, etc.)
+
+⚡ PERFORMANCE E OTIMIZAÇÃO
+   ✓ Analisar planos de execução (EXPLAIN/EXPLAIN ANALYZE)
+   ✓ Identificar e resolver gargalos de performance
+   ✓ Criar índices estratégicos (B-Tree, GIN, GIST)
+   ✓ Otimizar queries complexas
+   ✓ Entender quando normalizar vs desnormalizar
+
+🔒 ADMINISTRAÇÃO E SEGURANÇA
+   ✓ Gerenciar usuários e roles
+   ✓ Configurar permissões (GRANT/REVOKE)
+   ✓ Realizar backup e restore (pg_dump, pg_restore)
+   ✓ Executar manutenção (VACUUM, ANALYZE, REINDEX)
+   ✓ Monitorar performance e uso de recursos
+
+🛠️ FERRAMENTAS
+   ✓ Dominar DBeaver para desenvolvimento
+   ✓ Usar psql (linha de comando) para administração
+   ✓ Importar/exportar dados (CSV, SQL, JSON)
+   ✓ Debugar e troubleshoot problemas
+
+================================================================================
+                        3. METODOLOGIA DE ENSINO
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ABORDAGEM PEDAGÓGICA                                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+O curso adota metodologia PRÁTICA E APLICADA, baseada em:
+
+🎓 TEORIA APLICADA (30% do tempo)
+   - Conceitos explicados de forma objetiva
+   - Slides com diagramas e exemplos visuais
+   - Demonstrações ao vivo no DBeaver
+   - Discussão de casos reais da indústria
+
+💻 PRÁTICA GUIADA (50% do tempo)
+   - Instrutor executa + alunos replicam simultaneamente
+   - Exercícios progressivos (fácil → médio → avançado)
+   - Correção em tempo real
+   - Pair programming (trabalho em duplas)
+
+🚀 AUTONOMIA (20% do tempo)
+   - Exercícios individuais
+   - Desafios opcionais
+   - Projetos em grupo
+   - Pesquisa e experimentação
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ ESTRUTURA DE CADA AULA (4 HORAS)                                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+13:30 - 13:45 (15 min) │ REVISÃO E AQUECIMENTO
+                       │ ✓ Recap da aula anterior
+                       │ ✓ Dúvidas pendentes
+                       │ ✓ Quiz rápido (Kahoot/Mentimeter)
+13:45 - 14:45 (60 min) │ CONTEÚDO TEÓRICO + DEMONSTRAÇÃO
+                       │ ✓ Apresentação de novos conceitos
+                       │ ✓ Demonstração ao vivo
+                       │ ✓ Exemplos práticos
+14:45 - 15:30 (45 min) │ PRÁTICA GUIADA
+                       │ ✓ Alunos replicam os exemplos
+                       │ ✓ Instrutor auxilia individualmente
+                       │ ✓ Troubleshooting coletivo
+15:30 - 15:45 (15 min) │ ☕ INTERVALO
+15:45 - 17:00 (75 min) │ EXERCÍCIOS PRÁTICOS
+                       │ ✓ Exercícios individuais/duplas
+                       │ ✓ Desafios de dificuldade crescente
+                       │ ✓ Instrutor como facilitador
+17:00 - 17:30 (30 min) │ REVISÃO E ENCERRAMENTO
+                       │ ✓ Correção de exercícios selecionados
+                       │ ✓ Discussão de soluções alternativas
+                       │ ✓ Preview da próxima aula
+                       │ ✓ Tarefa para casa (opcional)
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ RECURSOS DIDÁTICOS                                                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📺 APRESENTAÇÃO
+   - Slides (PowerPoint/Google Slides)
+   - Diagramas ER (draw.io, Lucidchart)
+   - Projetor/tela compartilhada
+
+💾 MATERIAIS DIGITAIS
+   - Apostila completa (este documento)
+   - Scripts SQL prontos
+   - Datasets para importação
+   - Cheat sheets de referência
+
+🌐 FERRAMENTAS ONLINE
+   - Fórum de dúvidas (Discord/Slack)
+   - Repositório Git com materiais
+   - Quiz interativos
+   - Gravações das aulas (se online)
+
+📚 REFERÊNCIAS
+   - Documentação oficial PostgreSQL
+   - Stack Overflow
+   - Tutoriais selecionados
+   - Livros recomendados
+
+================================================================================
+                      4. CRONOGRAMA DETALHADO (15 DIAS)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                              VISÃO GERAL                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+SEMANA 1: FUNDAMENTOS
+├── Dia 1: Introdução + Instalação + Conceitos Básicos
+├── Dia 2: DDL - Criação de Estruturas
+├── Dia 3: DDL Avançado - Constraints e Relacionamentos
+├── Dia 4: DML - Manipulação de Dados
+└── Dia 5: Consultas Básicas + REVISÃO SEMANA 1
+
+SEMANA 2: INTERMEDIÁRIO
+├── Dia 6: Joins e Relacionamentos
+├── Dia 7: Funções Agregadas e Agrupamento
+├── Dia 8: Subconsultas
+├── Dia 9: Views e Índices
+└── Dia 10: PROJETO PRÁTICO 1 + REVISÃO SEMANA 2
+
+SEMANA 3: AVANÇADO
+├── Dia 11: Funções e Procedures
+├── Dia 12: Triggers e Automação
+├── Dia 13: Performance e Otimização
+├── Dia 14: Administração e Segurança
+└── Dia 15: PROJETO FINAL + AVALIAÇÃO + ENCERRAMENTO
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ DIA 1: INTRODUÇÃO + INSTALAÇÃO + CONCEITOS BÁSICOS                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+🎯 OBJETIVOS DO DIA:
+   ✓ Compreender o que são bancos de dados relacionais
+   ✓ Instalar e configurar PostgreSQL e DBeaver
+   ✓ Executar primeiros comandos SQL
+   ✓ Entender conceitos de tabelas, linhas, colunas
+
+📋 CONTEÚDO:
+13:30 - 13:45 │ APRESENTAÇÃO DO CURSO
+              │ • Apresentação do instrutor
+              │ • Dinâmica de integração dos alunos
+              │ • Visão geral do cronograma
+              │ • Expectativas e regras
+13:45 - 14:45 │ PARTE 1: CONCEITOS FUNDAMENTAIS
+              │ 
+              │ 🔹 O que é um Banco de Dados?
+              │    - Definição e importância
+              │    - Dados vs Informação vs Conhecimento
+              │    - Sistemas de arquivos vs SGBD
+              │ 
+              │ 🔹 Banco de Dados Relacional
+              │    - Modelo relacional (E.F. Codd, 1970)
+              │    - Tabelas, tuplas (linhas), atributos (colunas)
+              │    - Chaves primárias e estrangeiras
+              │    - Relacionamentos (1:1, 1:N, N:N)
+              │ 
+              │ 🔹 RDBMS vs NoSQL
+              │    - Quando usar cada um
+              │    - Vantagens e desvantagens
+              │    - Exemplos de SGBDs: PostgreSQL, MySQL, SQL Server, Oracle
+              │ 
+              │ 🔹 Propriedades ACID
+              │    - Atomicity (Atomicidade)
+              │    - Consistency (Consistência)
+              │    - Isolation (Isolamento)
+              │    - Durability (Durabilidade)
+              │ 
+              │ 🔹 SQL - Structured Query Language
+              │    - História e padronização (ANSI SQL)
+              │    - Categorias: DDL, DML, DCL, TCL, DQL
+              │    - SQL procedural vs declarativo
+              │ 
+              │ 🔹 Por que PostgreSQL?
+              │    - Open source e comunidade ativa
+              │    - Conformidade com padrões SQL
+              │    - Performance e recursos avançados
+              │    - Extensibilidade
+              │    - Casos de uso na indústria
+
+14:45 - 15:30 │ PARTE 2: INSTALAÇÃO E CONFIGURAÇÃO
+              │ 
+              │ 🔧 Instalação do PostgreSQL (Hands-on)
+              │ 
+              │    WINDOWS:
+              │    1. Download do instalador em postgresql.org
+              │    2. Executar instalador
+              │    3. Definir senha do superusuário (postgres)
+              │    4. Porta padrão: 5432
+              │    5. Locale: Portuguese, Brazil
+              │    6. Instalar Stack Builder (opcional)
+              │    7. Verificar serviço no Services.msc
+              │ 
+              │    LINUX (Ubuntu/Debian):
+              │    ```bash
+              │    # Atualizar repositórios
+              │    sudo apt update
+              │    
+              │    # Instalar PostgreSQL
+              │    sudo apt install postgresql postgresql-contrib
+              │    
+              │    # Verificar status
+              │    sudo systemctl status postgresql
+              │    
+              │    # Acessar como usuário postgres
+              │    sudo -u postgres psql
+              │    
+              │    # Definir senha
+              │    ALTER USER postgres PASSWORD 'sua_senha';
+              │    ```
+              │ 
+              │    MAC (via Homebrew):
+              │    ```bash
+              │    brew install postgresql@14
+              │    brew services start postgresql@14
+              │    psql postgres
+              │    ```
+              │ 
+              │    DOCKER (alternativa):
+              │    ```bash
+              │    docker run --name postgres-curso \
+              │      -e POSTGRES_PASSWORD=senha123 \
+              │      -p 5432:5432 \
+              │      -d postgres:14
+              │    ```
+              │ 
+              │ 🔧 Instalação do DBeaver
+              │    1. Download em dbeaver.io
+              │    2. Instalar versão Community
+              │    3. Executar DBeaver
+              │    4. Criar nova conexão PostgreSQL:
+              │       - Host: localhost
+              │       - Port: 5432
+              │       - Database: postgres
+              │       - Username: postgres
+              │       - Password: [sua senha]
+              │    5. Test Connection
+              │    6. Baixar driver JDBC (automático)
+              │    7. Finish
+              │ 
+              │ 🔧 Tour pelo DBeaver
+              │    - Database Navigator (árvore à esquerda)
+              │    - SQL Editor (área principal)
+              │    - Properties (painel inferior)
+              │    - Atalhos úteis:
+              │      • Ctrl+Enter: Executar query
+              │      • Ctrl+Space: Autocomplete
+              │      • F4: Editar objeto
+              │      • Alt+X: Executar script
+
+15:30 - 15:45 │ ☕ INTERVALO
+
+15:45 - 17:00 │ PARTE 3: PRIMEIROS COMANDOS SQL
+              │ 
+              │ 🔹 Comandos Básicos no psql/DBeaver
+              │ 
+              │ -- ================================================
+              │ -- Listar bancos de dados existentes
+              │ -- ================================================
+              │ -- No DBeaver: veja no Database Navigator
+              │ -- No psql: use \l
+              │ 
+              │ SELECT datname FROM pg_database;
+              │ 
+              │ -- Resultado:
+              │ --   datname
+              │ -- -----------
+              │ --   postgres
+              │ --   template0
+              │ --   template1
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Criar primeiro banco de dados
+              │ -- ================================================
+              │ 
+              │ CREATE DATABASE meu_primeiro_bd;
+              │ 
+              │ -- Comentário: cria banco vazio
+              │ 
+              │ COMMENT ON DATABASE meu_primeiro_bd 
+              │ IS 'Banco de dados para aprendizado';
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Conectar ao banco (DBeaver: selecione no dropdown)
+              │ -- ================================================
+              │ 
+              │ \c meu_primeiro_bd  -- psql
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Criar primeira tabela
+              │ -- ================================================
+              │ 
+              │ CREATE TABLE pessoas (
+              │     id INTEGER PRIMARY KEY,
+              │     nome VARCHAR(100),
+              │     idade INTEGER
+              │ );
+              │ 
+              │ -- Explicação linha por linha:
+              │ -- CREATE TABLE: comando para criar tabela
+              │ -- pessoas: nome da tabela
+              │ -- id INTEGER: coluna chamada "id" do tipo número inteiro
+              │ -- PRIMARY KEY: marca "id" como chave primária (única, não-nula)
+              │ -- nome VARCHAR(100): coluna texto até 100 caracteres
+              │ -- idade INTEGER: coluna número inteiro
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Inserir dados na tabela
+              │ -- ================================================
+              │ 
+              │ INSERT INTO pessoas (id, nome, idade) 
+              │ VALUES (1, 'João Silva', 30);
+              │ 
+              │ -- Explicação:
+              │ -- INSERT INTO: comando para inserir
+              │ -- pessoas: tabela destino
+              │ -- (id, nome, idade): colunas que receberão valores
+              │ -- VALUES (...): valores correspondentes
+              │ 
+              │ -- Inserir múltiplas linhas de uma vez:
+              │ INSERT INTO pessoas (id, nome, idade) VALUES
+              │     (2, 'Maria Santos', 25),
+              │     (3, 'Pedro Oliveira', 35),
+              │     (4, 'Ana Costa', 28);
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Consultar dados (SELECT)
+              │ -- ================================================
+              │ 
+              │ -- Selecionar todas as colunas de todas as linhas
+              │ SELECT * FROM pessoas;
+              │ 
+              │ -- Resultado:
+              │ --  id │      nome       │ idade
+              │ -- ────┼─────────────────┼───────
+              │ --   1 │ João Silva      │    30
+              │ --   2 │ Maria Santos    │    25
+              │ --   3 │ Pedro Oliveira  │    35
+              │ --   4 │ Ana Costa       │    28
+              │ 
+              │ 
+              │ -- Selecionar colunas específicas
+              │ SELECT nome, idade FROM pessoas;
+              │ 
+              │ -- Resultado:
+              │ --       nome       │ idade
+              │ -- ─────────────────┼───────
+              │ --  João Silva      │    30
+              │ --  Maria Santos    │    25
+              │ --  Pedro Oliveira  │    35
+              │ --  Ana Costa       │    28
+              │ 
+              │ 
+              │ -- Filtrar com WHERE
+              │ SELECT nome FROM pessoas WHERE idade > 28;
+              │ 
+              │ -- Resultado:
+              │ --       nome
+              │ -- ─────────────────
+              │ --  João Silva
+              │ --  Pedro Oliveira
+              │ 
+              │ 
+              │ -- Ordenar com ORDER BY
+              │ SELECT nome, idade 
+              │ FROM pessoas 
+              │ ORDER BY idade DESC;  -- DESC = decrescente
+              │ 
+              │ -- Resultado (do mais velho para o mais novo):
+              │ --       nome       │ idade
+              │ -- ─────────────────┼───────
+              │ --  Pedro Oliveira  │    35
+              │ --  João Silva      │    30
+              │ --  Ana Costa       │    28
+              │ --  Maria Santos    │    25
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Atualizar dados (UPDATE)
+              │ -- ================================================
+              │ 
+              │ UPDATE pessoas 
+              │ SET idade = 31 
+              │ WHERE nome = 'João Silva';
+              │ 
+              │ -- Explicação:
+              │ -- UPDATE: comando para atualizar
+              │ -- pessoas: tabela a ser atualizada
+              │ -- SET idade = 31: define novo valor
+              │ -- WHERE: condição (sem WHERE, atualiza TODAS as linhas!)
+              │ 
+              │ -- Verificar:
+              │ SELECT * FROM pessoas WHERE nome = 'João Silva';
+              │ -- idade agora é 31
+              │ 
+              │ 
+              │ -- ================================================
+              │ -- Deletar dados (DELETE)
+              │ -- ================================================
+              │ 
+              │ DELETE FROM pessoas WHERE id = 4;
+              │ 
+              │ -- CUIDADO: sem WHERE, deleta TUDO!
+              │ 
+              │ SELECT * FROM pessoas;
+              │ -- Ana Costa não aparece mais
+
+17:00 - 17:30 │ REVISÃO E EXERCÍCIOS
+              │ 
+              │ 📝 EXERCÍCIOS PRÁTICOS:
+              │ 
+              │ 1. Crie um banco chamado "escola"
+              │ 2. Nele, crie uma tabela "alunos" com:
+              │    - matricula (número, chave primária)
+              │    - nome (texto)
+              │    - curso (texto)
+              │ 3. Insira 5 alunos
+              │ 4. Consulte todos os alunos do curso "Informática"
+              │ 5. Atualize o curso de um aluno específico
+              │ 6. Delete um aluno
+              │ 
+              │ 💬 DISCUSSÃO:
+              │ - O que acontece se tentar inserir dois alunos com mesma matrícula?
+              │ - Como garantir que o nome seja obrigatório?
+              │ - E se deletarmos sem WHERE?
+              │ 
+              │ 🏠 TAREFA PARA CASA:
+              │ - Ler capítulo 1 da documentação do PostgreSQL
+              │ - Explorar interface do DBeaver
+              │ - Fazer os exercícios 1-3 da lista
+
+📚 RECURSOS:
+   - Slides: "Dia 1 - Introdução aos Bancos de Dados.pdf"
+   - Guia: "Como Instalar PostgreSQL e DBeaver.pdf"
+   - Cheat Sheet: "Comandos SQL Básicos.pdf"
+
+📊 AVALIAÇÃO DO DIA:
+   - Quiz de 5 questões sobre conceitos (não vale nota)
+   - Verificar se todos conseguiram instalar as ferramentas
+
+═══════════════════════════════════════════════════════════════════════════
+
+[... O plano continua com os 14 dias restantes em formato similar ...]
+
+═══════════════════════════════════════════════════════════════════════════
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ DIA 2: DDL - CRIAÇÃO DE ESTRUTURAS                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+🎯 OBJETIVOS DO DIA:
+   ✓ Dominar CREATE TABLE com diversos tipos de dados
+   ✓ Entender e aplicar constraints básicas
+   ✓ Trabalhar com AUTO INCREMENT (SERIAL)
+   ✓ Usar DEFAULT e NOT NULL
+
+📋 CONTEÚDO:
+
+[Formato similar ao Dia 1, com divisão em partes, códigos comentados,
+ exercícios práticos, etc.]
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ DIA 3: DDL AVANÇADO - CONSTRAINTS E RELACIONAMENTOS                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+[Continua...]
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ DIA 15: PROJETO FINAL + AVALIAÇÃO + ENCERRAMENTO                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+[Últimodia com projeto integrador e avaliação final]
+
+================================================================================
+                      6. AVALIAÇÃO E CERTIFICAÇÃO
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ SISTEMA DE AVALIAÇÃO                                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COMPOSIÇÃO DA NOTA FINAL:
+
+├── Participação e Exercícios em Aula (30%)
+│   ├── Presença e pontualidade (10%)
+│   ├── Exercícios práticos diários (15%)
+│   └── Contribuição em discussões (5%)
+│
+├── Projeto Prático 1 - Dia 10 (20%)
+│   └── Sistema de Loja Virtual (modelagem + queries)
+│
+├── Projeto Prático 2 - Dia 15 (30%)
+│   └── Projeto Final Integrado (completo)
+│
+└── Avaliação Teórica - Dia 15 (20%)
+    └── Prova escrita com questões de múltipla escolha e dissertativas
+
+CRITÉRIOS DE APROVAÇÃO:
+✓ Nota final ≥ 7.0
+✓ Frequência ≥ 75%
+✓ Entrega de ambos os projetos
+
+CERTIFICADO:
+- Emitido para alunos aprovados
+- Carga horária: 60 horas
+- Conteúdo programático detalhado no verso
+
+================================================================================
+                         7. RECURSOS E REFERÊNCIAS
+================================================================================
+
+📚 DOCUMENTAÇÃO OFICIAL:
+   • PostgreSQL Documentation: https://www.postgresql.org/docs/
+   • DBeaver Wiki: https://github.com/dbeaver/dbeaver/wiki
+
+📖 LIVROS RECOMENDADOS:
+   • "PostgreSQL: Up and Running" - Regina Obe & Leo Hsu
+   • "The Art of PostgreSQL" - Dimitri Fontaine
+   • "SQL Para Análise de Dados" - Cathy Tanimura
+
+🌐 RECURSOS ONLINE:
+   • Stack Overflow (Q&A)
+   • PostgreSQL Tutorial: https://www.postgresqltutorial.com/
+   • Mode Analytics SQL Tutorial
+   • LeetCode Database Problems
+
+🎥 VÍDEOS E CURSOS:
+   • Curso PostgreSQL - Bóson Treinamentos (YouTube)
+   • PostgreSQL Full Course - freeCodeCamp (YouTube)
+
+🛠️ FERRAMENTAS COMPLEMENTARES:
+   • pgAdmin 4 (administração gráfica)
+   • psql (terminal interativo)
+   • Lucidchart / draw.io (modelagem ER)
+   • SQLFiddle / DB Fiddle (praticar online)
+
+================================================================================
+                                 FIM DO PLANO
+================================================================================

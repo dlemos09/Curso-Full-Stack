@@ -1,0 +1,26 @@
+Aula 09 – Armazenamento Web e HTTP Básico
+
+Conteúdo Teórico
+- localStorage, sessionStorage; JSON persistência.
+- HTTP: métodos, status, headers, CORS.
+- Fetch API básica.
+
+Exemplos
+localStorage.setItem('user', JSON.stringify({nome:'Ana'}));
+const u = JSON.parse(localStorage.getItem('user'));
+
+fetch('/api/items')
+  .then(r=>r.json())
+  .then(data=>console.log(data))
+  .catch(console.error);
+
+Exercícios
+- Básico: salvar/restaurar preferências no storage.
+- Intermediário: consumir API com paginação simples.
+- Avançado: CORS e tokens; retry/backoff para falhas.
+
+Atividade Real
+- Dashboard simples que lê dados e guarda estado local.
+
+Resumo
+- Persistência no navegador e comunicação HTTP básica.

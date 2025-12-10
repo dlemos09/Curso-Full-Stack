@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./output.css" rel="stylesheet" />
+    <title>Exemplo</title>
+  </head>
+  <body class="bg-gray-100 text-gray-900 font-sans">
+    <nav class="bg-gray-800 text-white p-4">
+      <div class="flex justify-between items-center">
+        <div class="text-2xl font-bold">Meu Site</div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-gray-400">Home</a>
+          <a href="#" class="hover:text-gray-400">Sobre</a>
+          <a href="#" class="hover:text-gray-400">Contato</a>
+          <a href="#" class="hover:text-gray-400">Blog</a>
+        </div>
+    </nav>
+    <header class="bg-blue-500 text-white p-6 text-center">
+      <h1 class="text-4xl font-bold">Bem-vindo ao Meu Site</h1>
+      <p class="mt-2">Este é um exemplo de página HTML com Tailwind CSS</p>
+    </header>
+  
+    <main>
+      <h2 class="text-3xl font-semibold text-center mt-8 mb-4">Exemplo de Formulário</h2>
+      <form class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+          <label for="name" class="block text-gray-700">Nome:</label>
+          <input type="text" id="name" class="w-full p-2 border border-gray-300 rounded" placeholder="Digite seu nome" />
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-gray-700">E-mail:</label>
+          <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded" placeholder="Digite seu e-mail" />
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Enviar</button>
+      </form>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8 text-center fixed bottom-0 w-full">
+      <p>&copy; 2023 Meu Site. Todos os direitos reservados.</p>
+    </footer>
+       
+  </body>
+</html>

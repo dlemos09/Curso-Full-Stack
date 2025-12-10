@@ -1,0 +1,23 @@
+Aula 15 – Projeto Final Integrador
+
+Conteúdo Teórico
+- Planejamento: requisitos, escopo, backlog.
+- Arquitetura: módulos, camadas, responsabilidades.
+- Qualidade: testes, logs, documentação.
+
+Exemplos
+// Estrutura proposta
+- frontend simples (DOM + fetch)
+- backend Node (API mock)
+- storage local
+
+Exercícios / Atividade
+- Básico: definir requisitos e tarefas.
+- Intermediário: implementar features principais com testes.
+- Avançado: refinar performance e padrões de projeto.
+
+Atividade Real
+- Entregar um mini aplicativo completo (ex.: lista de tarefas com filtros, persistência e testes).
+
+Resumo
+- Consolidamos todo conteúdo em um projeto aplicável ao mundo real.

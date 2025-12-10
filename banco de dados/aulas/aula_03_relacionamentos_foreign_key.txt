@@ -1,0 +1,710 @@
+================================================================================
+                              AULA 03 - DIA 3
+            DDL AVANÇADO - RELACIONAMENTOS E CHAVES ESTRANGEIRAS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 (4 horas)
+DATA: _____/_____/_____
+
+================================================================================
+                            OBJETIVOS DA AULA
+================================================================================
+
+Ao final desta aula, você será capaz de:
+✓ Criar relacionamentos entre tabelas com FOREIGN KEY
+✓ Compreender integridade referencial
+✓ Usar ON DELETE e ON UPDATE (CASCADE, SET NULL, RESTRICT)
+✓ Modificar tabelas existentes com ALTER TABLE
+✓ Usar DROP e TRUNCATE corretamente
+
+================================================================================
+                          CRONOGRAMA DA AULA
+================================================================================
+
+13:30 - 13:45 (15 min) → Revisão + Quiz
+13:45 - 14:45 (60 min) → Chaves Estrangeiras e Relacionamentos
+14:45 - 15:30 (45 min) → ON DELETE / ON UPDATE
+15:30 - 15:45 (15 min) → ☕ INTERVALO
+15:45 - 17:00 (75 min) → ALTER TABLE - Modificar Estruturas
+17:00 - 17:30 (30 min) → Exercícios Práticos
+
+================================================================================
+     PARTE 1: CHAVES ESTRANGEIRAS (13:45 - 14:45)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.1 O QUE SÃO CHAVES ESTRANGEIRAS (FOREIGN KEY)?                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 DEFINIÇÃO:
+   Uma FOREIGN KEY (FK) é uma coluna que referencia a PRIMARY KEY de outra 
+   tabela, criando um relacionamento entre elas.
+
+📌 PROPÓSITO:
+   - Garantir integridade referencial (dados consistentes)
+   - Evitar "órfãos" (registros que referenciam IDs inexistentes)
+   - Modelar relacionamentos do mundo real
+
+📌 ANALOGIA:
+   Pense em um livro de biblioteca e seu autor:
+   - Cada livro TEM um autor (relacionamento)
+   - O autor_id no livro APONTA para um id real na tabela autores
+   - Não pode cadastrar livro com autor_id = 999 se autor 999 não existe!
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.2 CRIANDO RELACIONAMENTO 1:N (UM PARA MUITOS)                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Exemplo: Um departamento TEM muitos funcionários
+--          Um funcionário PERTENCE a um departamento
+
+-- PASSO 1: Criar tabela "pai" (lado 1)
+CREATE TABLE departamentos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE,
+    sigla VARCHAR(5),
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- PASSO 2: Criar tabela "filho" (lado N) com FK
+CREATE TABLE funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) UNIQUE NOT NULL,
+    salario DECIMAL(10,2),
+    departamento_id INTEGER NOT NULL,
+    
+    -- Definir chave estrangeira:
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(id)
+);
+
+/*
+   📚 EXPLICAÇÃO:
+   
+   FOREIGN KEY (departamento_id)    → Coluna que é FK
+   REFERENCES departamentos(id)     → Aponta para qual tabela(coluna)
+   
+   REGRA CRIADA:
+   ✓ departamento_id deve existir em departamentos.id
+   ❌ Não pode inserir funcionário com departamento_id inexistente
+*/
+
+-- Inserindo dados (ordem importa!):
+-- 1º) Inserir na tabela pai (departamentos)
+INSERT INTO departamentos (nome, sigla) VALUES
+    ('Tecnologia da Informação', 'TI'),
+    ('Recursos Humanos', 'RH'),
+    ('Financeiro', 'FIN');
+
+-- 2º) Inserir na tabela filho (funcionarios)
+-- ✅ Válido - departamento 1 existe:
+INSERT INTO funcionarios (nome, cpf, salario, departamento_id) 
+VALUES ('João Silva', '12345678901', 5000.00, 1);
+
+-- ❌ ERRO - departamento 99 não existe:
+-- INSERT INTO funcionarios (nome, cpf, salario, departamento_id) 
+-- VALUES ('Maria Santos', '98765432100', 4500.00, 99);
+-- ERROR: insert or update violates foreign key constraint
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.3 SINTAXES DE FOREIGN KEY                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- FORMA 1: Inline (na própria coluna)
+CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER REFERENCES clientes(id),
+    data_pedido DATE
+);
+
+-- FORMA 2: Como constraint separada (mais legível)
+CREATE TABLE itens_pedido (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER,
+    produto_id INTEGER,
+    quantidade INTEGER,
+    
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+-- FORMA 3: Com nome de constraint (facilita manutenção)
+CREATE TABLE avaliacoes (
+    id SERIAL PRIMARY KEY,
+    produto_id INTEGER,
+    usuario_id INTEGER,
+    nota INTEGER CHECK (nota BETWEEN 1 AND 5),
+    
+    CONSTRAINT fk_avaliacoes_produto 
+        FOREIGN KEY (produto_id) REFERENCES produtos(id),
+    
+    CONSTRAINT fk_avaliacoes_usuario 
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+/*
+   💡 BENEFÍCIO DE NOMEAR CONSTRAINTS:
+   - Mensagens de erro mais claras
+   - Fácil identificar qual FK tem problema
+   - Facilita alterar/remover depois
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.4 RELACIONAMENTO N:N (MUITOS PARA MUITOS) - TABELA ASSOCIATIVA          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Exemplo: Alunos cursam VÁRIAS disciplinas
+--          Disciplinas têm VÁRIOS alunos
+
+-- Tabela 1
+CREATE TABLE alunos (
+    id SERIAL PRIMARY KEY,
+    matricula VARCHAR(10) UNIQUE NOT NULL,
+    nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela 2
+CREATE TABLE disciplinas (
+    id SERIAL PRIMARY KEY,
+    codigo VARCHAR(10) UNIQUE NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    carga_horaria INTEGER
+);
+
+-- Tabela ASSOCIATIVA (ponte entre as duas)
+CREATE TABLE matriculas (
+    id SERIAL PRIMARY KEY,
+    aluno_id INTEGER NOT NULL,
+    disciplina_id INTEGER NOT NULL,
+    data_matricula DATE DEFAULT CURRENT_DATE,
+    nota_final DECIMAL(4,2),
+    
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id),
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id),
+    
+    -- Evitar matrícula duplicada (mesmo aluno na mesma disciplina):
+    UNIQUE (aluno_id, disciplina_id)
+);
+
+-- Inserindo dados:
+INSERT INTO alunos (matricula, nome) VALUES
+    ('2024001', 'Pedro Alves'),
+    ('2024002', 'Julia Mendes');
+
+INSERT INTO disciplinas (codigo, nome, carga_horaria) VALUES
+    ('INF101', 'Banco de Dados', 80),
+    ('INF102', 'Programação Web', 60);
+
+-- Pedro matriculado em Banco de Dados e Programação Web:
+INSERT INTO matriculas (aluno_id, disciplina_id) VALUES
+    (1, 1),
+    (1, 2);
+
+-- Julia matriculada apenas em Banco de Dados:
+INSERT INTO matriculas (aluno_id, disciplina_id) VALUES
+    (2, 1);
+
+-- Consulta: Quais disciplinas Pedro cursa?
+SELECT d.nome 
+FROM disciplinas d
+INNER JOIN matriculas m ON d.id = m.disciplina_id
+WHERE m.aluno_id = 1;
+
+
+================================================================================
+     PARTE 2: ON DELETE E ON UPDATE (14:45 - 15:30)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.1 O QUE ACONTECE AO DELETAR/ATUALIZAR REGISTRO REFERENCIADO?            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Imagine:
+- Departamento "TI" (id=1) tem 10 funcionários
+- O que acontece se deletar o departamento "TI"?
+- E se alterar o id de 1 para 100?
+
+Você pode definir o comportamento com ON DELETE e ON UPDATE:
+
+┌────────────────────────────────────────────────────────────────┐
+│ OPÇÃO          │ COMPORTAMENTO                                 │
+├────────────────┼───────────────────────────────────────────────┤
+│ CASCADE        │ Deleta/atualiza em cascata os filhos também  │
+│ SET NULL       │ Define NULL nos filhos                        │
+│ SET DEFAULT    │ Define valor DEFAULT nos filhos               │
+│ RESTRICT       │ IMPEDE se houver filhos (padrão)             │
+│ NO ACTION      │ Igual a RESTRICT                              │
+└────────────────────────────────────────────────────────────────┘
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.2 CASCADE - PROPAGAR ALTERAÇÃO                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE produtos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    categoria_id INTEGER,
+    
+    FOREIGN KEY (categoria_id) 
+        REFERENCES categorias(id) 
+        ON DELETE CASCADE        -- Se deletar categoria, deleta produtos
+        ON UPDATE CASCADE        -- Se mudar id da categoria, atualiza produtos
+);
+
+-- Teste:
+INSERT INTO categorias (id, nome) VALUES (1, 'Eletrônicos');
+INSERT INTO produtos (nome, categoria_id) VALUES 
+    ('Notebook', 1),
+    ('Mouse', 1);
+
+-- Deletar categoria:
+DELETE FROM categorias WHERE id = 1;
+-- Resultado: Categoria E os 2 produtos são deletados! (CASCADE)
+
+/*
+   ⚠️ CUIDADO COM CASCADE:
+   - Pode deletar MUITOS dados sem querer
+   - Use apenas quando faz sentido (ex: pedido → itens do pedido)
+   - Evite em relacionamentos importantes
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.3 SET NULL - TORNAR ÓRFÃO                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CREATE TABLE gerentes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100)
+);
+
+CREATE TABLE equipes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    gerente_id INTEGER,
+    
+    FOREIGN KEY (gerente_id) 
+        REFERENCES gerentes(id) 
+        ON DELETE SET NULL       -- Se deletar gerente, equipe fica sem gerente
+);
+
+-- Teste:
+INSERT INTO gerentes (id, nome) VALUES (1, 'Carlos Silva');
+INSERT INTO equipes (nome, gerente_id) VALUES ('Equipe A', 1);
+
+-- Deletar gerente:
+DELETE FROM gerentes WHERE id = 1;
+-- Resultado: Gerente deletado, equipe.gerente_id = NULL
+
+/*
+   💡 QUANDO USAR SET NULL:
+   - Quando o relacionamento é OPCIONAL
+   - Ex: Funcionário pode ficar sem gerente temporariamente
+   - ⚠️ A coluna FK deve aceitar NULL!
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.4 RESTRICT - IMPEDIR (PADRÃO)                                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CREATE TABLE autores (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100)
+);
+
+CREATE TABLE livros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(200),
+    autor_id INTEGER,
+    
+    FOREIGN KEY (autor_id) 
+        REFERENCES autores(id) 
+        ON DELETE RESTRICT       -- Não pode deletar se tiver livros
+);
+
+-- Teste:
+INSERT INTO autores (id, nome) VALUES (1, 'Machado de Assis');
+INSERT INTO livros (titulo, autor_id) VALUES ('Dom Casmurro', 1);
+
+-- Tentar deletar autor:
+-- DELETE FROM autores WHERE id = 1;
+-- ERROR: update or delete violates foreign key constraint
+-- DETAIL: Key is still referenced from table "livros"
+
+-- Para deletar, precisa PRIMEIRO deletar os livros:
+DELETE FROM livros WHERE autor_id = 1;
+DELETE FROM autores WHERE id = 1;  -- Agora funciona!
+
+/*
+   💡 QUANDO USAR RESTRICT:
+   - Quando não pode deletar "pai" com "filhos"
+   - Força a limpar filhos manualmente primeiro
+   - Mais seguro (evita perda acidental de dados)
+   - É o comportamento PADRÃO se não especificar
+*/
+
+
+================================================================================
+     PARTE 3: ALTER TABLE - MODIFICAR TABELAS (15:45 - 17:00)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.1 ADICIONAR COLUNA                                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Adicionar coluna simples
+ALTER TABLE funcionarios 
+ADD COLUMN email VARCHAR(100);
+
+-- Adicionar com constraint
+ALTER TABLE funcionarios 
+ADD COLUMN telefone VARCHAR(15) UNIQUE;
+
+-- Adicionar com DEFAULT (preenche linhas existentes)
+ALTER TABLE funcionarios 
+ADD COLUMN ativo BOOLEAN DEFAULT TRUE;
+
+-- Adicionar múltiplas colunas de uma vez
+ALTER TABLE funcionarios 
+ADD COLUMN data_admissao DATE DEFAULT CURRENT_DATE,
+ADD COLUMN cargo VARCHAR(50);
+
+/*
+   💡 SOBRE VALORES EM LINHAS EXISTENTES:
+   - Se coluna tem DEFAULT → preenche com DEFAULT
+   - Se coluna é NULL → fica NULL
+   - Se coluna é NOT NULL sem DEFAULT → ERRO!
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.2 REMOVER COLUNA                                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Remover coluna
+ALTER TABLE funcionarios 
+DROP COLUMN telefone;
+
+-- ⚠️ ISSO DELETA PERMANENTEMENTE A COLUNA E TODOS OS DADOS!
+
+-- Se coluna é FK, precisa remover a constraint primeiro:
+ALTER TABLE funcionarios 
+DROP CONSTRAINT fk_nome_constraint CASCADE;
+
+-- Depois remove a coluna:
+ALTER TABLE funcionarios 
+DROP COLUMN departamento_id;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.3 MODIFICAR TIPO DE COLUNA                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Mudar tipo de dados
+ALTER TABLE funcionarios 
+ALTER COLUMN nome TYPE VARCHAR(200);
+
+-- Com conversão usando USING
+ALTER TABLE produtos 
+ALTER COLUMN preco TYPE INTEGER USING preco::INTEGER;
+
+/*
+   ⚠️ CUIDADO:
+   - Pode perder dados (ex: VARCHAR → INTEGER)
+   - Pode falhar se dados não são compatíveis
+   - Teste em ambiente de desenvolvimento primeiro!
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.4 ADICIONAR/REMOVER NOT NULL                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Tornar coluna obrigatória
+ALTER TABLE funcionarios 
+ALTER COLUMN email SET NOT NULL;
+
+-- ⚠️ Falha se já existem NULLs! Preencha antes:
+UPDATE funcionarios SET email = 'sem@email.com' WHERE email IS NULL;
+ALTER TABLE funcionarios ALTER COLUMN email SET NOT NULL;
+
+-- Permitir NULL novamente
+ALTER TABLE funcionarios 
+ALTER COLUMN email DROP NOT NULL;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.5 ADICIONAR/MODIFICAR DEFAULT                                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Adicionar DEFAULT
+ALTER TABLE funcionarios 
+ALTER COLUMN ativo SET DEFAULT TRUE;
+
+-- Mudar DEFAULT
+ALTER TABLE funcionarios 
+ALTER COLUMN ativo SET DEFAULT FALSE;
+
+-- Remover DEFAULT
+ALTER TABLE funcionarios 
+ALTER COLUMN ativo DROP DEFAULT;
+
+/*
+   💡 DEFAULT só afeta NOVAS inserções!
+   Não altera linhas que já existem.
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.6 ADICIONAR FOREIGN KEY EM TABELA EXISTENTE                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Adicionar FK
+ALTER TABLE funcionarios 
+ADD CONSTRAINT fk_funcionarios_departamento 
+    FOREIGN KEY (departamento_id) 
+    REFERENCES departamentos(id) 
+    ON DELETE RESTRICT;
+
+-- ⚠️ Só funciona se os valores já são válidos!
+-- Se tiver departamento_id = 99 e departamento 99 não existe, DÁ ERRO!
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.7 REMOVER CONSTRAINT                                                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Remover por nome
+ALTER TABLE funcionarios 
+DROP CONSTRAINT fk_funcionarios_departamento;
+
+-- Se não sabe o nome, consulte:
+SELECT constraint_name 
+FROM information_schema.table_constraints 
+WHERE table_name = 'funcionarios' 
+  AND constraint_type = 'FOREIGN KEY';
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.8 RENOMEAR TABELA OU COLUNA                                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Renomear tabela
+ALTER TABLE funcionarios RENAME TO empregados;
+
+-- Renomear coluna
+ALTER TABLE empregados RENAME COLUMN nome TO nome_completo;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.9 DROP TABLE vs TRUNCATE TABLE                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- DROP TABLE: Deleta tabela E estrutura
+DROP TABLE funcionarios;
+-- ⚠️ Tabela desaparece completamente! Não tem Ctrl+Z!
+
+-- DROP com CASCADE (deleta tabelas dependentes também)
+DROP TABLE departamentos CASCADE;
+
+-- TRUNCATE TABLE: Deleta DADOS mas mantém estrutura
+TRUNCATE TABLE funcionarios;
+-- Resultado: Tabela vazia, mas ainda existe
+
+-- TRUNCATE com CASCADE (limpa tabelas relacionadas)
+TRUNCATE TABLE departamentos CASCADE;
+
+/*
+   📊 COMPARAÇÃO:
+   
+   DELETE FROM tabela   → Deleta linha por linha (lento, pode usar WHERE)
+   TRUNCATE TABLE       → Deleta tudo rápido (não pode usar WHERE)
+   DROP TABLE           → Deleta tabela inteira (estrutura + dados)
+*/
+
+
+================================================================================
+                    EXERCÍCIOS PRÁTICOS (17:00 - 17:30)
+================================================================================
+
+💪 EXERCÍCIO 1: SISTEMA DE PEDIDOS (20 min)
+
+Crie as tabelas com relacionamentos:
+
+1. Tabela "clientes":
+   - id (PK), nome, email (único), telefone, ativo (padrão true)
+
+2. Tabela "pedidos":
+   - id (PK), cliente_id (FK → clientes), data_pedido (padrão hoje),
+     valor_total (decimal), status (padrão 'PENDENTE')
+   - Use ON DELETE RESTRICT (não pode deletar cliente com pedidos)
+
+3. Tabela "produtos":
+   - id (PK), nome, preco (decimal), estoque (inteiro)
+
+4. Tabela "itens_pedido":
+   - id (PK), pedido_id (FK → pedidos), produto_id (FK → produtos),
+     quantidade, preco_unitario
+   - Use ON DELETE CASCADE (se deletar pedido, deleta itens)
+
+
+   -- Inicia uma transação para segurança
+BEGIN;
+
+-- 1) Tabela clientes
+-- id: PK auto-increment (IDENTITY)
+-- email: único
+CREATE TABLE clientes (
+  id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome          VARCHAR(200)       NOT NULL,
+  email         VARCHAR(255)       NOT NULL UNIQUE,
+  telefone      VARCHAR(30),
+  ativo         BOOLEAN            NOT NULL DEFAULT TRUE,
+  criado_em     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
+
+-- 3) Tabela produtos
+-- preco como numeric(10,2), estoque inteiro com valor não-negativo
+CREATE TABLE produtos (
+  id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome          VARCHAR(200)       NOT NULL,
+  preco         NUMERIC(10,2)      NOT NULL CHECK (preco >= 0),
+  estoque       INTEGER            NOT NULL DEFAULT 0 CHECK (estoque >= 0),
+  criado_em     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
+
+-- 2) Tabela pedidos
+-- cliente_id FK -> clientes(id) com ON DELETE RESTRICT (não permite apagar cliente com pedidos)
+-- data_pedido default para a data/hora atual
+-- valor_total numeric(12,2) (pode ser atualizado por aplicação/trigger)
+CREATE TABLE pedidos (
+  id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  cliente_id     BIGINT            NOT NULL,
+  data_pedido    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  valor_total    NUMERIC(12,2)     NOT NULL DEFAULT 0 CHECK (valor_total >= 0),
+  status         VARCHAR(20)       NOT NULL DEFAULT 'PENDENTE',
+  criado_em      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  CONSTRAINT fk_pedidos_clientes FOREIGN KEY (cliente_id)
+    REFERENCES clientes(id)
+    ON DELETE RESTRICT
+);
+
+-- Opcional: restrição de valores válidos para status (ajuste conforme necessário)
+ALTER TABLE pedidos
+  ADD CONSTRAINT chk_pedidos_status CHECK (status IN ('PENDENTE','APROVADO','CANCELADO','ENVIADO','ENTREGUE'));
+
+-- 4) Tabela itens_pedido
+-- pedido_id FK -> pedidos(id) com ON DELETE CASCADE (se apagar pedido, apaga itens)
+-- produto_id FK -> produtos(id) (aqui mantive padrão RESTRICT para evitar excluir produto usado em itens)
+-- registra preço_unitario para histórico
+CREATE TABLE itens_pedido (
+  id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  pedido_id      BIGINT            NOT NULL,
+  produto_id     BIGINT            NOT NULL,
+  quantidade     INTEGER           NOT NULL CHECK (quantidade > 0),
+  preco_unitario NUMERIC(10,2)     NOT NULL CHECK (preco_unitario >= 0),
+  criado_em      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  CONSTRAINT fk_itens_pedido_pedido FOREIGN KEY (pedido_id)
+    REFERENCES pedidos(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_itens_pedido_produto FOREIGN KEY (produto_id)
+    REFERENCES produtos(id)
+    ON DELETE RESTRICT
+);
+
+-- Índices úteis (opcionais)
+CREATE INDEX idx_pedidos_cliente_id ON pedidos(cliente_id);
+CREATE INDEX idx_itens_pedido_pedido_id ON itens_pedido(pedido_id);
+CREATE INDEX idx_itens_pedido_produto_id ON itens_pedido(produto_id);
+
+COMMIT;
+
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 2: INSERIR E TESTAR INTEGRIDADE (15 min)
+
+a) Insira 2 clientes, 3 produtos, 1 pedido e 2 itens do pedido
+b) Tente deletar um cliente que tem pedidos (deve dar erro)
+c) Tente inserir item com produto_id inexistente (deve dar erro)
+d) Delete um pedido e veja os itens serem deletados em CASCADE
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 3: MODIFICAR TABELAS (15 min)
+
+Na tabela "clientes":
+a) Adicione coluna "cpf" (CHAR 11, único)
+b) Adicione coluna "data_cadastro" (DATE, padrão hoje)
+c) Torne o campo "email" obrigatório (NOT NULL)
+d) Adicione CHECK para email conter '@'
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 DESAFIO EXTRA:
+
+Crie um sistema de blog:
+- autores (id, nome, email)
+- posts (id, autor_id FK, titulo, conteudo, data_publicacao)
+- comentarios (id, post_id FK, autor_nome, texto, data)
+
+Configure:
+- ON DELETE SET NULL para posts.autor_id (post fica órfão)
+- ON DELETE CASCADE para comentarios.post_id (deleta comentários junto)
+
+
+================================================================================
+                              RESUMO DA AULA
+================================================================================
+
+✅ O QUE APRENDEMOS:
+
+   FOREIGN KEY:
+   • Cria relacionamentos entre tabelas
+   • Garante integridade referencial
+   • Sintaxes: inline, constraint separada, com nome
+
+   RELACIONAMENTOS:
+   • 1:N → FK na tabela "muitos"
+   • N:N → Tabela associativa com 2 FKs
+
+   ON DELETE / ON UPDATE:
+   • CASCADE → Propaga ação
+   • SET NULL → Define NULL
+   • RESTRICT → Impede ação (padrão)
+
+   ALTER TABLE:
+   • ADD/DROP COLUMN
+   • ALTER COLUMN (tipo, NOT NULL, DEFAULT)
+   • ADD/DROP CONSTRAINT
+   • RENAME
+
+   DROP vs TRUNCATE:
+   • DROP → Deleta estrutura
+   • TRUNCATE → Deleta dados, mantém estrutura
+
+📚 TAREFA PARA CASA:
+   1. Exercícios 21-30 da lista geral
+   2. Criar mini-projeto com 4+ tabelas relacionadas
+   3. Ler sobre normalização (1FN, 2FN, 3FN)
+
+🔜 PRÓXIMA AULA:
+   DML - Manipulação de Dados e Transações
+   - INSERT avançado (RETURNING, CONFLICT)
+   - UPDATE com JOIN
+   - DELETE com subconsulta
+   - BEGIN, COMMIT, ROLLBACK
+
+================================================================================
+                            FIM DA AULA 03
+================================================================================

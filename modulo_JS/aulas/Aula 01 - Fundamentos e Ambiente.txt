@@ -1,0 +1,49 @@
+Aula 01 – Fundamentos do JavaScript e Ambiente de Desenvolvimento
+
+Conteúdo Teórico
+- O que é JavaScript: histórico, usos, execução no navegador e em Node.js.
+- Tipos de dado primitivos: string, number, boolean, null, undefined, symbol, bigint.
+- Variáveis e escopo: var, let, const; bloco, função e escopo global.
+- Operadores: aritméticos, comparação, lógicos, atribuição; coerção de tipos.
+- Ambiente: instalação do Node.js, VS Code, extensões úteis, execução via console.
+
+Demonstrações e Exemplos de Código (comentados)
+// Declarações e tipos
+const nome = "Ana";            // string
+let idade = 28;                 // number
+const ativo = true;             // boolean
+let nada = null;                // null
+let indefinido;                 // undefined
+
+// typeof e coerção
+console.log(typeof nome);       // "string"
+console.log(Number("42"));     // 42 (coerção explícita)
+console.log("5" * 2);          // 10 (coerção implícita)
+
+// var vs let vs const
+var x = 1;                      // escopo de função
+let y = 2;                      // escopo de bloco
+const z = 3;                    // constante
+
+// Operadores
+console.log(5 == "5");         // true (comparação frouxa)
+console.log(5 === "5");        // false (estrita)
+console.log(!ativo);            // false
+
+Exercícios Práticos
+- Básico:
+  1) Declare variáveis com let/const para nome, idade e ativo; imprima tipos.
+  2) Converta a string "123" em número e some com 7.
+  3) Teste == vs === entre "10" e 10 e explique o resultado.
+- Intermediário:
+  1) Crie um script que receba uma entrada (prompt ou process.argv) e converta para número de forma segura, validando NaN.
+  2) Demonstre escopo: crie blocos e funções mostrando visibilidade de var/let/const.
+- Avançado:
+  1) Explique e demonstre BigInt e Symbol em pequenos exemplos úteis.
+  2) Crie uma função que detecta o tipo de forma robusta (incluindo null e arrays).
+
+Atividades Práticas de Aplicação Real
+- Mini utilitário CLI: script Node que lê um valor, detecta tipo, e aplica operações básicas (soma, concatenação) com validações.
+
+Resumo da Aula
+- Entendemos tipos, variáveis, operadores e o ambiente. Prontos para estruturas de controle e funções.

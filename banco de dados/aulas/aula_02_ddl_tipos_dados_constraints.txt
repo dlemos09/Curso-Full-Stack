@@ -1,0 +1,669 @@
+================================================================================
+                              AULA 02 - DIA 2
+                  DDL - CRIAÇÃO DE ESTRUTURAS E TIPOS DE DADOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 (4 horas)
+DATA: _____/_____/_____
+
+================================================================================
+                            OBJETIVOS DA AULA
+================================================================================
+
+Ao final desta aula, você será capaz de:
+✓ Dominar CREATE TABLE com diversos tipos de dados
+✓ Aplicar constraints básicas (NOT NULL, DEFAULT, UNIQUE)
+✓ Usar SERIAL para auto-incremento
+✓ Trabalhar com tipos de dados: INTEGER, VARCHAR, DATE, BOOLEAN, DECIMAL
+✓ Compreender quando usar cada tipo de dado
+
+================================================================================
+                          CRONOGRAMA DA AULA
+================================================================================
+
+13:30 - 13:45 (15 min) → Revisão Aula Anterior + Quiz
+13:45 - 14:45 (60 min) → Tipos de Dados do PostgreSQL
+14:45 - 15:30 (45 min) → Constraints Básicas (NOT NULL, DEFAULT, UNIQUE)
+15:30 - 15:45 (15 min) → ☕ INTERVALO
+15:45 - 17:00 (75 min) → Prática: Criar Tabelas Complexas
+17:00 - 17:30 (30 min) → Exercícios Práticos
+
+================================================================================
+     PARTE 1: TIPOS DE DADOS DO POSTGRESQL (13:45 - 14:45)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.1 TIPOS NUMÉRICOS                                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 NÚMEROS INTEIROS:
+
+   SMALLINT    → -32.768 a 32.767 (2 bytes)
+   INTEGER     → -2 bilhões a 2 bilhões (4 bytes) ← MAIS USADO
+   BIGINT      → -9 quintilhões a 9 quintilhões (8 bytes)
+   
+   SERIAL      → INTEGER com auto-incremento (1, 2, 3...)
+   BIGSERIAL   → BIGINT com auto-incremento
+
+-- Exemplo prático:
+CREATE TABLE produtos (
+    id SERIAL PRIMARY KEY,          -- Auto-incrementa: 1, 2, 3...
+    codigo_barras BIGINT UNIQUE,    -- Códigos longos: 7891234567890
+    estoque INTEGER,                -- Quantidade em estoque
+    nivel_alerta SMALLINT           -- Números pequenos
+);
+
+/*
+   💡 QUANDO USAR SERIAL?
+   - Chaves primárias (ID)
+   - Não precisa inserir o valor, é automático!
+   
+   INSERT INTO produtos (codigo_barras, estoque) 
+   VALUES (7891234567890, 100);
+   -- id será gerado automaticamente como 1
+*/
+
+
+📌 NÚMEROS DECIMAIS (Com casas decimais):
+
+   DECIMAL(p, s)  → Precisão exata ← Use para DINHEIRO!
+   NUMERIC(p, s)  → Idêntico a DECIMAL
+   REAL           → Precisão simples (~6 dígitos)
+   DOUBLE PRECISION → Precisão dupla (~15 dígitos)
+   
+   p = precisão total (dígitos totais)
+   s = escala (dígitos após vírgula)
+
+-- Exemplo prático:
+CREATE TABLE financeiro (
+    id SERIAL PRIMARY KEY,
+    preco DECIMAL(10, 2),      -- 10 dígitos, 2 após vírgula
+                               -- Ex: 12345678.90
+    desconto DECIMAL(5, 2),    -- Ex: 999.99 (porcentagem)
+    taxa_juros REAL            -- Ex: 0.0575 (5.75%)
+);
+
+/*
+   💰 REGRA DE OURO:
+   SEMPRE use DECIMAL/NUMERIC para valores monetários!
+   NUNCA use REAL ou DOUBLE para dinheiro (erro de arredondamento)
+   
+   ✅ Correto: preco DECIMAL(10,2)
+   ❌ Errado:  preco REAL
+*/
+
+-- Inserindo valores decimais:
+INSERT INTO financeiro (preco, desconto, taxa_juros) 
+VALUES (1599.99, 15.50, 0.0575);
+
+-- Operações com decimais:
+SELECT 
+    preco,
+    preco * (desconto / 100) AS valor_desconto,
+    preco - (preco * desconto / 100) AS preco_final
+FROM financeiro;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.2 TIPOS DE TEXTO (STRINGS)                                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+   CHAR(n)         → Tamanho FIXO, preenche com espaços
+   VARCHAR(n)      → Tamanho VARIÁVEL, até n caracteres ← MAIS USADO
+   TEXT            → Tamanho ilimitado
+
+-- Exemplo prático:
+CREATE TABLE clientes (
+    id SERIAL PRIMARY KEY,
+    cpf CHAR(11),              -- CPF sempre tem 11 dígitos
+    nome VARCHAR(150),         -- Nomes variam de tamanho
+    email VARCHAR(100),        -- Emails até 100 caracteres
+    observacoes TEXT           -- Comentários longos, sem limite
+);
+
+/*
+   📏 DIFERENÇAS:
+   
+   CHAR(5):    'AB'    → armazenado como 'AB   ' (3 espaços)
+   VARCHAR(5): 'AB'    → armazenado como 'AB' (sem espaços)
+   TEXT:       'AB...' → qualquer tamanho
+   
+   💡 QUANDO USAR CADA UM?
+   CHAR(n)    → Tamanho sempre igual (CPF, CEP, código fixo)
+   VARCHAR(n) → Tamanho varia (nome, email, endereço)
+   TEXT       → Não sabe o tamanho (descrição, comentários)
+*/
+
+-- Inserindo textos:
+INSERT INTO clientes (cpf, nome, email, observacoes) VALUES
+    ('12345678901', 'Ana Silva', 'ana@email.com', 'Cliente VIP'),
+    ('98765432100', 'João Santos', 'joao@email.com', NULL);
+
+-- 💡 NULL significa "sem valor", diferente de '' (vazio)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.3 TIPOS DE DATA E HORA                                                  ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+   DATE            → Apenas data: 2025-12-01
+   TIME            → Apenas hora: 14:30:00
+   TIMESTAMP       → Data + hora: 2025-12-01 14:30:00
+   TIMESTAMPTZ     → Com fuso horário
+   INTERVAL        → Período de tempo: 3 days, 2 hours
+
+-- Exemplo prático:
+CREATE TABLE eventos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    data_evento DATE,
+    hora_inicio TIME,
+    data_hora_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duracao INTERVAL
+);
+
+/*
+   💡 CURRENT_TIMESTAMP
+   Função que retorna data/hora atual do servidor
+   Útil para campos "criado_em", "atualizado_em"
+*/
+
+-- Inserindo datas:
+INSERT INTO eventos (nome, data_evento, hora_inicio, duracao) VALUES
+    ('Reunião', '2025-12-15', '14:00:00', '2 hours'),
+    ('Treinamento', '2025-12-20', '09:30:00', '4 hours 30 minutes');
+
+-- Formato de data no PostgreSQL: 'YYYY-MM-DD' (Ano-Mês-Dia)
+
+-- Consultas com datas:
+SELECT nome, data_evento 
+FROM eventos 
+WHERE data_evento > '2025-12-10';
+
+-- Funções úteis de data:
+SELECT 
+    NOW(),                          -- Data/hora atual
+    CURRENT_DATE,                   -- Apenas data atual
+    CURRENT_TIME,                   -- Apenas hora atual
+    AGE('2025-12-01', '2000-01-01'), -- Diferença entre datas
+    EXTRACT(YEAR FROM CURRENT_DATE); -- Extrair parte da data
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.4 TIPO BOOLEANO (VERDADEIRO/FALSO)                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+   BOOLEAN → TRUE, FALSE ou NULL
+
+-- Exemplo prático:
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50),
+    email VARCHAR(100),
+    ativo BOOLEAN DEFAULT TRUE,    -- Usuário ativo por padrão
+    admin BOOLEAN DEFAULT FALSE    -- Não é admin por padrão
+);
+
+-- Inserindo valores booleanos:
+INSERT INTO usuarios (username, email, ativo, admin) VALUES
+    ('joao123', 'joao@email.com', TRUE, FALSE),
+    ('admin', 'admin@email.com', TRUE, TRUE),
+    ('maria_x', 'maria@email.com', FALSE, FALSE);
+
+-- Consultando booleanos:
+SELECT * FROM usuarios WHERE ativo = TRUE;
+SELECT * FROM usuarios WHERE ativo;  -- Forma curta
+SELECT * FROM usuarios WHERE NOT ativo;  -- Inativos
+
+/*
+   💡 VALORES ACEITOS PARA BOOLEAN:
+   TRUE:  TRUE, 't', 'true', 'y', 'yes', '1'
+   FALSE: FALSE, 'f', 'false', 'n', 'no', '0'
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.5 OUTROS TIPOS ÚTEIS                                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- UUID (Identificador Único Universal)
+CREATE TABLE sessoes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    usuario_id INTEGER,
+    token TEXT
+);
+
+-- JSON / JSONB (dados em formato JSON)
+CREATE TABLE configuracoes (
+    id SERIAL PRIMARY KEY,
+    chave VARCHAR(50),
+    valor JSONB  -- JSONB é mais rápido que JSON
+);
+
+INSERT INTO configuracoes (chave, valor) VALUES
+    ('tema', '{"cor": "azul", "fonte": "Arial"}');
+
+-- ARRAY (listas/vetores)
+CREATE TABLE turmas (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50),
+    dias_semana TEXT[]  -- Array de textos
+);
+
+INSERT INTO turmas (nome, dias_semana) VALUES
+    ('Turma A', ARRAY['Segunda', 'Quarta', 'Sexta']);
+
+
+================================================================================
+     PARTE 2: CONSTRAINTS BÁSICAS (14:45 - 15:30)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.1 NOT NULL (NÃO NULO - CAMPO OBRIGATÓRIO)                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- NOT NULL força o campo a ter valor
+CREATE TABLE funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,    -- Nome é obrigatório
+    cpf CHAR(11) NOT NULL,         -- CPF é obrigatório
+    email VARCHAR(100),            -- Email é opcional (pode ser NULL)
+    salario DECIMAL(10,2) NOT NULL -- Salário é obrigatório
+);
+
+-- ✅ Inserção válida:
+INSERT INTO funcionarios (nome, cpf, salario) 
+VALUES ('Pedro Silva', '12345678901', 3500.00);
+
+-- ❌ Erro - nome é NOT NULL:
+-- INSERT INTO funcionarios (cpf, salario) 
+-- VALUES ('98765432100', 4000.00);
+-- ERROR: null value in column "nome" violates not-null constraint
+
+/*
+   💡 QUANDO USAR NOT NULL?
+   - Dados essenciais (nome, CPF, email em cadastro)
+   - Valores que sempre devem existir
+   - Evita dados incompletos no banco
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.2 DEFAULT (VALOR PADRÃO)                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- DEFAULT define valor automático se não informado
+CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER NOT NULL,
+    data_pedido DATE DEFAULT CURRENT_DATE,     -- Data de hoje
+    status VARCHAR(20) DEFAULT 'PENDENTE',     -- Status padrão
+    desconto DECIMAL(5,2) DEFAULT 0.00,        -- Sem desconto
+    ativo BOOLEAN DEFAULT TRUE                 -- Ativo por padrão
+);
+
+-- Se não informar os campos com DEFAULT, usam o valor padrão:
+INSERT INTO pedidos (cliente_id) VALUES (10);
+-- data_pedido = data de hoje
+-- status = 'PENDENTE'
+-- desconto = 0.00
+-- ativo = TRUE
+
+-- Pode sobrescrever o DEFAULT:
+INSERT INTO pedidos (cliente_id, status, desconto) 
+VALUES (20, 'APROVADO', 10.50);
+
+/*
+   💡 BOAS PRÁTICAS:
+   - Use DEFAULT para campos que têm valor "normal"
+   - Combine com NOT NULL quando apropriado
+   - Exemplos comuns: status inicial, datas de criação, flags
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.3 UNIQUE (VALOR ÚNICO)                                                  ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- UNIQUE garante que não há valores duplicados
+CREATE TABLE contas (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,  -- Email único
+    cpf CHAR(11) UNIQUE,                 -- CPF único (pode ser NULL)
+    username VARCHAR(50) UNIQUE NOT NULL -- Username único
+);
+
+-- ✅ Inserção válida:
+INSERT INTO contas (email, cpf, username) 
+VALUES ('joao@email.com', '12345678901', 'joao123');
+
+-- ❌ Erro - email já existe:
+-- INSERT INTO contas (email, cpf, username) 
+-- VALUES ('joao@email.com', '98765432100', 'maria456');
+-- ERROR: duplicate key value violates unique constraint "contas_email_key"
+
+/*
+   💡 DIFERENÇA: UNIQUE vs PRIMARY KEY
+   
+   PRIMARY KEY = UNIQUE + NOT NULL (apenas 1 por tabela)
+   UNIQUE = permite NULL (pode ter vários por tabela)
+   
+   Exemplo:
+   - id → PRIMARY KEY
+   - email, cpf, username → UNIQUE
+*/
+
+-- UNIQUE em múltiplas colunas (combinação única):
+CREATE TABLE inscricoes (
+    id SERIAL PRIMARY KEY,
+    aluno_id INTEGER,
+    curso_id INTEGER,
+    UNIQUE (aluno_id, curso_id)  -- Aluno não pode se inscrever 2x no mesmo curso
+);
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.4 CHECK (VALIDAÇÃO PERSONALIZADA)                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- CHECK valida condições customizadas
+CREATE TABLE pessoas (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    idade INTEGER CHECK (idade >= 0 AND idade <= 150),  -- Idade válida
+    email VARCHAR(100) CHECK (email LIKE '%@%'),        -- Deve ter @
+    sexo CHAR(1) CHECK (sexo IN ('M', 'F', 'O')),      -- M, F ou O
+    salario DECIMAL(10,2) CHECK (salario > 0)          -- Salário positivo
+);
+
+-- ✅ Inserção válida:
+INSERT INTO pessoas (nome, idade, email, sexo, salario) 
+VALUES ('Ana Costa', 28, 'ana@email.com', 'F', 3500.00);
+
+-- ❌ Erro - idade inválida:
+-- INSERT INTO pessoas (nome, idade, email, sexo, salario) 
+-- VALUES ('João', -5, 'joao@email.com', 'M', 3000.00);
+-- ERROR: new row violates check constraint "pessoas_idade_check"
+
+-- ❌ Erro - email sem @:
+-- INSERT INTO pessoas (nome, idade, email, sexo, salario) 
+-- VALUES ('Maria', 25, 'maria.com', 'F', 3000.00);
+
+/*
+   💡 OPERADORES ÚTEIS EM CHECK:
+   =, <>, <, >, <=, >=      → Comparação
+   AND, OR, NOT             → Lógicos
+   BETWEEN ... AND ...      → Entre valores
+   IN (val1, val2, ...)     → Em lista
+   LIKE 'padrão'            → Correspondência de texto
+       % = qualquer sequência
+       _ = um caractere
+*/
+
+
+================================================================================
+     PARTE 3: PRÁTICA - TABELAS COMPLEXAS (15:45 - 17:00)
+================================================================================
+
+-- EXEMPLO COMPLETO: Sistema de Biblioteca
+
+-- Tabela de autores
+CREATE TABLE autores (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    nacionalidade VARCHAR(50),
+    data_nascimento DATE,
+    biografia TEXT
+);
+
+-- Tabela de livros
+CREATE TABLE livros (
+    id SERIAL PRIMARY KEY,
+    isbn CHAR(13) UNIQUE NOT NULL,
+    titulo VARCHAR(200) NOT NULL,
+    autor_id INTEGER NOT NULL,  -- Será foreign key (próxima aula)
+    ano_publicacao INTEGER CHECK (ano_publicacao >= 1000 AND ano_publicacao <= 2100),
+    paginas INTEGER CHECK (paginas > 0),
+    preco DECIMAL(10,2) CHECK (preco >= 0),
+    estoque INTEGER DEFAULT 0 CHECK (estoque >= 0),
+    disponivel BOOLEAN DEFAULT TRUE,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de membros da biblioteca
+CREATE TABLE membros (
+    id SERIAL PRIMARY KEY,
+    numero_carteirinha VARCHAR(20) UNIQUE NOT NULL,
+    nome_completo VARCHAR(150) NOT NULL,
+    cpf CHAR(11) UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL CHECK (email LIKE '%@%'),
+    telefone VARCHAR(15),
+    data_nascimento DATE NOT NULL,
+    data_cadastro DATE DEFAULT CURRENT_DATE,
+    ativo BOOLEAN DEFAULT TRUE,
+    tipo_membro VARCHAR(20) DEFAULT 'REGULAR' CHECK (tipo_membro IN ('REGULAR', 'PREMIUM', 'ESTUDANTE'))
+);
+
+-- Inserindo dados:
+INSERT INTO autores (nome, nacionalidade, data_nascimento) VALUES
+    ('Machado de Assis', 'Brasileiro', '1839-06-21'),
+    ('Clarice Lispector', 'Brasileira', '1920-12-10'),
+    ('Paulo Coelho', 'Brasileiro', '1947-08-24');
+
+INSERT INTO livros (isbn, titulo, autor_id, ano_publicacao, paginas, preco, estoque) VALUES
+    ('9788535911664', 'Dom Casmurro', 1, 1899, 256, 35.90, 10),
+    ('9788520925683', 'A Hora da Estrela', 2, 1977, 88, 28.50, 5),
+    ('9788542212938', 'O Alquimista', 3, 1988, 224, 42.90, 15);
+
+INSERT INTO membros (numero_carteirinha, nome_completo, cpf, email, data_nascimento, tipo_membro) VALUES
+    ('BIB001', 'Pedro Alves da Silva', '12345678901', 'pedro@email.com', '1995-03-15', 'REGULAR'),
+    ('BIB002', 'Julia Mendes Santos', '98765432100', 'julia@email.com', '2000-07-22', 'ESTUDANTE'),
+    ('BIB003', 'Carlos Eduardo Lima', '11122233344', 'carlos@email.com', '1988-11-30', 'PREMIUM');
+
+-- Consultas úteis:
+SELECT * FROM livros WHERE preco > 30 ORDER BY preco DESC;
+SELECT * FROM membros WHERE ativo = TRUE AND tipo_membro = 'ESTUDANTE';
+SELECT titulo, preco, estoque FROM livros WHERE disponivel AND estoque < 10;
+
+
+================================================================================
+                    EXERCÍCIOS PRÁTICOS (17:00 - 17:30)
+================================================================================
+
+💪 EXERCÍCIO 1: CRIAR TABELA DE PRODUTOS (15 min)
+
+Crie uma tabela chamada "produtos_loja" com:
+- id (auto-incremento, chave primária)
+- codigo_produto (texto 20 caracteres, único, obrigatório)
+- nome (texto 100 caracteres, obrigatório)
+- descricao (texto longo)
+- preco_custo (decimal 10,2, obrigatório, maior que 0)
+- preco_venda (decimal 10,2, obrigatório, maior que preco_custo)
+- estoque_atual (inteiro, padrão 0, não negativo)
+- estoque_minimo (inteiro, padrão 10, não negativo)
+- peso_kg (decimal 8,3, deve ser positivo)
+- categoria (texto 50 caracteres)
+- ativo (booleano, padrão verdadeiro)
+- data_cadastro (timestamp, padrão data/hora atual)
+
+DICA: Use CHECK para validar preco_venda > preco_custo
+
+# RESOLUÇÃO EXEMPLO:
+CREATE TABLE produtos_loja (
+    id SERIAL PRIMARY KEY,
+
+    codigo_produto VARCHAR(20) UNIQUE NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+
+    preco_custo DECIMAL(10,2) NOT NULL CHECK (preco_custo > 0),
+    preco_venda DECIMAL(10,2) NOT NULL CHECK (preco_venda > preco_custo),
+
+    estoque_atual INT DEFAULT 0 CHECK (estoque_atual >= 0),
+    estoque_minimo INT DEFAULT 10 CHECK (estoque_minimo >= 0),
+
+    peso_kg DECIMAL(8,3) CHECK (peso_kg > 0),
+
+    categoria VARCHAR(50),
+
+    ativo BOOLEAN DEFAULT TRUE,
+
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 2: INSERIR PRODUTOS (10 min)
+
+Insira 5 produtos variados na tabela criada:
+- Notebook Dell (R$ 2500 custo, R$ 3200 venda)
+- Mouse Logitech (R$ 45 custo, R$ 75 venda)
+- Teclado Mecânico (R$ 180 custo, R$ 299 venda)
+- Monitor LG 24" (R$ 550 custo, R$ 899 venda)
+- Webcam HD (R$ 120 custo, R$ 199 venda)
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 3: CRIAR TABELA DE FUNCIONÁRIOS (15 min)
+
+Crie uma tabela "funcionarios_empresa" com:
+- id (auto-incremento, PK)
+- matricula (texto 10 caracteres, único, obrigatório)
+- nome_completo (texto 150, obrigatório)
+- cpf (texto 11, único, obrigatório)
+- email (texto 100, único, obrigatório, deve conter @)
+- telefone (texto 15)
+- data_nascimento (data, obrigatória)
+- data_admissao (data, padrão data atual)
+- cargo (texto 50, obrigatório)
+- salario (decimal 10,2, deve ser >= 1320.00)
+- departamento (texto 50)
+- ativo (booleano, padrão verdadeiro)
+- turno (texto 10, deve ser: 'MANHÃ', 'TARDE', 'NOITE' ou 'INTEGRAL')
+
+-- Criação da tabela "funcionarios_empresa" conforme solicitado
+
+CREATE TABLE funcionarios_empresa (
+    id SERIAL PRIMARY KEY,
+
+    -- Matrícula: texto fixo, única e obrigatória
+    matricula VARCHAR(10) NOT NULL UNIQUE,
+
+    -- Nome completo
+    nome_completo VARCHAR(150) NOT NULL,
+
+    -- CPF com 11 caracteres, obrigatório e único
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+
+    -- E-mail obrigatório, único e deve conter '@'
+    email VARCHAR(100) NOT NULL UNIQUE
+        CHECK (POSITION('@' IN email) > 0),
+
+    -- Telefone opcional
+    telefone VARCHAR(15),
+
+    -- Data de nascimento obrigatória
+    data_nascimento DATE NOT NULL,
+
+    -- Data de admissão com padrão da data atual
+    data_admissao DATE DEFAULT CURRENT_DATE,
+
+    -- Cargo obrigatório
+    cargo VARCHAR(50) NOT NULL,
+
+    -- Salário mínimo de 1320,00
+    salario NUMERIC(10,2) NOT NULL
+        CHECK (salario >= 1320.00),
+
+    -- Departamento opcional
+    departamento VARCHAR(50),
+
+    -- Funcionário ativo por padrão
+    ativo BOOLEAN DEFAULT TRUE,
+
+    -- Turno com valores limitados
+    turno VARCHAR(10) NOT NULL
+        CHECK (turno IN ('MANHÃ', 'TARDE', 'NOITE', 'INTEGRAL'))
+);
+
+
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 DESAFIO EXTRA:
+
+Crie uma tabela "vendas" que registre:
+- id, numero_nota_fiscal (único), data_venda, valor_total
+- forma_pagamento (apenas: 'DINHEIRO', 'CARTAO', 'PIX', 'BOLETO')
+- status_pagamento (apenas: 'PENDENTE', 'PAGO', 'CANCELADO')
+- Use DEFAULT para data_venda e status_pagamento
+
+-- Criação da tabela "vendas" com todas as regras solicitadas
+
+CREATE TABLE vendas (
+    id SERIAL PRIMARY KEY,
+    
+    -- Número da nota fiscal, valor único
+    numero_nota_fiscal VARCHAR(30) NOT NULL UNIQUE,
+    
+    -- Data da venda: recebe a data/hora atual automaticamente
+    data_venda TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Valor total da venda
+    valor_total NUMERIC(10,2) NOT NULL CHECK (valor_total >= 0),
+    
+    -- Forma de pagamento limitada aos valores permitidos
+    forma_pagamento VARCHAR(20) NOT NULL
+        CHECK (forma_pagamento IN ('DINHEIRO', 'CARTAO', 'PIX', 'BOLETO')),
+    
+    -- Status do pagamento limitado aos valores permitidos, com valor padrão
+    status_pagamento VARCHAR(20) DEFAULT 'PENDENTE'
+        CHECK (status_pagamento IN ('PENDENTE', 'PAGO', 'CANCELADO'))
+);
+
+-- ✔️ Regras aplicadas:
+-- - numero_nota_fiscal é único
+-- - data_venda usa CURRENT_TIMESTAMP por padrão
+-- - status_pagamento usa 'PENDENTE' por padrão
+-- - forma_pagamento e status_pagamento têm valores restritos via CHECK
+
+
+================================================================================
+                              RESUMO DA AULA
+================================================================================
+
+✅ O QUE APRENDEMOS:
+
+   TIPOS DE DADOS:
+   • Numéricos: INTEGER, BIGINT, SERIAL, DECIMAL, REAL
+   • Texto: CHAR, VARCHAR, TEXT
+   • Data/Hora: DATE, TIME, TIMESTAMP, INTERVAL
+   • Booleano: BOOLEAN
+   • Especiais: UUID, JSON, ARRAY
+
+   CONSTRAINTS:
+   • NOT NULL → campo obrigatório
+   • DEFAULT → valor padrão automático
+   • UNIQUE → sem duplicatas
+   • CHECK → validação customizada
+
+   FUNÇÕES ÚTEIS:
+   • CURRENT_DATE, CURRENT_TIME, NOW()
+   • CURRENT_TIMESTAMP
+
+📚 TAREFA PARA CASA:
+   1. Fazer exercícios 11-20 da lista geral
+   2. Explorar tipos de dados na documentação
+   3. Criar tabelas para um mini-projeto pessoal
+
+🔜 PRÓXIMA AULA:
+   DDL Avançado - Relacionamentos e Chaves Estrangeiras
+   - PRIMARY KEY vs FOREIGN KEY
+   - ON DELETE CASCADE, SET NULL
+   - ALTER TABLE (modificar tabelas existentes)
+   - DROP, TRUNCATE
+
+================================================================================
+                            FIM DA AULA 02
+================================================================================

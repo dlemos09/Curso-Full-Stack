@@ -1,0 +1,513 @@
+================================================================================
+                              AULA 04 - DIA 4
+                    DML - MANIPULAÇÃO DE DADOS E TRANSAÇÕES
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 (4 horas)
+DATA: _____/_____/_____
+
+================================================================================
+                            OBJETIVOS DA AULA
+================================================================================
+
+Ao final desta aula, você será capaz de:
+✓ Usar INSERT avançado (RETURNING, ON CONFLICT)
+✓ Executar UPDATE em múltiplas tabelas
+✓ Aplicar DELETE com subconsultas
+✓ Controlar transações (BEGIN, COMMIT, ROLLBACK)
+✓ Entender ACID e níveis de isolamento
+
+================================================================================
+                          CRONOGRAMA DA AULA
+================================================================================
+
+13:30 - 13:45 (15 min) → Revisão + Quiz
+13:45 - 14:45 (60 min) → INSERT e UPDATE Avançados
+14:45 - 15:30 (45 min) → DELETE e Operações em Lote
+15:30 - 15:45 (15 min) → ☕ INTERVALO
+15:45 - 17:00 (75 min) → Transações (BEGIN, COMMIT, ROLLBACK)
+17:00 - 17:30 (30 min) → Exercícios Práticos
+
+================================================================================
+     PARTE 1: INSERT AVANÇADO (13:45 - 14:15)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.1 INSERT RETURNING - RETORNAR DADOS INSERIDOS                           ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- RETURNING retorna valores da linha inserida
+INSERT INTO clientes (nome, email) 
+VALUES ('João Silva', 'joao@email.com')
+RETURNING id, nome, email;
+
+/*
+   Resultado:
+    id │    nome     │      email
+   ────┼─────────────┼─────────────────
+     1 │ João Silva  │ joao@email.com
+   
+   💡 ÚTIL PARA:
+   - Saber qual ID foi gerado (SERIAL)
+   - Confirmar valores com DEFAULT aplicado
+   - Usar o ID retornado em próxima query
+*/
+
+-- Retornar múltiplas linhas inseridas:
+INSERT INTO produtos (nome, preco) VALUES
+    ('Notebook', 3500.00),
+    ('Mouse', 50.00),
+    ('Teclado', 150.00)
+RETURNING *;  -- * retorna todas as colunas
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.2 INSERT com SELECT (Copiar dados)                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Copiar dados de outra tabela
+CREATE TABLE produtos_backup (LIKE produtos INCLUDING ALL);
+
+INSERT INTO produtos_backup
+SELECT * FROM produtos WHERE estoque < 10;
+
+-- Inserir resultado de cálculo:
+INSERT INTO relatorio_vendas (mes, total_vendas)
+SELECT 
+    EXTRACT(MONTH FROM data_venda) AS mes,
+    SUM(valor_total) AS total
+FROM pedidos
+WHERE EXTRACT(YEAR FROM data_venda) = 2024
+GROUP BY mes;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 1.3 ON CONFLICT - TRATAR DUPLICATAS (UPSERT)                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Tabela de exemplo:
+CREATE TABLE estoque (
+    produto_id INTEGER PRIMARY KEY,
+    quantidade INTEGER DEFAULT 0
+);
+
+-- Se já existe, ATUALIZA; senão, INSERE:
+INSERT INTO estoque (produto_id, quantidade) 
+VALUES (1, 100)
+ON CONFLICT (produto_id) 
+DO UPDATE SET quantidade = estoque.quantidade + EXCLUDED.quantidade;
+
+/*
+   📚 EXPLICAÇÃO:
+   - ON CONFLICT (produto_id) → se produto_id já existe
+   - DO UPDATE → atualiza ao invés de dar erro
+   - EXCLUDED.quantidade → valor que tentou inserir
+   
+   Primeira vez: insere produto_id=1, quantidade=100
+   Segunda vez: atualiza quantidade = 100 + 100 = 200
+*/
+
+-- Ignorar se já existe (DO NOTHING):
+INSERT INTO clientes (email, nome) 
+VALUES ('joao@email.com', 'João')
+ON CONFLICT (email) DO NOTHING;
+
+
+================================================================================
+     PARTE 2: UPDATE AVANÇADO (14:15 - 14:45)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.1 UPDATE com EXPRESSÕES                                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Atualizar com cálculo:
+UPDATE produtos 
+SET preco = preco * 1.10  -- Aumentar 10%
+WHERE categoria = 'Eletrônicos';
+
+-- Atualizar múltiplas colunas:
+UPDATE funcionarios 
+SET 
+    salario = salario * 1.05,
+    data_ultimo_aumento = CURRENT_DATE
+WHERE departamento_id = 1;
+
+-- Atualizar com CASE (condição):
+UPDATE produtos
+SET desconto = CASE
+    WHEN preco > 1000 THEN 15.00
+    WHEN preco > 500 THEN 10.00
+    ELSE 5.00
+END;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.2 UPDATE com FROM (Join)                                                ║
+╚════════════════════════════════════════════════════════════════════════════╗
+
+-- Atualizar com dados de outra tabela:
+UPDATE pedidos
+SET cliente_nome = c.nome
+FROM clientes c
+WHERE pedidos.cliente_id = c.id;
+
+-- Atualizar baseado em subconsulta:
+UPDATE funcionarios
+SET salario = salario * 1.10
+WHERE departamento_id IN (
+    SELECT id FROM departamentos 
+    WHERE nome = 'TI'
+);
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 2.3 UPDATE RETURNING                                                      ║
+╚════════════════════════════════════════════════════════════════════════════╗
+
+-- Ver o que foi atualizado:
+UPDATE produtos 
+SET preco = preco * 0.90
+WHERE estoque > 100
+RETURNING id, nome, preco;
+
+
+================================================================================
+     PARTE 3: DELETE AVANÇADO (14:45 - 15:30)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.1 DELETE com SUBCONSULTA                                                ║
+╚════════════════════════════════════════════════════════════════════════════╗
+
+-- Deletar clientes sem pedidos:
+DELETE FROM clientes
+WHERE id NOT IN (
+    SELECT DISTINCT cliente_id FROM pedidos
+);
+
+-- Deletar produtos sem vendas há mais de 1 ano:
+DELETE FROM produtos
+WHERE id NOT IN (
+    SELECT DISTINCT produto_id 
+    FROM itens_pedido ip
+    JOIN pedidos p ON ip.pedido_id = p.id
+    WHERE p.data_pedido > CURRENT_DATE - INTERVAL '1 year'
+);
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.2 DELETE com USING (Join)                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Deletar pedidos de clientes inativos:
+DELETE FROM pedidos
+USING clientes
+WHERE pedidos.cliente_id = clientes.id
+  AND clientes.ativo = FALSE;
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 3.3 DELETE RETURNING                                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- Ver o que foi deletado (útil para auditoria):
+DELETE FROM produtos 
+WHERE estoque = 0
+RETURNING id, nome, data_cadastro;
+
+
+================================================================================
+     PARTE 4: TRANSAÇÕES (15:45 - 17:00)
+================================================================================
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.1 O QUE É UMA TRANSAÇÃO?                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📌 DEFINIÇÃO:
+   Transação é um conjunto de operações que são executadas como uma
+   unidade indivisível: ou TODAS acontecem, ou NENHUMA acontece.
+
+📌 PROPRIEDADES ACID:
+
+   🅰️ ATOMICITY (Atomicidade)
+      Tudo ou nada. Se uma parte falha, TUDO é desfeito.
+   
+   🅲 CONSISTENCY (Consistência)
+      Dados sempre válidos (respeitam constraints).
+   
+   🅸 ISOLATION (Isolamento)
+      Transações concorrentes não interferem.
+   
+   🅳 DURABILITY (Durabilidade)
+      Dados persistem após COMMIT.
+
+📌 EXEMPLO DO MUNDO REAL:
+   Transferência bancária: debitar conta A e creditar conta B
+   - Se debitar A mas der erro ao creditar B → ROLLBACK!
+   - Ambas devem acontecer juntas
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.2 COMANDOS DE TRANSAÇÃO                                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+BEGIN;     -- Inicia transação
+-- ... comandos SQL ...
+COMMIT;    -- Confirma mudanças (torna permanente)
+
+-- ou
+
+BEGIN;
+-- ... comandos SQL ...
+ROLLBACK;  -- Desfaz tudo (volta ao estado anterior)
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.3 EXEMPLO PRÁTICO - TRANSFERÊNCIA BANCÁRIA                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+CREATE TABLE contas (
+    id SERIAL PRIMARY KEY,
+    titular VARCHAR(100),
+    saldo DECIMAL(10,2) CHECK (saldo >= 0)
+);
+
+INSERT INTO contas (titular, saldo) VALUES
+    ('João', 1000.00),
+    ('Maria', 500.00);
+
+-- ✅ TRANSFERÊNCIA COM SUCESSO:
+BEGIN;
+    -- Debitar de João:
+    UPDATE contas SET saldo = saldo - 200 WHERE titular = 'João';
+    
+    -- Creditar para Maria:
+    UPDATE contas SET saldo = saldo + 200 WHERE titular = 'Maria';
+COMMIT;  -- Confirma as duas operações
+
+SELECT * FROM contas;
+-- João: 800.00
+-- Maria: 700.00
+
+
+-- ❌ TRANSFERÊNCIA COM ERRO - ROLLBACK AUTOMÁTICO:
+BEGIN;
+    UPDATE contas SET saldo = saldo - 500 WHERE titular = 'João';
+    -- João agora teria 300.00
+    
+    -- Tenta creditar valor errado (violaria CHECK):
+    UPDATE contas SET saldo = saldo - 1000 WHERE titular = 'Maria';
+    -- ERROR! saldo não pode ser negativo
+ROLLBACK;  -- Desfaz TUDO
+
+SELECT * FROM contas;
+-- João: 800.00 (voltou ao estado anterior!)
+-- Maria: 700.00
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.4 SAVEPOINT - PONTOS DE SALVAMENTO                                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+BEGIN;
+    INSERT INTO produtos (nome, preco) VALUES ('Produto A', 100);
+    
+    SAVEPOINT ponto1;  -- Marca ponto de salvamento
+    
+    INSERT INTO produtos (nome, preco) VALUES ('Produto B', 200);
+    
+    SAVEPOINT ponto2;
+    
+    INSERT INTO produtos (nome, preco) VALUES ('Produto C', 300);
+    
+    -- Ops, erro no Produto C, voltar para ponto2:
+    ROLLBACK TO ponto2;
+    -- Produto C foi desfeito, A e B permanecem
+    
+    -- Ou voltar para ponto1:
+    ROLLBACK TO ponto1;
+    -- B e C desfeitos, apenas A permanece
+    
+COMMIT;  -- Confirma apenas Produto A
+
+/*
+   💡 SAVEPOINT é útil para:
+   - Desfazer parte da transação
+   - Processos longos com múltiplas etapas
+   - Permitir erro em sub-operação sem perder tudo
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.5 TRANSAÇÕES IMPLÍCITAS vs EXPLÍCITAS                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- IMPLÍCITA (auto-commit):
+INSERT INTO produtos (nome) VALUES ('Teste');
+-- Automaticamente faz BEGIN + COMMIT
+
+-- EXPLÍCITA:
+BEGIN;
+    INSERT INTO produtos (nome) VALUES ('Teste 1');
+    INSERT INTO produtos (nome) VALUES ('Teste 2');
+COMMIT;  -- Você controla quando confirmar
+
+/*
+   💡 QUANDO USAR TRANSAÇÕES EXPLÍCITAS:
+   - Múltiplas operações relacionadas
+   - Operações que devem ser atômicas
+   - Importação de dados em lote
+   - Alterações críticas (teste antes de COMMIT)
+*/
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ 4.6 NÍVEIS DE ISOLAMENTO (Avançado)                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+-- PostgreSQL suporta 4 níveis de isolamento:
+
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;  -- Padrão
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+/*
+   📊 PROBLEMAS DE CONCORRÊNCIA:
+   
+   DIRTY READ: Ler dados não confirmados de outra transação
+   NON-REPEATABLE READ: Ler duas vezes, valores diferentes
+   PHANTOM READ: Linhas aparecem/somem entre leituras
+   
+   ┌──────────────────┬────────┬─────────────┬─────────────┐
+   │ Nível            │ Dirty  │ Non-Repeat. │ Phantom     │
+   ├──────────────────┼────────┼─────────────┼─────────────┤
+   │ READ UNCOMMITTED │ Sim    │ Sim         │ Sim         │
+   │ READ COMMITTED   │ Não    │ Sim         │ Sim         │
+   │ REPEATABLE READ  │ Não    │ Não         │ Sim*        │
+   │ SERIALIZABLE     │ Não    │ Não         │ Não         │
+   └──────────────────┴────────┴─────────────┴─────────────┘
+   
+   *No PostgreSQL, REPEATABLE READ evita phantom reads também
+   
+   💡 REGRA GERAL:
+   Quanto maior o isolamento, menor a performance
+   Use READ COMMITTED (padrão) para 99% dos casos
+*/
+
+
+================================================================================
+                    EXERCÍCIOS PRÁTICOS (17:00 - 17:30)
+================================================================================
+
+💪 EXERCÍCIO 1: UPSERT (10 min)
+
+Crie uma tabela "visitas_site":
+- pagina VARCHAR(100) PRIMARY KEY
+- contador INTEGER DEFAULT 0
+
+Use ON CONFLICT para:
+- Se página já existe: incrementar contador
+- Se não existe: inserir com contador = 1
+
+Teste inserindo a mesma página 3 vezes.
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 2: UPDATE EM LOTE (10 min)
+
+Dada a tabela "produtos":
+a) Aumentar 15% no preço de produtos da categoria 'Eletrônicos'
+b) Diminuir 10% no preço de produtos com estoque > 100
+c) Zerar desconto de produtos inativos
+d) Use RETURNING para ver o que foi alterado
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 3: LIMPEZA DE DADOS (10 min)
+
+a) Delete clientes que:
+   - Estão inativos E
+   - Não têm pedidos nos últimos 2 anos
+   
+b) Delete produtos com:
+   - Estoque = 0 E
+   - Sem vendas (não estão em itens_pedido)
+
+c) Use RETURNING para registrar o que foi deletado
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 EXERCÍCIO 4: TRANSAÇÃO - SISTEMA DE PEDIDOS (20 min)
+
+Crie uma transação que:
+
+1. Inserir pedido na tabela "pedidos"
+2. Inserir 3 itens na tabela "itens_pedido"
+3. Atualizar estoque dos produtos (subtrair quantidade vendida)
+4. Se qualquer produto ficar com estoque negativo → ROLLBACK
+
+Teste com:
+a) Estoque suficiente (deve dar COMMIT)
+b) Estoque insuficiente (deve dar ROLLBACK)
+
+DICA: Use CHECK (estoque >= 0) na tabela produtos
+
+────────────────────────────────────────────────────────────────────────────
+
+💪 DESAFIO EXTRA: AUDITORIA
+
+Crie uma tabela "log_alteracoes":
+- id, tabela_nome, operacao ('INSERT', 'UPDATE', 'DELETE'),
+  usuario, data_hora, dados_json
+
+Faça uma transação que:
+1. Atualiza salário de funcionário
+2. Registra a alteração no log
+3. COMMIT apenas se ambas funcionarem
+
+
+================================================================================
+                              RESUMO DA AULA
+================================================================================
+
+✅ O QUE APRENDEMOS:
+
+   INSERT AVANÇADO:
+   • RETURNING → retorna dados inseridos
+   • INSERT ... SELECT → copiar dados
+   • ON CONFLICT → tratar duplicatas (upsert)
+
+   UPDATE AVANÇADO:
+   • Com expressões e cálculos
+   • Com FROM (join)
+   • RETURNING
+
+   DELETE AVANÇADO:
+   • Com subconsultas
+   • Com USING (join)
+   • RETURNING
+
+   TRANSAÇÕES:
+   • BEGIN, COMMIT, ROLLBACK
+   • SAVEPOINT → pontos de salvamento
+   • ACID → Atomicidade, Consistência, Isolamento, Durabilidade
+   • Níveis de isolamento
+
+📚 TAREFA PARA CASA:
+   1. Exercícios 31-40 da lista geral
+   2. Praticar transações com cenários reais
+   3. Ler sobre locks e concorrência
+
+🔜 PRÓXIMA AULA:
+   Consultas Básicas e Filtros
+   - WHERE com operadores complexos
+   - LIKE, ILIKE, padrões
+   - IN, BETWEEN, IS NULL
+   - ORDER BY, LIMIT, OFFSET (paginação)
+
+================================================================================
+                            FIM DA AULA 04
+================================================================================

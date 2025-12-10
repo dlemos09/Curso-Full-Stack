@@ -1,0 +1,437 @@
+================================================================================
+                              AULA 13 - DIA 13
+                    OTIMIZAÇÃO DE PERFORMANCE E EXPLAIN ANALYZE
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Identificar gargalos de performance
+✓ Interpretar planos de execução (EXPLAIN)
+✓ Otimizar queries lentas
+✓ Criar índices eficientes
+✓ Técnicas de tuning
+
+CRONOGRAMA:
+13:30-14:30 → EXPLAIN e EXPLAIN ANALYZE
+14:30-15:30 → Otimização de Queries
+15:30-15:45 → Intervalo
+15:45-16:30 → Índices Avançados
+16:30-17:30 → Prática e Tuning
+
+================================================================================
+1. EXPLAIN - ENTENDENDO PLANOS DE EXECUÇÃO
+================================================================================
+
+CONCEITO:
+EXPLAIN mostra como o PostgreSQL executa uma query.
+Essencial para identificar problemas de performance.
+
+COMANDOS:
+- EXPLAIN → mostra plano sem executar
+- EXPLAIN ANALYZE → executa e mostra estatísticas reais
+- EXPLAIN (ANALYZE, BUFFERS) → incluir uso de memória
+
+--------------------------------------------------------------------------------
+EXEMPLO 1: EXPLAIN Básico
+--------------------------------------------------------------------------------
+
+EXPLAIN
+SELECT * FROM produtos WHERE categoria_id = 5;
+
+RESULTADO:
+Seq Scan on produtos  (cost=0.00..15.50 rows=10 width=100)
+  Filter: (categoria_id = 5)
+
+💡 Seq Scan → varredura sequencial (lê tabela inteira)
+💡 cost=0.00..15.50 → custo estimado (inicial..final)
+💡 rows=10 → linhas estimadas
+💡 width=100 → tamanho médio da linha em bytes
+
+--------------------------------------------------------------------------------
+EXEMPLO 2: EXPLAIN ANALYZE (Com Execução Real)
+--------------------------------------------------------------------------------
+
+EXPLAIN ANALYZE
+SELECT p.nome, c.nome AS categoria
+FROM produtos p
+INNER JOIN categorias c ON p.categoria_id = c.id
+WHERE p.preco > 100;
+
+RESULTADO:
+Hash Join  (cost=1.15..18.45 rows=5 width=64) 
+           (actual time=0.025..0.042 rows=8 loops=1)
+  Hash Cond: (p.categoria_id = c.id)
+  ->  Seq Scan on produtos p  (cost=0.00..15.50 rows=5 width=100)
+                               (actual time=0.010..0.015 rows=8 loops=1)
+        Filter: (preco > 100::numeric)
+  ->  Hash  (cost=1.05..1.05 rows=5 width=64)
+            (actual time=0.008..0.008 rows=5 loops=1)
+        ->  Seq Scan on categorias c  (cost=0.00..1.05 rows=5 width=64)
+Planning Time: 0.125 ms
+Execution Time: 0.068 ms
+
+💡 actual time → tempo real de execução
+💡 rows=8 → linhas realmente retornadas
+💡 loops=1 → quantas vezes o nó foi executado
+💡 Planning Time → tempo de planejamento
+💡 Execution Time → tempo de execução
+
+================================================================================
+2. TIPOS DE SCAN
+================================================================================
+
+1. SEQ SCAN (Sequential Scan)
+   - Lê tabela inteira linha por linha
+   - LENTO para tabelas grandes
+   - OK para tabelas pequenas ou quando busca muitos registros
+
+2. INDEX SCAN
+   - Usa índice para localizar registros
+   - RÁPIDO para poucos registros
+   - Melhor quando filtra pequena porcentagem
+
+3. INDEX ONLY SCAN
+   - Dados vêm APENAS do índice (não acessa tabela)
+   - MUITO RÁPIDO
+
+4. BITMAP SCAN
+   - Cria bitmap de páginas a visitar
+   - Bom para múltiplos índices ou muitos resultados
+
+--------------------------------------------------------------------------------
+EXEMPLO 3: Comparação Com e Sem Índice
+--------------------------------------------------------------------------------
+
+-- SEM índice:
+EXPLAIN ANALYZE
+SELECT * FROM produtos WHERE nome = 'Notebook Dell';
+
+Seq Scan on produtos  (cost=0.00..20.00 rows=1 width=100)
+                      (actual time=0.050..0.250 rows=1 loops=1)
+  Filter: (nome = 'Notebook Dell'::text)
+  Rows Removed by Filter: 999
+Execution Time: 0.275 ms
+
+-- Criar índice:
+CREATE INDEX idx_produtos_nome ON produtos(nome);
+
+-- COM índice:
+EXPLAIN ANALYZE
+SELECT * FROM produtos WHERE nome = 'Notebook Dell';
+
+Index Scan using idx_produtos_nome on produtos
+    (cost=0.28..8.29 rows=1 width=100)
+    (actual time=0.015..0.016 rows=1 loops=1)
+  Index Cond: (nome = 'Notebook Dell'::text)
+Execution Time: 0.035 ms
+
+💡 Execution Time: 0.275ms → 0.035ms (8x mais rápido!)
+💡 Index Scan vs Seq Scan
+
+================================================================================
+3. OTIMIZAÇÃO DE QUERIES
+================================================================================
+
+PROBLEMA 1: SELECT *
+--------------------------------------------------------------------------------
+
+❌ RUIM:
+SELECT * FROM produtos WHERE ativo = TRUE;
+
+✅ BOM:
+SELECT id, nome, preco FROM produtos WHERE ativo = TRUE;
+
+💡 Selecione apenas colunas necessárias
+💡 Reduz transferência de dados
+💡 Possibilita Index Only Scan
+
+--------------------------------------------------------------------------------
+
+PROBLEMA 2: Funções em WHERE
+--------------------------------------------------------------------------------
+
+❌ RUIM (não usa índice):
+SELECT * FROM clientes WHERE LOWER(email) = 'joao@email.com';
+
+✅ BOM:
+-- Opção 1: Normalizar dados (trigger)
+SELECT * FROM clientes WHERE email = 'joao@email.com';
+
+-- Opção 2: Índice funcional
+CREATE INDEX idx_clientes_email_lower ON clientes(LOWER(email));
+SELECT * FROM clientes WHERE LOWER(email) = 'joao@email.com';
+
+💡 Funções em colunas impedem uso de índice
+💡 Índices funcionais resolvem isso
+
+--------------------------------------------------------------------------------
+
+PROBLEMA 3: OR vs UNION
+--------------------------------------------------------------------------------
+
+❌ LENTO:
+SELECT * FROM produtos 
+WHERE categoria_id = 1 OR categoria_id = 2;
+
+✅ RÁPIDO:
+SELECT * FROM produtos WHERE categoria_id IN (1, 2);
+
+-- Ou ainda melhor com UNION (se índices diferentes):
+SELECT * FROM produtos WHERE categoria_id = 1
+UNION ALL
+SELECT * FROM produtos WHERE categoria_id = 2;
+
+💡 IN geralmente é otimizado
+💡 UNION ALL pode usar índices separadamente
+
+--------------------------------------------------------------------------------
+
+PROBLEMA 4: Subconsultas vs JOIN
+--------------------------------------------------------------------------------
+
+❌ PODE SER LENTO:
+SELECT * FROM produtos
+WHERE categoria_id IN (
+    SELECT id FROM categorias WHERE ativo = TRUE
+);
+
+✅ GERALMENTE MAIS RÁPIDO:
+SELECT p.* 
+FROM produtos p
+INNER JOIN categorias c ON p.categoria_id = c.id
+WHERE c.ativo = TRUE;
+
+💡 JOIN geralmente mais eficiente
+💡ependendo do caso, EXISTS pode ser melhor
+
+--------------------------------------------------------------------------------
+
+PROBLEMA 5: LIMIT sem ORDER BY
+--------------------------------------------------------------------------------
+
+❌ IMPREVISÍVEL:
+SELECT * FROM produtos LIMIT 10;
+
+✅ PREVISÍVEL E RÁPIDO:
+CREATE INDEX idx_produtos_id ON produtos(id);
+SELECT * FROM produtos ORDER BY id LIMIT 10;
+
+💡 ORDER BY + índice + LIMIT = muito eficiente
+💡 PostgreSQL pode parar após encontrar N registros
+
+================================================================================
+4. ÍNDICES AVANÇADOS
+================================================================================
+
+ÍNDICE PARCIAL
+--------------------------------------------------------------------------------
+
+-- Índice apenas para produtos ativos
+CREATE INDEX idx_produtos_ativos 
+ON produtos(categoria_id) 
+WHERE ativo = TRUE;
+
+💡 Menor e mais rápido
+💡 Usa menos espaço
+💡 Ideal quando query sempre filtra condição
+
+-- Uso:
+SELECT * FROM produtos 
+WHERE categoria_id = 5 AND ativo = TRUE;  -- USA índice
+
+SELECT * FROM produtos 
+WHERE categoria_id = 5;  -- NÃO usa índice
+
+--------------------------------------------------------------------------------
+
+ÍNDICE COMPOSTO (Múltiplas Colunas)
+--------------------------------------------------------------------------------
+
+-- Ordem importa!
+CREATE INDEX idx_produtos_cat_preco 
+ON produtos(categoria_id, preco);
+
+-- ✅ USA índice:
+SELECT * FROM produtos WHERE categoria_id = 5;
+SELECT * FROM produtos WHERE categoria_id = 5 AND preco > 100;
+
+-- ❌ NÃO usa índice completo:
+SELECT * FROM produtos WHERE preco > 100;
+
+💡 Índice pode ser usado pela primeira coluna sozinha
+💡 Coloque coluna mais seletiva primeiro (geralmente)
+
+--------------------------------------------------------------------------------
+
+ÍNDICE COVERING (Inclui Colunas Extras)
+--------------------------------------------------------------------------------
+
+-- Incluir colunas adicionais
+CREATE INDEX idx_produtos_cat_include 
+ON produtos(categoria_id) 
+INCLUDE (nome, preco);
+
+-- Permite Index Only Scan:
+SELECT nome, preco FROM produtos WHERE categoria_id = 5;
+
+💡 INCLUDE → colunas no índice mas não na chave
+💡 Ideal para queries que retornam poucas colunas
+
+================================================================================
+5. ANÁLISE DE PERFORMANCE REAL
+================================================================================
+
+EXEMPLO COMPLETO: Otimizar Query Lenta
+--------------------------------------------------------------------------------
+
+-- Query problemática:
+EXPLAIN ANALYZE
+SELECT 
+    c.nome AS cliente,
+    COUNT(p.id) AS total_pedidos,
+    SUM(p.valor_total) AS total_gasto
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id
+WHERE c.ativo = TRUE
+AND p.data_pedido >= CURRENT_DATE - INTERVAL '1 year'
+GROUP BY c.id, c.nome
+ORDER BY total_gasto DESC;
+
+-- Resultado (antes):
+Hash Right Join  (cost=50.00..250.00 rows=100 width=64)
+    (actual time=15.250..45.500 rows=85 loops=1)
+  ->  Seq Scan on pedidos p  (cost=0.00..180.00 rows=500 width=12)
+        Filter: (data_pedido >= (CURRENT_DATE - '1 year'::interval))
+        Rows Removed by Filter: 8500
+  ->  Hash  (cost=40.00..40.00 rows=800 width=64)
+        ->  Seq Scan on clientes c  (cost=0.00..40.00 rows=800 width=64)
+              Filter: ativo
+Execution Time: 45.750 ms
+
+ANÁLISE DOS PROBLEMAS:
+1. Seq Scan em pedidos (8500 linhas removidas!)
+2. Seq Scan em clientes
+3. Sem índices
+
+SOLUÇÃO:
+-- Índice para filtro de data:
+CREATE INDEX idx_pedidos_data ON pedidos(data_pedido);
+
+-- Índice para JOIN:
+CREATE INDEX idx_pedidos_cliente ON pedidos(cliente_id);
+
+-- Índice para filtro de ativo:
+CREATE INDEX idx_clientes_ativo ON clientes(ativo) WHERE ativo = TRUE;
+
+-- Resultado (depois):
+Hash Right Join  (cost=8.50..25.00 rows=100 width=64)
+    (actual time=1.125..2.250 rows=85 loops=1)
+  ->  Index Scan using idx_pedidos_data on pedidos p
+        (cost=0.28..15.00 rows=500 width=12)
+        Index Cond: (data_pedido >= (CURRENT_DATE - '1 year'::interval))
+  ->  Hash  (cost=5.00..5.00 rows=800 width=64)
+        ->  Bitmap Heap Scan on clientes c
+              (cost=2.00..5.00 rows=800 width=64)
+              ->  Bitmap Index Scan on idx_clientes_ativo
+Execution Time: 2.500 ms
+
+💡 45.75ms → 2.5ms (18x mais rápido!)
+
+================================================================================
+6. DICAS DE TUNING
+================================================================================
+
+1. VACUUM e ANALYZE
+   -- Limpa espaço morto e atualiza estatísticas
+   VACUUM ANALYZE produtos;
+
+2. Estatísticas Atualizadas
+   -- PostgreSQL usa estatísticas para planejar
+   ANALYZE;  -- todas as tabelas
+
+3. Configurações de Memória
+   -- work_mem: memória para ordenação/hash
+   -- shared_buffers: cache de dados
+   
+   -- Aumentar temporariamente:
+   SET work_mem = '50MB';
+   
+4. Verificar Índices Não Usados
+   SELECT 
+       schemaname,
+       tablename,
+       indexname,
+       idx_scan
+   FROM pg_stat_user_indexes
+   WHERE idx_scan = 0
+   ORDER BY pg_relation_size(indexrelid) DESC;
+
+5. Tamanho de Índices
+   SELECT
+       tablename,
+       indexname,
+       pg_size_pretty(pg_relation_size(indexrelid)) AS tamanho
+   FROM pg_stat_user_indexes
+   ORDER BY pg_relation_size(indexrelid) DESC;
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+EXERCÍCIO 1: Análise de Performance [MÉDIO - 25 min]
+1. Criar query complexa com JOINs e agregações
+2. Executar EXPLAIN ANALYZE
+3. Identificar gargalos
+4. Criar índices apropriados
+5. Comparar performance antes/depois
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 2: Otimização de Query [MÉDIO - 30 min]
+Otimizar query que lista pedidos com:
+- Cliente, produtos, quantidades
+- Filtro por período
+- Ordenação por valor total
+- Deve executar em menos de 10ms
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 3: Índices Estratégicos [AVANÇADO - 35 min]
+Criar estratégia completa de índices para e-commerce:
+1. Identificar queries mais frequentes
+2. Criar índices apropriados (simples, compostos, parciais)
+3. Documentar escolhas
+4. Medir impacto
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 4: Tuning Completo [AVANÇADO - 40 min]
+Otimizar banco inteiro:
+1. VACUUM ANALYZE todas tabelas
+2. Identificar índices não usados
+3. Reescrever queries lentas
+4. Criar relatório de performance
+
+================================================================================
+CHECKLIST DE OTIMIZAÇÃO
+================================================================================
+
+□ Selecionar apenas colunas necessárias
+□ Usar índices em colunas de filtro e JOIN
+□ Evitar funções em WHERE
+□ Preferir JOIN a subconsultas complexas
+□ Usar LIMIT quando apropriado
+□ Normalizar dados para evitar funções
+□ Criar índices compostos para queries frequentes
+□ Usar índices parciais quando possível
+□ VACUUM ANALYZE regularmente
+□ Monitorar índices não usados
+□ Testar com dados realistas
+□ Medir antes e depois
+
+TAREFA: Otimizar queries do seu projeto | PRÓXIMA AULA: Administração
+
+================================================================================
+FIM DA AULA 13
+================================================================================

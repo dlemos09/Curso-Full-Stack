@@ -1,0 +1,27 @@
+Aula 04 – Objetos, JSON e Desestruturação
+
+Conteúdo Teórico
+- Objetos: literais, propriedades, métodos, protótipo básico.
+- JSON: serialização e parsing; diferenças para objeto JS.
+- Desestruturação e renomeação; spread/rest em objetos.
+
+Exemplos
+const usuario = { id:1, nome:"Ana", email:"ana@ex.com" };
+usuario.status = "ativo";
+
+const {nome, email:mail} = usuario;
+const usuario2 = { ...usuario, role:"admin" };
+
+const json = JSON.stringify(usuario);
+const obj = JSON.parse(json);
+
+Exercícios
+- Básico: crie objeto com métodos; serialize/deserializa.
+- Intermediário: desestruture com valores padrão; mescle objetos com validação.
+- Avançado: função deepMerge simples; deepClone sem libs para casos comuns.
+
+Atividade Real
+- Config loader: ler JSON de config e expor objeto tipado.
+
+Resumo
+- Objetos e JSON formam base de dados em JS moderno.

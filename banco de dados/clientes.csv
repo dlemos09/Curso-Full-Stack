@@ -1,0 +1,21 @@
+id_cliente,nome,email,cpf,telefone,data_nascimento,limite_credito,status_ativo
+1,João Silva,joao.silva@email.com,12345678901,(11) 98888-1111,1985-03-15,5000.00,true
+2,Maria Santos,maria.santos@email.com,23456789012,(11) 97777-2222,1990-07-22,3000.00,true
+3,Pedro Oliveira,pedro.oliveira@email.com,34567890123,(21) 96666-3333,1978-11-30,8000.00,true
+4,Ana Costa,ana.costa@email.com,45678901234,(21) 95555-4444,1995-01-10,2000.00,true
+5,Carlos Souza,carlos.souza@email.com,56789012345,(11) 94444-5555,1982-05-25,4500.00,true
+6,Juliana Lima,juliana.lima@email.com,67890123456,(85) 93333-6666,1988-09-18,6000.00,true
+7,Roberto Alves,roberto.alves@email.com,78901234567,(31) 92222-7777,1975-12-05,10000.00,true
+8,Fernanda Rocha,fernanda.rocha@email.com,89012345678,(41) 91111-8888,1992-04-20,2500.00,true
+9,Ricardo Mendes,ricardo.mendes@email.com,90123456789,(51) 90000-9999,1980-08-14,7000.00,true
+10,Patricia Ferreira,patricia.ferreira@email.com,01234567890,(61) 99999-0000,1987-02-28,3500.00,true
+11,Lucas Barbosa,lucas.barbosa@email.com,11122233344,(11) 98765-4321,1993-06-12,4000.00,true
+12,Camila Dias,camila.dias@email.com,22233344455,(21) 97654-3210,1986-11-25,5500.00,true
+13,Bruno Cardoso,bruno.cardoso@email.com,33344455566,(31) 96543-2109,1991-03-08,3200.00,true
+14,Amanda Moreira,amanda.moreira@email.com,44455566677,(41) 95432-1098,1989-09-30,2800.00,true
+15,Felipe Ramos,felipe.ramos@email.com,55566677788,(51) 94321-0987,1984-01-17,6500.00,true
+16,Larissa Cunha,larissa.cunha@email.com,66677788899,(61) 93210-9876,1996-05-22,2200.00,true
+17,Thiago Borges,thiago.borges@email.com,77788899900,(71) 92109-8765,1981-12-14,7500.00,true
+18,Renata Pires,renata.pires@email.com,88899900011,(81) 91098-7654,1994-07-19,3800.00,true
+19,Rodrigo Gomes,rodrigo.gomes@email.com,99900011122,(85) 90987-6543,1983-02-26,5200.00,true
+20,Beatriz Teixeira,beatriz.teixeira@email.com,00011122233,(11) 99876-5432,1990-10-05,4200.00,true

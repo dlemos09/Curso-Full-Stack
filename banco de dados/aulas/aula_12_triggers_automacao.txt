@@ -1,0 +1,492 @@
+================================================================================
+                              AULA 12 - DIA 12
+                         TRIGGERS E AUTOMAÇÃO DE BANCO
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Compreender conceito e tipos de triggers
+✓ Criar triggers BEFORE e AFTER
+✓ Implementar triggers de auditoria
+✓ Automatizar regras de negócio
+
+CRONOGRAMA:
+13:30-14:30 → Fundamentos de Triggers
+14:30-15:30 → Triggers BEFORE/AFTER
+15:30-15:45 → Intervalo
+15:45-16:30 → Triggers de Auditoria
+16:30-17:30 → Projeto Prático
+
+================================================================================
+1. O QUE SÃO TRIGGERS?
+================================================================================
+
+CONCEITO:
+Triggers (gatilhos) são procedimentos executados AUTOMATICAMENTE quando
+eventos específicos ocorrem (INSERT, UPDATE, DELETE).
+
+USOS COMUNS:
+✓ Auditoria (registrar quem/quando modificou)
+✓ Validação de dados
+✓ Atualização automática de campos
+✓ Manutenção de integridade
+✓ Replicação de dados
+✓ Notificações
+
+TIPOS:
+1. BEFORE → executa ANTES da operação (pode modificar/cancelar)
+2. AFTER → executa DEPOIS da operação (dados já gravados)
+
+NÍVEIS:
+- FOR EACH ROW → executa para cada linha afetada
+- FOR EACH STATEMENT → executa uma vez por comando
+
+================================================================================
+2. ESTRUTURA BÁSICA
+================================================================================
+
+PASSO 1: Criar função trigger
+CREATE OR REPLACE FUNCTION nome_funcao_trigger()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- lógica aqui
+    RETURN NEW;  -- ou OLD, ou NULL
+END;
+$$;
+
+PASSO 2: Criar trigger
+CREATE TRIGGER nome_trigger
+BEFORE/AFTER INSERT/UPDATE/DELETE ON tabela
+FOR EACH ROW
+EXECUTE FUNCTION nome_funcao_trigger();
+
+💡 NEW → registro novo (INSERT/UPDATE)
+💡 OLD → registro antigo (UPDATE/DELETE)
+💡 RETURN NEW → permite operação
+💡 RETURN NULL → cancela operação
+
+================================================================================
+3. TRIGGERS BEFORE
+================================================================================
+
+EXEMPLO 1: Validação Automática
+--------------------------------------------------------------------------------
+
+-- Garantir que preço não seja negativo
+CREATE OR REPLACE FUNCTION validar_preco()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.preco < 0 THEN
+        RAISE EXCEPTION 'Preço não pode ser negativo: %', NEW.preco;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_validar_preco
+BEFORE INSERT OR UPDATE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION validar_preco();
+
+-- 💡 BEFORE → valida ANTES de gravar
+-- 💡 RAISE EXCEPTION → cancela operação
+
+-- Testando:
+INSERT INTO produtos (nome, preco, categoria_id) 
+VALUES ('Teste', -10, 1);  -- ERRO!
+
+--------------------------------------------------------------------------------
+
+EXEMPLO 2: Modificação Automática de Valores
+--------------------------------------------------------------------------------
+
+-- Converter email para minúsculas e remover espaços
+CREATE OR REPLACE FUNCTION normalizar_email()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.email := LOWER(TRIM(NEW.email));
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_normalizar_email
+BEFORE INSERT OR UPDATE ON clientes
+FOR EACH ROW
+EXECUTE FUNCTION normalizar_email();
+
+-- 💡 Modifica NEW antes de gravar
+-- 💡 Garante padrão de dados
+
+-- Testando:
+INSERT INTO clientes (nome, email) 
+VALUES ('João', '  JOAO@EMAIL.COM  ');
+-- Gravará: 'joao@email.com'
+
+--------------------------------------------------------------------------------
+
+EXEMPLO 3: Atualizar Timestamp Automaticamente
+--------------------------------------------------------------------------------
+
+-- Atualizar data_atualizacao sempre que registro for modificado
+CREATE OR REPLACE FUNCTION atualizar_timestamp()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.data_atualizacao := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$;
+
+-- Aplicar em múltiplas tabelas:
+CREATE TRIGGER trg_atualizar_timestamp_produtos
+BEFORE UPDATE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_timestamp();
+
+CREATE TRIGGER trg_atualizar_timestamp_clientes
+BEFORE UPDATE ON clientes
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_timestamp();
+
+-- 💡 Uma função pode ser usada em vários triggers
+-- 💡 Comum para campos de auditoria
+
+================================================================================
+4. TRIGGERS AFTER
+================================================================================
+
+EXEMPLO 4: Atualizar Totais Automaticamente
+--------------------------------------------------------------------------------
+
+-- Atualizar valor_total do pedido ao inserir/atualizar item
+CREATE OR REPLACE FUNCTION atualizar_total_pedido()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_pedido_id INTEGER;
+BEGIN
+    -- Determinar qual pedido atualizar
+    IF TG_OP = 'DELETE' THEN
+        v_pedido_id := OLD.pedido_id;
+    ELSE
+        v_pedido_id := NEW.pedido_id;
+    END IF;
+    
+    -- Recalcular total
+    UPDATE pedidos
+    SET valor_total = (
+        SELECT COALESCE(SUM(quantidade * preco_unitario), 0)
+        FROM itens_pedido
+        WHERE pedido_id = v_pedido_id
+    )
+    WHERE id = v_pedido_id;
+    
+    IF TG_OP = 'DELETE' THEN
+        RETURN OLD;
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$$;
+
+CREATE TRIGGER trg_atualizar_total_pedido
+AFTER INSERT OR UPDATE OR DELETE ON itens_pedido
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_total_pedido();
+
+-- 💡 TG_OP → indica operação (INSERT/UPDATE/DELETE)
+-- 💡 AFTER → executa depois de gravar item
+-- 💡 Mantém integridade de totais
+
+-- Testando:
+INSERT INTO itens_pedido (pedido_id, produto_id, quantidade, preco_unitario)
+VALUES (1, 5, 3, 25.00);
+-- Pedido 1 terá valor_total atualizado automaticamente
+
+--------------------------------------------------------------------------------
+
+EXEMPLO 5: Controle de Estoque Automático
+--------------------------------------------------------------------------------
+
+-- Dar baixa no estoque ao confirmar pedido
+CREATE OR REPLACE FUNCTION controlar_estoque()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_item RECORD;
+BEGIN
+    -- Quando pedido é confirmado
+    IF NEW.status = 'CONFIRMADO' AND OLD.status <> 'CONFIRMADO' THEN
+        FOR v_item IN 
+            SELECT produto_id, quantidade 
+            FROM itens_pedido 
+            WHERE pedido_id = NEW.id
+        LOOP
+            UPDATE produtos
+            SET estoque = estoque - v_item.quantidade
+            WHERE id = v_item.produto_id;
+            
+            -- Verificar estoque negativo
+            IF (SELECT estoque FROM produtos WHERE id = v_item.produto_id) < 0 THEN
+                RAISE EXCEPTION 'Estoque insuficiente para produto %', v_item.produto_id;
+            END IF;
+        END LOOP;
+    END IF;
+    
+    -- Quando pedido é cancelado
+    IF NEW.status = 'CANCELADO' AND OLD.status <> 'CANCELADO' THEN
+        FOR v_item IN 
+            SELECT produto_id, quantidade 
+            FROM itens_pedido 
+            WHERE pedido_id = NEW.id
+        LOOP
+            UPDATE produtos
+            SET estoque = estoque + v_item.quantidade
+            WHERE id = v_item.produto_id;
+        END LOOP;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_controlar_estoque
+AFTER UPDATE ON pedidos
+FOR EACH ROW
+EXECUTE FUNCTION controlar_estoque();
+
+-- 💡 Compara OLD.status com NEW.status
+-- 💡 Automatiza regra de negócio crítica
+
+================================================================================
+5. TRIGGERS DE AUDITORIA
+================================================================================
+
+EXEMPLO 6: Log de Alterações Completo
+--------------------------------------------------------------------------------
+
+-- Tabela de auditoria
+CREATE TABLE auditoria (
+    id SERIAL PRIMARY KEY,
+    tabela VARCHAR(50),
+    operacao VARCHAR(10),
+    usuario VARCHAR(100),
+    data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    registro_antigo JSONB,
+    registro_novo JSONB
+);
+
+-- Função genérica de auditoria
+CREATE OR REPLACE FUNCTION auditar_alteracoes()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO auditoria (tabela, operacao, usuario, registro_antigo, registro_novo)
+    VALUES (
+        TG_TABLE_NAME,
+        TG_OP,
+        CURRENT_USER,
+        CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE row_to_json(OLD)::JSONB END,
+        CASE WHEN TG_OP = 'DELETE' THEN NULL ELSE row_to_json(NEW)::JSONB END
+    );
+    
+    IF TG_OP = 'DELETE' THEN
+        RETURN OLD;
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$$;
+
+-- Aplicar em tabelas importantes
+CREATE TRIGGER trg_auditoria_produtos
+AFTER INSERT OR UPDATE OR DELETE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION auditar_alteracoes();
+
+CREATE TRIGGER trg_auditoria_clientes
+AFTER INSERT OR UPDATE OR DELETE ON clientes
+FOR EACH ROW
+EXECUTE FUNCTION auditar_alteracoes();
+
+-- 💡 TG_TABLE_NAME → nome da tabela que disparou trigger
+-- 💡 JSONB → armazena registro completo em formato JSON
+-- 💡 row_to_json() → converte linha em JSON
+
+-- Consultando auditoria:
+SELECT 
+    tabela,
+    operacao,
+    usuario,
+    data_hora,
+    registro_novo->>'nome' AS novo_nome,
+    registro_antigo->>'nome' AS nome_anterior
+FROM auditoria
+WHERE tabela = 'produtos'
+ORDER BY data_hora DESC
+LIMIT 10;
+
+================================================================================
+6. TRIGGERS AVANÇADOS
+================================================================================
+
+EXEMPLO 7: Prevenir Operações
+--------------------------------------------------------------------------------
+
+-- Impedir exclusão de pedidos confirmados
+CREATE OR REPLACE FUNCTION proteger_pedidos_confirmados()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF OLD.status = 'CONFIRMADO' THEN
+        RAISE EXCEPTION 'Não é possível excluir pedido confirmado!';
+    END IF;
+    RETURN OLD;
+END;
+$$;
+
+CREATE TRIGGER trg_proteger_pedidos
+BEFORE DELETE ON pedidos
+FOR EACH ROW
+EXECUTE FUNCTION proteger_pedidos_confirmados();
+
+--------------------------------------------------------------------------------
+
+EXEMPLO 8: Notificação/Alertas
+--------------------------------------------------------------------------------
+
+-- Notificar quando estoque ficar baixo
+CREATE OR REPLACE FUNCTION notificar_estoque_baixo()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.estoque < NEW.estoque_minimo AND 
+       (OLD.estoque IS NULL OR OLD.estoque >= OLD.estoque_minimo) THEN
+        
+        RAISE NOTICE 'ALERTA: Produto % (ID: %) está com estoque baixo: %',
+            NEW.nome, NEW.id, NEW.estoque;
+        
+        -- Aqui poderia enviar email, criar task, etc.
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_notificar_estoque
+AFTER INSERT OR UPDATE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION notificar_estoque_baixo();
+
+================================================================================
+7. GERENCIAMENTO DE TRIGGERS
+================================================================================
+
+-- Listar todos os triggers:
+SELECT 
+    trigger_name,
+    event_object_table AS tabela,
+    action_timing AS momento,
+    event_manipulation AS evento
+FROM information_schema.triggers
+WHERE trigger_schema = 'public'
+ORDER BY event_object_table, trigger_name;
+
+-- Desabilitar trigger:
+ALTER TABLE produtos DISABLE TRIGGER trg_validar_preco;
+
+-- Habilitar trigger:
+ALTER TABLE produtos ENABLE TRIGGER trg_validar_preco;
+
+-- Remover trigger:
+DROP TRIGGER IF EXISTS trg_validar_preco ON produtos;
+
+-- Desabilitar TODOS os triggers de uma tabela:
+ALTER TABLE produtos DISABLE TRIGGER ALL;
+
+-- Habilitar TODOS os triggers de uma tabela:
+ALTER TABLE produtos ENABLE TRIGGER ALL;
+
+================================================================================
+8. BOAS PRÁTICAS
+================================================================================
+
+✓ Use triggers com moderação (podem impactar performance)
+✓ Documente o propósito de cada trigger
+✓ Evite lógica complexa em triggers
+✓ Cuidado com triggers que chamam outros triggers (cascata)
+✓ Teste triggers isoladamente
+✓ Use BEFORE para validação, AFTER para ações
+✓ Considere alternativas (constraints, defaults)
+✓ Monitore performance de tabelas com muitos triggers
+
+QUANDO NÃO USAR TRIGGERS:
+❌ Para lógica de negócio complexa → use procedures
+❌ Para validações simples → use constraints CHECK
+❌ Para valores padrão → use DEFAULT
+❌ Se impactar performance → considere fazer na aplicação
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+EXERCÍCIO 1: Trigger de Validação [MÉDIO - 20 min]
+Criar trigger que impede inserir cliente com email duplicado (case-insensitive).
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 2: Histórico de Preços [MÉDIO - 25 min]
+Criar tabela historico_precos e trigger que registra alterações de preço
+de produtos com: produto_id, preco_antigo, preco_novo, data_alteracao.
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 3: Controle de Status [AVANÇADO - 30 min]
+Criar trigger que valida transições de status de pedido:
+- PENDENTE → PROCESSANDO → CONFIRMADO → ENTREGUE
+- Só pode ir para frente, nunca voltar (exceto CANCELADO)
+- CANCELADO pode vir de qualquer status exceto ENTREGUE
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 4: Sistema de Pontos [AVANÇADO - 35 min]
+Criar sistema de pontos:
+1. Tabela clientes_pontos (cliente_id, pontos, nivel)
+2. Trigger que adiciona 1 ponto a cada R$ 10 em pedidos
+3. Trigger que atualiza nível: Bronze (0-100), Prata (101-500), Ouro (500+)
+4. Tabela historico_pontos para auditoria
+
+================================================================================
+PROJETO PRÁTICO
+================================================================================
+
+Implementar sistema completo de auditoria e automação:
+
+1. Triggers de auditoria para todas as tabelas principais
+2. Controle automático de estoque (entrada/saída)
+3. Cálculo automático de totais
+4. Validações de integridade
+5. Notificações de eventos importantes
+6. Histórico de alterações de campos críticos
+
+DELIVERABLE: Script SQL com todos os triggers documentados
+
+TAREFA: Implementar triggers no seu projeto | PRÓXIMA AULA: Performance
+
+================================================================================
+FIM DA AULA 12
+================================================================================

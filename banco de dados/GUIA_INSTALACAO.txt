@@ -1,0 +1,756 @@
+================================================================================
+            GUIA COMPLETO DE INSTALAÇÃO - POSTGRESQL + DBEAVER
+                    Curso Intensivo de Banco de Dados
+================================================================================
+
+ÍNDICE:
+1. Instalação do PostgreSQL no Windows
+2. Instalação do PostgreSQL no Linux (Ubuntu/Debian)
+3. Instalação do PostgreSQL no macOS
+4. Instalação via Docker (Multiplataforma)
+5. Instalação do DBeaver Community
+6. Configuração Inicial
+7. Testes de Verificação
+8. Solução de Problemas
+
+================================================================================
+            1. INSTALAÇÃO DO POSTGRESQL NO WINDOWS
+================================================================================
+
+PASSO 1: Download
+─────────────────
+
+1. Acesse: https://www.postgresql.org/download/windows/
+2. Clique em "Download the installer" (EnterpriseDB)
+3. Escolha a versão PostgreSQL 14.x ou superior
+4. Selecione Windows x86-64
+5. Salve o instalador (postgresql-14.x-x-windows-x64.exe)
+
+PASSO 2: Executar Instalador
+────────────────────────────
+
+1. Dê duplo clique no arquivo baixado
+2. Se aparecer aviso do UAC, clique em "Sim"
+3. Tela de boas-vindas: clique [Next]
+
+PASSO 3: Escolher Diretório de Instalação
+─────────────────────────────────────────
+
+1. Diretório padrão: C:\Program Files\PostgreSQL\14
+2. Pode manter o padrão ou escolher outro
+3. Clique [Next]
+
+PASSO 4: Selecionar Componentes
+───────────────────────────────
+
+Marque todos os componentes:
+☑ PostgreSQL Server (obrigatório)
+☑ pgAdmin 4 (interface gráfica - recomendado)
+☑ Stack Builder (para extensões - opcional)
+☑ Command Line Tools (psql - recomendado)
+
+Clique [Next]
+
+PASSO 5: Diretório de Dados
+───────────────────────────
+
+1. Diretório padrão: C:\Program Files\PostgreSQL\14\data
+2. Pode manter o padrão
+3. Clique [Next]
+
+PASSO 6: Senha do Superusuário
+──────────────────────────────
+
+⚠️ IMPORTANTE: Esta é a senha do usuário "postgres" (superusuário)
+
+1. Digite uma senha FORTE
+2. Confirme a senha
+3. ANOTE essa senha - você vai precisar!
+4. Sugestão para curso: "postgres123" (só para ambiente de estudo!)
+5. Clique [Next]
+
+PASSO 7: Porta
+─────────────
+
+1. Porta padrão: 5432
+2. Mantenha 5432 (a menos que já esteja em uso)
+3. Clique [Next]
+
+PASSO 8: Locale (Localização)
+─────────────────────────────
+
+1. Selecione: Portuguese, Brazil
+2. Ou mantenha: [Default locale]
+3. Clique [Next]
+
+PASSO 9: Resumo
+──────────────
+
+1. Revise as configurações
+2. Clique [Next]
+
+PASSO 10: Instalação
+───────────────────
+
+1. Aguarde o processo de instalação (2-5 minutos)
+2. Ao final, clique [Finish]
+
+PASSO 11: Stack Builder (Opcional)
+──────────────────────────────────
+
+1. Se aparecer Stack Builder, pode fechar
+2. Não é necessário para o curso
+
+PASSO 12: Verificar Serviço
+───────────────────────────
+
+1. Pressione Win + R
+2. Digite: services.msc
+3. Procure: postgresql-x64-14
+4. Status deve ser: "Em execução"
+5. Tipo de inicialização: "Automático"
+
+✅ PostgreSQL instalado com sucesso no Windows!
+
+================================================================================
+            2. INSTALAÇÃO DO POSTGRESQL NO LINUX (Ubuntu/Debian)
+================================================================================
+
+MÉTODO 1: Repositório Oficial PostgreSQL (Recomendado)
+──────────────────────────────────────────────────────
+
+# Abra o terminal (Ctrl+Alt+T)
+
+# Criar arquivo de configuração do repositório
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# Importar chave de assinatura do repositório
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+# Atualizar lista de pacotes
+sudo apt update
+
+# Instalar PostgreSQL 14
+sudo apt install postgresql-14 postgresql-contrib-14
+
+# Verificar se está rodando
+sudo systemctl status postgresql
+
+# Se não estiver rodando, iniciar:
+sudo systemctl start postgresql
+
+# Habilitar inicialização automática
+sudo systemctl enable postgresql
+
+
+MÉTODO 2: Repositório Ubuntu Padrão (Mais Simples)
+──────────────────────────────────────────────────
+
+# Atualizar repositórios
+sudo apt update
+
+# Instalar PostgreSQL (versão do repositório)
+sudo apt install postgresql postgresql-contrib
+
+# Verificar status
+sudo systemctl status postgresql
+
+
+CONFIGURAÇÃO INICIAL NO LINUX
+─────────────────────────────
+
+# Trocar para usuário postgres
+sudo -i -u postgres
+
+# Entrar no psql
+psql
+
+# Definir senha do usuário postgres
+ALTER USER postgres PASSWORD 'sua_senha_aqui';
+
+# Sair do psql
+\q
+
+# Voltar ao seu usuário
+exit
+
+
+PERMITIR CONEXÕES REMOTAS (Opcional)
+────────────────────────────────────
+
+# Editar postgresql.conf
+sudo nano /etc/postgresql/14/main/postgresql.conf
+
+# Procurar e descomentar/alterar:
+listen_addresses = '*'
+
+# Salvar (Ctrl+O, Enter, Ctrl+X)
+
+# Editar pg_hba.conf
+sudo nano /etc/postgresql/14/main/pg_hba.conf
+
+# Adicionar ao final:
+host    all             all             0.0.0.0/0               md5
+
+# Salvar e reiniciar
+sudo systemctl restart postgresql
+
+
+✅ PostgreSQL instalado com sucesso no Linux!
+
+================================================================================
+            3. INSTALAÇÃO DO POSTGRESQL NO macOS
+================================================================================
+
+MÉTODO 1: Homebrew (Recomendado)
+────────────────────────────────
+
+# Instalar Homebrew (se não tiver)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Atualizar Homebrew
+brew update
+
+# Instalar PostgreSQL 14
+brew install postgresql@14
+
+# Iniciar serviço
+brew services start postgresql@14
+
+# Criar usuário postgres (opcional)
+createuser -s postgres
+
+# Definir senha
+psql postgres
+ALTER USER postgres PASSWORD 'sua_senha';
+\q
+
+
+MÉTODO 2: Postgres.app (Interface Gráfica)
+──────────────────────────────────────────
+
+1. Baixar: https://postgresapp.com/
+2. Arrastar para Applications
+3. Abrir Postgres.app
+4. Clicar em "Initialize"
+5. Servidor iniciará automaticamente
+
+
+MÉTODO 3: Instalador Oficial
+────────────────────────────
+
+1. Baixar: https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+2. Selecionar macOS
+3. Executar instalador .dmg
+4. Seguir assistente (similar ao Windows)
+
+
+✅ PostgreSQL instalado com sucesso no macOS!
+
+================================================================================
+            4. INSTALAÇÃO VIA DOCKER (MULTIPLATAFORMA)
+================================================================================
+
+PRÉ-REQUISITO: Docker instalado
+───────────────────────────────
+• Windows/Mac: Docker Desktop (https://www.docker.com/products/docker-desktop)
+• Linux: Docker Engine (https://docs.docker.com/engine/install/)
+
+
+PASSO 1: Baixar Imagem do PostgreSQL
+────────────────────────────────────
+
+docker pull postgres:14
+
+
+PASSO 2: Criar e Executar Container
+───────────────────────────────────
+
+# Criar container com PostgreSQL
+docker run --name postgres-curso \
+  -e POSTGRES_PASSWORD=postgres123 \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_DB=loja_virtual \
+  -p 5432:5432 \
+  -v postgres-data:/var/lib/postgresql/data \
+  -d postgres:14
+
+# No Windows PowerShell, use:
+docker run --name postgres-curso `
+  -e POSTGRES_PASSWORD=postgres123 `
+  -e POSTGRES_USER=postgres `
+  -e POSTGRES_DB=loja_virtual `
+  -p 5432:5432 `
+  -v postgres-data:/var/lib/postgresql/data `
+  -d postgres:14
+
+
+EXPLICAÇÃO DOS PARÂMETROS:
+─────────────────────────
+--name postgres-curso .......... Nome do container
+-e POSTGRES_PASSWORD ............ Senha do postgres
+-e POSTGRES_USER ................ Usuário (padrão: postgres)
+-e POSTGRES_DB .................. Banco inicial
+-p 5432:5432 .................... Porta (host:container)
+-v postgres-data ................ Volume para persistir dados
+-d ............................... Rodar em background
+postgres:14 ..................... Imagem e versão
+
+
+COMANDOS ÚTEIS:
+──────────────
+
+# Ver containers rodando
+docker ps
+
+# Parar container
+docker stop postgres-curso
+
+# Iniciar container
+docker start postgres-curso
+
+# Remover container (cuidado: perde dados se não tiver volume)
+docker rm postgres-curso
+
+# Acessar psql dentro do container
+docker exec -it postgres-curso psql -U postgres
+
+# Ver logs
+docker logs postgres-curso
+
+
+✅ PostgreSQL rodando no Docker!
+
+================================================================================
+            5. INSTALAÇÃO DO DBEAVER COMMUNITY
+================================================================================
+
+WINDOWS
+───────
+
+1. Acesse: https://dbeaver.io/download/
+2. Clique em "Windows (installer)"
+3. Baixe: dbeaver-ce-xx.x.x-x64-setup.exe
+4. Execute o instalador
+5. Clique [Next] em todas as telas
+6. Marque: Create Desktop Icon
+7. Clique [Install]
+8. Aguarde instalação
+9. Clique [Finish]
+10. DBeaver abrirá automaticamente
+
+
+LINUX (Ubuntu/Debian)
+────────────────────
+
+MÉTODO 1: Via Snap (Recomendado)
+
+sudo snap install dbeaver-ce
+
+
+MÉTODO 2: Via APT
+
+# Adicionar repositório
+sudo add-apt-repository ppa:serge-rider/dbeaver-ce
+
+# Atualizar
+sudo apt update
+
+# Instalar
+sudo apt install dbeaver-ce
+
+
+MÉTODO 3: Download Direto
+
+# Baixar .deb
+wget https://dbeaver.io/files/dbeaver-ce_latest_amd64.deb
+
+# Instalar
+sudo dpkg -i dbeaver-ce_latest_amd64.deb
+
+# Corrigir dependências (se necessário)
+sudo apt-get install -f
+
+
+macOS
+─────
+
+MÉTODO 1: Homebrew
+
+brew install --cask dbeaver-community
+
+
+MÉTODO 2: Download Direto
+
+1. Acesse: https://dbeaver.io/download/
+2. Clique em "macOS (dmg)"
+3. Baixe o arquivo .dmg
+4. Abra o .dmg
+5. Arraste DBeaver para Applications
+6. Abra DBeaver do Launchpad
+
+
+✅ DBeaver instalado!
+
+================================================================================
+            6. CONFIGURAÇÃO INICIAL DO DBEAVER
+================================================================================
+
+PRIMEIRO ACESSO
+───────────────
+
+1. Abra o DBeaver
+2. Se aparecer "Create sample database", clique [No]
+3. Feche a tela de boas-vindas
+
+
+CRIAR CONEXÃO COM POSTGRESQL
+────────────────────────────
+
+PASSO 1: Nova Conexão
+
+1. Clique no botão [Nova Conexão] (ícone de plug com +)
+   Ou: Menu Database > New Database Connection
+   Ou: Ctrl+N (Windows/Linux) / Cmd+N (Mac)
+
+2. Na janela "Connect to a database":
+   - Selecione: PostgreSQL
+   - Clique [Next]
+
+
+PASSO 2: Configurar Conexão
+
+Preencha os campos:
+
+┌─────────────────────────────────────────┐
+│ Connection Settings                     │
+├─────────────────────────────────────────┤
+│ Host: localhost                         │
+│ Port: 5432                              │
+│ Database: postgres                      │
+│ Username: postgres                      │
+│ Password: [sua senha definida]          │
+│                                         │
+│ ☑ Show all databases                    │
+│ ☑ Save password                         │
+└─────────────────────────────────────────┘
+
+PASSO 3: Testar Conexão
+
+1. Clique [Test Connection]
+2. DBeaver solicitará download do driver JDBC:
+   - Clique [Download]
+   - Aguarde download
+3. Se tudo estiver OK, verá:
+   "Connected (PostgreSQL 14.x)"
+4. Clique [OK]
+
+
+PASSO 4: Finalizar
+
+1. Se quiser, altere o nome da conexão:
+   Connection name: "PostgreSQL - Curso"
+2. Clique [Finish]
+
+
+NAVEGAR NO DBEAVER
+──────────────────
+
+Após conectar, você verá:
+
+├── Database Navigator (painel esquerdo)
+│   └── PostgreSQL - Curso
+│       ├── Databases
+│       │   ├── postgres
+│       │   │   ├── Schemas
+│       │   │   │   ├── public
+│       │   │   │   │   ├── Tables
+│       │   │   │   │   ├── Views
+│       │   │   │   │   └── ...
+│       │   │   ├── Security
+│       │   │   └── ...
+│       │   └── template0, template1
+│       └── ...
+
+
+ABRIR SQL EDITOR
+───────────────
+
+1. Clique com botão direito na conexão
+2. SQL Editor > New SQL Script
+   Ou: pressione Ctrl+] (Windows/Linux) / Cmd+] (Mac)
+
+3. Digite sua primeira query:
+   SELECT version();
+
+4. Execute: Ctrl+Enter (ou botão ▶️ na barra)
+
+5. Resultado aparecerá no painel inferior
+
+
+CONFIGURAÇÕES RECOMENDADAS
+──────────────────────────
+
+Menu: Window > Preferences
+
+1. SQL Editor > Formatting:
+   ☑ Use spaces for indentation
+   Tab size: 4
+
+2. SQL Editor > Auto-complete:
+   ☑ Enable auto-completion
+   Activation delay: 500ms
+
+3. SQL Editor > SQL Processing:
+   ☑ Auto-commit
+
+4. General > Appearance:
+   Theme: Dark (opcional, se preferir tema escuro)
+
+
+ATALHOS ÚTEIS NO DBEAVER
+────────────────────────
+
+Ctrl+Enter ............. Executar query atual
+Ctrl+\ ................. Executar script completo
+Ctrl+Shift+E ........... Explicar plano de execução
+Ctrl+Shift+F ........... Formatar SQL
+Ctrl+Space ............. Auto-complete
+F4 ..................... Abrir editor de objeto
+F3 ..................... Ir para definição
+Ctrl+F ................. Buscar no script
+Ctrl+Tab ............... Alternar entre abas
+
+✅ DBeaver configurado e pronto para uso!
+
+================================================================================
+            7. TESTES DE VERIFICAÇÃO
+================================================================================
+
+TESTE 1: Verificar Versão do PostgreSQL
+───────────────────────────────────────
+
+# No psql ou DBeaver, execute:
+
+SELECT version();
+
+# Resultado esperado (algo como):
+PostgreSQL 14.x on x86_64-pc-linux-gnu, compiled by gcc...
+
+
+TESTE 2: Listar Bancos de Dados
+───────────────────────────────
+
+SELECT datname FROM pg_database;
+
+# Resultado esperado:
+  datname
+-----------
+ postgres
+ template0
+ template1
+
+
+TESTE 3: Verificar Usuário Atual
+────────────────────────────────
+
+SELECT current_user, current_database();
+
+# Resultado esperado:
+ current_user | current_database
+--------------+------------------
+ postgres     | postgres
+
+
+TESTE 4: Criar Banco de Teste
+─────────────────────────────
+
+CREATE DATABASE teste;
+
+# Conectar ao banco:
+\c teste   # no psql
+# ou selecione 'teste' no dropdown do DBeaver
+
+# Criar tabela:
+CREATE TABLE teste_tabela (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50)
+);
+
+# Inserir dado:
+INSERT INTO teste_tabela (nome) VALUES ('Teste');
+
+# Consultar:
+SELECT * FROM teste_tabela;
+
+# Resultado:
+ id | nome
+----+-------
+  1 | Teste
+
+# Deletar banco de teste:
+\c postgres   # voltar para postgres
+DROP DATABASE teste;
+
+
+TESTE 5: Executar Scripts do Curso
+──────────────────────────────────
+
+# No DBeaver:
+1. Abra o arquivo scripts.sql
+2. Selecione todo conteúdo (Ctrl+A)
+3. Execute (Ctrl+Enter)
+4. Aguarde conclusão
+5. Verifique criação do banco loja_virtual
+
+# Consultar estrutura criada:
+SELECT schemaname, tablename 
+FROM pg_tables 
+WHERE schemaname IN ('vendas', 'estoque', 'auditoria')
+ORDER BY schemaname, tablename;
+
+
+✅ Todos os testes passaram? Ambiente pronto para o curso!
+
+================================================================================
+            8. SOLUÇÃO DE PROBLEMAS
+================================================================================
+
+PROBLEMA: "psql: error: connection to server failed"
+──────────────────────────────────────────────────
+
+CAUSA: PostgreSQL não está rodando
+
+SOLUÇÃO:
+• Windows: Iniciar serviço em services.msc
+• Linux: sudo systemctl start postgresql
+• Mac: brew services start postgresql@14
+• Docker: docker start postgres-curso
+
+
+PROBLEMA: "password authentication failed for user postgres"
+────────────────────────────────────────────────────────────
+
+CAUSA: Senha incorreta
+
+SOLUÇÃO:
+• Tente senha definida na instalação
+• Se esqueceu, veja seção "Resetar senha" abaixo
+
+
+PROBLEMA: "could not connect to server: Connection refused"
+───────────────────────────────────────────────────────────
+
+CAUSA: PostgreSQL não está escutando na porta 5432 ou firewall bloqueando
+
+SOLUÇÃO:
+• Verifique se PostgreSQL está rodando
+• Verifique porta: netstat -an | grep 5432 (Linux/Mac)
+• Windows: netstat -an | findstr 5432
+• Desabilite firewall temporariamente para teste
+
+
+PROBLEMA: DBeaver não baixa driver JDBC
+───────────────────────────────────────
+
+CAUSA: Problema de conexão com internet ou proxy
+
+SOLUÇÃO:
+1. Verificar internet
+2. Desabilitar proxy temporariamente
+3. Download manual:
+   - Baixe de: https://jdbc.postgresql.org/download.html
+   - No DBeaver: Database > Driver Manager > PostgreSQL
+   - Libraries > Add File > selecione o .jar baixado
+
+
+RESETAR SENHA DO POSTGRES
+─────────────────────────
+
+LINUX:
+# Editar pg_hba.conf
+sudo nano /etc/postgresql/14/main/pg_hba.conf
+
+# Mudar 'md5' para 'trust' temporariamente:
+local   all             postgres                                trust
+
+# Salvar e reiniciar
+sudo systemctl restart postgresql
+
+# Conectar sem senha
+psql -U postgres
+
+# Alterar senha
+ALTER USER postgres PASSWORD 'nova_senha';
+\q
+
+# Voltar pg_hba.conf para 'md5' e reiniciar
+
+WINDOWS:
+# Localizar pg_hba.conf em: C:\Program Files\PostgreSQL\14\data\
+# Editar com Notepad (como Administrador)
+# Mudar METHOD de 'scram-sha-256' para 'trust'
+# Salvar
+# Reiniciar serviço em services.msc
+# Conectar e alterar senha
+# Voltar METHOD para 'scram-sha-256'
+# Reiniciar serviço
+
+
+PROBLEMA: "Peer authentication failed"
+──────────────────────────────────────
+
+CAUSA: Método de autenticação peer não permite senha
+
+SOLUÇÃO (Linux):
+# Editar pg_hba.conf
+sudo nano /etc/postgresql/14/main/pg_hba.conf
+
+# Mudar de 'peer' para 'md5':
+local   all             all                                     md5
+
+# Reiniciar
+sudo systemctl restart postgresql
+
+
+PROBLEMA: DBeaver lento ou trava
+────────────────────────────────
+
+SOLUÇÃO:
+1. Aumentar memória do DBeaver:
+   Editar dbeaver.ini:
+   -Xmx2048m (aumentar para 2GB)
+
+2. Desabilitar plugins não usados:
+   Window > Preferences > Connections
+   Desmarque drivers não utilizados
+
+3. Limpar cache:
+   Window > Preferences > Database > Cache
+   Clear cache
+
+
+MAIS AJUDA
+─────────
+
+• Documentação PostgreSQL: https://www.postgresql.org/docs/
+• Fórum PostgreSQL: https://www.postgresql.org/list/
+• Stack Overflow: [tag:postgresql]
+• DBeaver GitHub Issues: https://github.com/dbeaver/dbeaver/issues
+
+================================================================================
+                            CONCLUSÃO
+================================================================================
+
+Com PostgreSQL e DBeaver instalados e configurados, você está pronto para
+começar o curso!
+
+PRÓXIMOS PASSOS:
+1. ✅ Executar scripts.sql
+2. ✅ Importar arquivos CSV
+3. ✅ Começar os exercícios
+4. ✅ Estudar o plano de aula
+
+Boa sorte no curso! 🚀
+
+================================================================================

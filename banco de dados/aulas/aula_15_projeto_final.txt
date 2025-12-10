@@ -1,0 +1,544 @@
+================================================================================
+                              AULA 15 - DIA 15
+                   PROJETO FINAL E AVALIAÇÃO DO CURSO
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Desenvolver projeto integrado completo
+✓ Demonstrar domínio de todos os conceitos
+✓ Aplicar boas práticas
+✓ Apresentar solução técnica
+
+CRONOGRAMA:
+13:30-13:45 → Apresentação do Projeto Final
+13:45-15:30 → Desenvolvimento
+15:30-15:45 → Intervalo
+15:45-17:00 → Finalização
+17:00-17:30 → Apresentações e Encerramento
+
+================================================================================
+PROJETO FINAL: SISTEMA DE BIBLIOTECA COMPLETO
+================================================================================
+
+DESCRIÇÃO:
+Desenvolver sistema de gerenciamento de biblioteca com empréstimos, multas,
+reservas e controle de usuários.
+
+REQUISITOS OBRIGATÓRIOS:
+□ Modelagem ER completa
+□ Mínimo 10 tabelas relacionadas
+□ Constraints apropriadas
+□ Triggers para automação
+□ Functions/Procedures
+□ Views materializadas
+□ Índices otimizados
+□ Sistema de segurança (roles/RLS)
+□ Script de backup
+□ Documentação completa
+
+================================================================================
+1. ESPECIFICAÇÃO DO SISTEMA
+================================================================================
+
+ENTIDADES PRINCIPAIS:
+1. Livros (título, ISBN, editora, ano, categoria, quantidade)
+2. Autores (nome, nacionalidade, biografia)
+3. Livro_Autores (relacionamento N:N)
+4. Categorias (ficção, técnico, biografia, etc.)
+5. Usuários (nome, CPF, email, telefone, tipo)
+6. Empréstimos (usuário, livro, data_emprestimo, data_devolucao)
+7. Reservas (usuário, livro, data_reserva, status)
+8. Multas (empréstimo, valor, pago)
+9. Funcionários (bibliotecários, administradores)
+10. Histórico (auditoria de operações)
+
+REGRAS DE NEGÓCIO:
+- Usuário comum: até 3 livros simultâneos
+- Usuário premium: até 5 livros simultâneos
+- Prazo empréstimo: 14 dias
+- Multa: R$ 2,00/dia de atraso
+- Reserva: válida por 48h após disponibilidade
+- Livro pode ter múltiplos autores
+- Renovação: máximo 2 vezes se não houver reservas
+- Suspensão: usuário com multa > R$ 20,00
+
+================================================================================
+2. DESENVOLVIMENTO PASSO A PASSO
+================================================================================
+
+ETAPA 1: MODELAGEM E CRIAÇÃO (45 min)
+--------------------------------------------------------------------------------
+
+-- Database e extensions
+CREATE DATABASE biblioteca;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Schema para organização
+CREATE SCHEMA IF NOT EXISTS biblioteca;
+SET search_path TO biblioteca, public;
+
+-- Exemplo de tabela (criar todas!)
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE,
+    descricao TEXT,
+    ativa BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE livros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(300) NOT NULL,
+    isbn VARCHAR(17) UNIQUE,
+    editora VARCHAR(200),
+    ano_publicacao INTEGER CHECK (ano_publicacao > 1400),
+    categoria_id INTEGER REFERENCES categorias(id),
+    quantidade_total INTEGER DEFAULT 1 CHECK (quantidade_total >= 0),
+    quantidade_disponivel INTEGER DEFAULT 1 CHECK (quantidade_disponivel >= 0),
+    localizacao VARCHAR(50),  -- estante
+    sinopse TEXT,
+    capa_url VARCHAR(500),
+    ativo BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 💡 Criar todas as outras tabelas com relacionamentos corretos
+
+--------------------------------------------------------------------------------
+ETAPA 2: TRIGGERS (30 min)
+--------------------------------------------------------------------------------
+
+-- 1. Atualizar quantidade disponível ao emprestar
+CREATE OR REPLACE FUNCTION atualizar_disponibilidade_livro()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        UPDATE livros 
+        SET quantidade_disponivel = quantidade_disponivel - 1
+        WHERE id = NEW.livro_id;
+        
+        IF (SELECT quantidade_disponivel FROM livros WHERE id = NEW.livro_id) < 0 THEN
+            RAISE EXCEPTION 'Livro indisponível para empréstimo';
+        END IF;
+    ELSIF TG_OP = 'UPDATE' AND NEW.devolvido = TRUE AND OLD.devolvido = FALSE THEN
+        UPDATE livros 
+        SET quantidade_disponivel = quantidade_disponivel + 1
+        WHERE id = NEW.livro_id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_disponibilidade_livro
+AFTER INSERT OR UPDATE ON emprestimos
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_disponibilidade_livro();
+
+-- 2. Calcular multa automaticamente
+CREATE OR REPLACE FUNCTION calcular_multa()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_dias_atraso INTEGER;
+    v_valor_multa DECIMAL;
+BEGIN
+    IF NEW.data_devolucao_real IS NOT NULL AND 
+       NEW.data_devolucao_prevista < NEW.data_devolucao_real THEN
+        
+        v_dias_atraso := NEW.data_devolucao_real::DATE - NEW.data_devolucao_prevista::DATE;
+        v_valor_multa := v_dias_atraso * 2.00;
+        
+        INSERT INTO multas (emprestimo_id, valor, pago)
+        VALUES (NEW.id, v_valor_multa, FALSE);
+        
+        RAISE NOTICE 'Multa de R$ % gerada para empréstimo %', v_valor_multa, NEW.id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_calcular_multa
+AFTER UPDATE ON emprestimos
+FOR EACH ROW
+WHEN (NEW.data_devolucao_real IS NOT NULL)
+EXECUTE FUNCTION calcular_multa();
+
+-- 3. Validar limite de empréstimos por tipo de usuário
+-- 4. Processar reservas quando livro devolvido
+-- 5. Auditoria completa
+-- 💡 Implementar todos os triggers necessários
+
+--------------------------------------------------------------------------------
+ETAPA 3: FUNCTIONS E PROCEDURES (30 min)
+--------------------------------------------------------------------------------
+
+-- Function: Verificar disponibilidade
+CREATE OR REPLACE FUNCTION verificar_disponibilidade(p_livro_id INTEGER)
+RETURNS TABLE(
+    disponivel BOOLEAN,
+    quantidade INTEGER,
+    proxima_devolucao DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        (l.quantidade_disponivel > 0) AS disponivel,
+        l.quantidade_disponivel,
+        (SELECT MIN(data_devolucao_prevista::DATE)
+         FROM emprestimos 
+         WHERE livro_id = p_livro_id AND devolvido = FALSE) AS proxima_devolucao
+    FROM livros l
+    WHERE l.id = p_livro_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Procedure: Realizar empréstimo completo
+CREATE OR REPLACE PROCEDURE realizar_emprestimo(
+    p_usuario_id INTEGER,
+    p_livro_id INTEGER,
+    p_funcionario_id INTEGER
+) AS $$
+DECLARE
+    v_emprestimos_ativos INTEGER;
+    v_tipo_usuario VARCHAR;
+    v_limite INTEGER;
+    v_multas_pendentes DECIMAL;
+BEGIN
+    -- Verificar multas pendentes
+    SELECT COALESCE(SUM(valor), 0) INTO v_multas_pendentes
+    FROM multas m
+    JOIN emprestimos e ON m.emprestimo_id = e.id
+    WHERE e.usuario_id = p_usuario_id AND m.pago = FALSE;
+    
+    IF v_multas_pendentes > 20.00 THEN
+        RAISE EXCEPTION 'Usuário suspenso por multas pendentes: R$ %', v_multas_pendentes;
+    END IF;
+    
+    -- Verificar limite de empréstimos
+    SELECT tipo INTO v_tipo_usuario FROM usuarios WHERE id = p_usuario_id;
+    v_limite := CASE v_tipo_usuario 
+        WHEN 'PREMIUM' THEN 5 
+        ELSE 3 
+    END;
+    
+    SELECT COUNT(*) INTO v_emprestimos_ativos
+    FROM emprestimos 
+    WHERE usuario_id = p_usuario_id AND devolvido = FALSE;
+    
+    IF v_emprestimos_ativos >= v_limite THEN
+        RAISE EXCEPTION 'Limite de % empréstimos atingido', v_limite;
+    END IF;
+    
+    -- Criar empréstimo
+    INSERT INTO emprestimos (usuario_id, livro_id, funcionario_id, data_devolucao_prevista)
+    VALUES (p_usuario_id, p_livro_id, p_funcionario_id, CURRENT_DATE + INTERVAL '14 days');
+    
+    RAISE NOTICE 'Empréstimo realizado com sucesso!';
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function: Relatório de livros mais emprestados
+-- Function: Calcular total de multas de usuário
+-- Procedure: Processar devolução
+-- Procedure: Renovar empréstimo
+-- 💡 Criar todas functions/procedures necessárias
+
+--------------------------------------------------------------------------------
+ETAPA 4: VIEWS (20 min)
+--------------------------------------------------------------------------------
+
+-- View: Empréstimos ativos com informações completas
+CREATE OR REPLACE VIEW vw_emprestimos_ativos AS
+SELECT 
+    e.id,
+    u.nome AS usuario,
+    l.titulo AS livro,
+    e.data_emprestimo,
+    e.data_devolucao_prevista,
+    CASE 
+        WHEN e.data_devolucao_prevista < CURRENT_DATE THEN 
+            CURRENT_DATE - e.data_devolucao_prevista::DATE
+        ELSE 0
+    END AS dias_atraso,
+    f.nome AS atendente
+FROM emprestimos e
+JOIN usuarios u ON e.usuario_id = u.id
+JOIN livros l ON e.livro_id = l.id
+JOIN funcionarios f ON e.funcionario_id = f.id
+WHERE e.devolvido = FALSE;
+
+-- Materialized View: Estatísticas de biblioteca
+CREATE MATERIALIZED VIEW mv_estatisticas AS
+SELECT 
+    (SELECT COUNT(*) FROM livros WHERE ativo = TRUE) AS total_livros,
+    (SELECT SUM(quantidade_total) FROM livros WHERE ativo = TRUE) AS total_exemplares,
+    (SELECT COUNT(*) FROM usuarios WHERE ativo = TRUE) AS total_usuarios,
+    (SELECT COUNT(*) FROM emprestimos WHERE devolvido = FALSE) AS emprestimos_ativos,
+    (SELECT COUNT(*) FROM reservas WHERE status = 'ATIVA') AS reservas_ativas,
+    (SELECT COALESCE(SUM(valor), 0) FROM multas WHERE pago = FALSE) AS multas_pendentes;
+
+-- View: Livros disponíveis com detalhes
+-- View: Usuários com multas
+-- View: Ranking de livros mais emprestados
+-- 💡 Criar views úteis para relatórios
+
+--------------------------------------------------------------------------------
+ETAPA 5: ÍNDICES (15 min)
+--------------------------------------------------------------------------------
+
+-- Índices para performance
+CREATE INDEX idx_livros_categoria ON livros(categoria_id);
+CREATE INDEX idx_livros_isbn ON livros(isbn);
+CREATE INDEX idx_emprestimos_usuario ON emprestimos(usuario_id);
+CREATE INDEX idx_emprestimos_livro ON emprestimos(livro_id);
+CREATE INDEX idx_emprestimos_devolucao ON emprestimos(data_devolucao_prevista) 
+    WHERE devolvido = FALSE;
+
+-- Índice funcional
+CREATE INDEX idx_usuarios_email_lower ON usuarios(LOWER(email));
+
+-- Índice composto
+CREATE INDEX idx_emprestimos_usuario_ativo ON emprestimos(usuario_id, devolvido);
+
+-- 💡 Criar índices estratégicos baseados em queries frequentes
+
+--------------------------------------------------------------------------------
+ETAPA 6: SEGURANÇA (25 min)
+--------------------------------------------------------------------------------
+
+-- Roles
+CREATE ROLE biblioteca_readonly;
+CREATE ROLE biblioteca_bibliotecario;
+CREATE ROLE biblioteca_admin;
+
+-- Permissões readonly
+GRANT CONNECT ON DATABASE biblioteca TO biblioteca_readonly;
+GRANT USAGE ON SCHEMA biblioteca TO biblioteca_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA biblioteca TO biblioteca_readonly;
+
+-- Permissões bibliotecário
+GRANT biblioteca_readonly TO biblioteca_bibliotecario;
+GRANT INSERT, UPDATE ON emprestimos, reservas TO biblioteca_bibliotecario;
+GRANT INSERT ON multas TO biblioteca_bibliotecario;
+
+-- Row Level Security
+ALTER TABLE emprestimos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY usuario_ve_proprios_emprestimos ON emprestimos
+    FOR SELECT
+    TO biblioteca_readonly
+    USING (usuario_id = (SELECT id FROM usuarios WHERE email = CURRENT_USER));
+
+-- 💡 Implementar RLS e permissões completas
+
+--------------------------------------------------------------------------------
+ETAPA 7: DADOS DE TESTE (20 min)
+--------------------------------------------------------------------------------
+
+-- Popular com dados realistas
+INSERT INTO categorias (nome) VALUES
+    ('Ficção'), ('Técnico'), ('Biografia'), ('História'), ('Ciência');
+
+-- Inserir livros, autores, usuários, etc.
+-- Criar pelo menos:
+-- - 50 livros
+-- - 20 autores
+-- - 30 usuários
+-- - 40 empréstimos (alguns em atraso)
+-- - 15 reservas
+-- 💡 Dados devem permitir testar todas as funcionalidades
+
+================================================================================
+3. QUERIES OBRIGATÓRIAS
+================================================================================
+
+Desenvolver queries para:
+
+1. RELATÓRIOS:
+   a) Livros mais emprestados (top 10)
+   b) Usuários com mais empréstimos
+   c) Livros nunca emprestados
+   d) Empréstimos em atraso com multas calculadas
+   e) Receita total de multas por mês
+
+2. ANÁLISES:
+   a) Taxa de ocupação da biblioteca (emprestados/total)
+   b) Tempo médio de empréstimo por categoria
+   c) Autores mais populares
+   d) Usuários inadimplentes
+
+3. DASHBOARD:
+   Query única que retorna métricas principais do dia/mês
+
+4. COMPLEXAS:
+   a) Livros disponíveis de autores com mais de 3 livros cadastrados
+   b) Usuários elegíveis para upgrade (premium)
+   c) Projeção de devoluções próximos 7 dias
+   d) Ranking de categorias por popularidade com CTE
+
+================================================================================
+4. DOCUMENTAÇÃO OBRIGATÓRIA
+================================================================================
+
+Criar arquivo DOCUMENTACAO.txt com:
+
+1. MODELAGEM:
+   - Diagrama ER (descrição textual)
+   - Explicação dos relacionamentos
+   - Justificativa de constraints
+
+2. TRIGGERS:
+   - Lista de triggers criados
+   - Propósito de cada um
+   - Eventos que disparam
+
+3. FUNCTIONS/PROCEDURES:
+   - Lista com descrição
+   - Parâmetros e retornos
+   - Exemplos de uso
+
+4. ÍNDICES:
+   - Lista de índices
+   - Justificativa técnica
+   - Queries que beneficiam
+
+5. SEGURANÇA:
+   - Estrutura de roles
+   - Políticas de RLS
+   - Recomendações
+
+6. BACKUP:
+   - Script de backup
+   - Frequência recomendada
+   - Procedimento de restore
+
+7. QUERIES:
+   - Todas as queries obrigatórias
+   - EXPLAIN de queries complexas
+
+================================================================================
+5. ENTREGA FINAL
+================================================================================
+
+ARQUIVOS:
+1. biblioteca_completo.sql → Script com toda estrutura e dados
+2. queries_relatorios.sql → Todas as queries obrigatórias
+3. DOCUMENTACAO.txt → Documentação completa
+4. backup_script.ps1 → Script de backup automatizado (opcional)
+
+CRITÉRIOS DE AVALIAÇÃO (100 pontos):
+
+□ Modelagem (15 pontos)
+  - Relacionamentos corretos
+  - Constraints apropriadas
+  - Normalização
+
+□ Implementação (25 pontos)
+  - Código funcionando sem erros
+  - Dados de teste adequados
+  - Organização do código
+
+□ Triggers (15 pontos)
+  - Automação de regras
+  - Tratamento de erros
+  - Eficiência
+
+□ Functions/Procedures (10 pontos)
+  - Funcionalidades úteis
+  - Parâmetros corretos
+  - Reutilizáveis
+
+□ Views e Índices (10 pontos)
+  - Views úteis
+  - Índices estratégicos
+  - Performance
+
+□ Segurança (10 pontos)
+  - Roles bem definidos
+  - RLS implementado
+  - Boas práticas
+
+□ Queries (10 pontos)
+  - Todas obrigatórias
+  - Otimizadas
+  - Resultados corretos
+
+□ Documentação (5 pontos)
+  - Completa
+  - Clara
+  - Profissional
+
+BÔNUS (até 20 pontos):
++ Funcionalidades extras
++ Interface para relatórios
++ Testes unitários
++ Sistema de notificações
++ Backup automatizado
+
+================================================================================
+6. DICAS PARA SUCESSO
+================================================================================
+
+✓ Comece pela modelagem (desenhe no papel)
+✓ Teste cada parte antes de continuar
+✓ Use transações para popular dados
+✓ Comente código adequadamente
+✓ Execute EXPLAIN em queries complexas
+✓ Verifique constraints funcionando
+✓ Teste triggers com dados variados
+✓ Documente conforme desenvolve
+✓ Organize código com separadores
+✓ Faça backup antes de grandes mudanças
+
+================================================================================
+7. REVISÃO DO CURSO
+================================================================================
+
+DIA 1-2: Fundamentos (DDL, tipos, constraints)
+DIA 3-4: Relacionamentos e DML
+DIA 5: Consultas e filtros
+DIA 6: JOINs
+DIA 7: Agregações
+DIA 8: Subconsultas e CTEs
+DIA 9: Views e Índices
+DIA 10: Projeto Prático 1
+DIA 11: Functions e Procedures
+DIA 12: Triggers
+DIA 13: Performance
+DIA 14: Administração e Segurança
+DIA 15: PROJETO FINAL (hoje)
+
+PARABÉNS POR CHEGAR ATÉ AQUI!
+
+================================================================================
+ENCERRAMENTO
+================================================================================
+
+Você agora possui conhecimento sólido em:
+✓ Modelagem de dados
+✓ SQL (DDL, DML, DQL)
+✓ JOINs e agregações
+✓ Subconsultas e CTEs
+✓ Views e índices
+✓ Triggers e automação
+✓ Functions e procedures
+✓ Otimização de performance
+✓ Segurança e administração
+✓ Backup e restore
+
+PRÓXIMOS PASSOS:
+- Praticar com projetos reais
+- Estudar PostgreSQL avançado (particionamento, replicação)
+- Aprender outros SGBDs (MySQL, SQL Server, Oracle)
+- Explorar NoSQL (MongoDB, Redis)
+- Integrar banco com aplicações (Python, Java, etc.)
+
+BOA SORTE NO SEU PROJETO FINAL E NA SUA CARREIRA COM BANCOS DE DADOS!
+
+================================================================================
+FIM DO CURSO - OBRIGADO!
+================================================================================

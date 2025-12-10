@@ -1,0 +1,62 @@
+# Tailwind CSS v3.14.17 Installation Instructions
+
+1. **Initialize your project (if you haven't already):**
+    ```
+    npm init -y
+    ```
+
+2. **Install Tailwind CSS v3.14.17 and its peer dependencies:**
+    ```
+    npm install -D tailwindcss@3 postcss autoprefixer
+    
+    ```
+
+3. **Generate Tailwind and PostCSS config files:**
+    ```
+    npx tailwindcss init -p
+    ```
+
+4. **Configure your `tailwind.config.js` content paths:**
+    ```js
+    // tailwind.config.js
+    module.exports = {
+      content: ["./src/**/*.{html,js}"],
+      theme: {
+         extend: {},
+      },
+      plugins: [],
+    }
+    ```
+    
+
+5. **Add Tailwind directives to your CSS:**
+    ```css
+    /* ./src/input.css */
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+6. **Build your CSS:**
+    ```
+    npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
+    ```
+
+7. **Include the generated CSS in your HTML:**
+    ```<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./output.css" rel="stylesheet">
+</head>
+<body>
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+</body>
+</html>
+    
+    ```
+
+You're ready to use Tailwind CSS!

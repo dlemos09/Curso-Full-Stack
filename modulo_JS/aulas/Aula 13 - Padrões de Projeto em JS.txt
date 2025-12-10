@@ -1,0 +1,24 @@
+Aula 13 – Padrões de Projeto
+
+Conteúdo Teórico
+- Módulo, Revealing Module, Factory, Singleton, Observer.
+- Imutabilidade, composição sobre herança.
+
+Exemplos
+function createLogger(){
+  const prefix = '[LOG]';
+  return { log:(m)=>console.log(prefix, m) };
+}
+const logger = createLogger();
+logger.log('Olá');
+
+Exercícios
+- Básico: factory para usuário.
+- Intermediário: observer simples para eventos customizados.
+- Avançado: aplicar padrões em mini app (logger, store, observer).
+
+Atividade Real
+- Estruturar pequeno app com padrões para evolutividade.
+
+Resumo
+- Padrões tornam arquitetura sustentável e previsível.

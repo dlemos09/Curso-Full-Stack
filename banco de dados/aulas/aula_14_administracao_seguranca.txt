@@ -1,0 +1,533 @@
+================================================================================
+                              AULA 14 - DIA 14
+                  ADMINISTRAÇÃO, BACKUP, SEGURANÇA E USUÁRIOS
+================================================================================
+
+HORÁRIO: 13:30 - 17:30 | DATA: _____/_____/_____
+
+OBJETIVOS:
+✓ Gerenciar usuários e permissões
+✓ Implementar segurança de dados
+✓ Realizar backup e restore
+✓ Monitorar banco de dados
+✓ Manutenção preventiva
+
+CRONOGRAMA:
+13:30-14:30 → Usuários e Permissões
+14:30-15:30 → Segurança
+15:30-15:45 → Intervalo
+15:45-16:30 → Backup e Restore
+16:30-17:30 → Monitoramento e Manutenção
+
+================================================================================
+1. GERENCIAMENTO DE USUÁRIOS
+================================================================================
+
+CONCEITO:
+No PostgreSQL, usuários são chamados de ROLES.
+Roles podem ter permissões (LOGIN, CREATEDB, etc.)
+
+--------------------------------------------------------------------------------
+CRIAR USUÁRIOS
+--------------------------------------------------------------------------------
+
+-- Criar role sem login (grupo)
+CREATE ROLE vendas;
+
+-- Criar usuário com login
+CREATE ROLE joao WITH LOGIN PASSWORD 'senha123';
+
+-- Criar usuário com opções
+CREATE ROLE maria WITH 
+    LOGIN 
+    PASSWORD 'senha456'
+    CREATEDB           -- pode criar databases
+    VALID UNTIL '2025-12-31';
+
+-- Criar superusuário (cuidado!)
+CREATE ROLE admin WITH LOGIN PASSWORD 'admin123' SUPERUSER;
+
+💡 PASSWORD → senha criptografada
+💡 VALID UNTIL → expiração da conta
+💡 SUPERUSER → acesso total (perigoso)
+
+--------------------------------------------------------------------------------
+MODIFICAR USUÁRIOS
+--------------------------------------------------------------------------------
+
+-- Alterar senha
+ALTER ROLE joao WITH PASSWORD 'novasenha';
+
+-- Remover permissão
+ALTER ROLE maria WITH NOCREATEDB;
+
+-- Renomear
+ALTER ROLE joao RENAME TO joao_silva;
+
+-- Deletar usuário
+DROP ROLE IF EXISTS maria;
+
+💡 Não pode deletar role que possui objetos
+
+--------------------------------------------------------------------------------
+LISTAR USUÁRIOS
+--------------------------------------------------------------------------------
+
+-- Via SQL:
+SELECT 
+    rolname AS usuario,
+    rolsuper AS superuser,
+    rolcreatedb AS pode_criar_db,
+    rolcanlogin AS pode_logar
+FROM pg_roles
+WHERE rolname NOT LIKE 'pg_%'
+ORDER BY rolname;
+
+-- Via comando DBeaver:
+\du
+
+================================================================================
+2. PERMISSÕES (GRANT/REVOKE)
+================================================================================
+
+NÍVEIS DE PERMISSÃO:
+- DATABASE → acesso ao banco
+- SCHEMA → acesso ao schema
+- TABLE → SELECT, INSERT, UPDATE, DELETE
+- COLUMN → permissões específicas por coluna
+- FUNCTION → EXECUTE
+
+--------------------------------------------------------------------------------
+GRANT - CONCEDER PERMISSÕES
+--------------------------------------------------------------------------------
+
+-- Conectar ao banco
+GRANT CONNECT ON DATABASE loja TO joao;
+
+-- Usar schema
+GRANT USAGE ON SCHEMA public TO joao;
+
+-- Permissões em tabela específica
+GRANT SELECT ON produtos TO joao;
+GRANT SELECT, INSERT ON clientes TO maria;
+GRANT ALL PRIVILEGES ON pedidos TO admin;
+
+-- Permissões em todas as tabelas do schema
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO joao;
+
+-- Permissões futuras (para tabelas que ainda serão criadas)
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT SELECT ON TABLES TO joao;
+
+💡 ALL PRIVILEGES → SELECT, INSERT, UPDATE, DELETE
+💡 DEFAULT PRIVILEGES → aplica a objetos futuros
+
+--------------------------------------------------------------------------------
+GRANT por Coluna
+--------------------------------------------------------------------------------
+
+-- Permitir SELECT apenas em colunas específicas
+GRANT SELECT (id, nome, email) ON clientes TO vendedor;
+
+-- Usuário NÃO verá outras colunas (cpf, telefone, etc.)
+
+--------------------------------------------------------------------------------
+REVOKE - REMOVER PERMISSÕES
+--------------------------------------------------------------------------------
+
+-- Remover permissão específica
+REVOKE INSERT ON clientes FROM maria;
+
+-- Remover todas permissões
+REVOKE ALL PRIVILEGES ON produtos FROM joao;
+
+-- Remover de todas tabelas
+REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM joao;
+
+--------------------------------------------------------------------------------
+VERIFICAR PERMISSÕES
+--------------------------------------------------------------------------------
+
+-- Permissões de uma tabela
+SELECT 
+    grantee,
+    privilege_type
+FROM information_schema.table_privileges
+WHERE table_name = 'produtos';
+
+-- Ou via comando:
+\dp produtos
+
+================================================================================
+3. ROLES E HIERARQUIA
+================================================================================
+
+CONCEITO:
+Criar grupos de permissões e atribuir a usuários.
+
+--------------------------------------------------------------------------------
+EXEMPLO: Sistema de Vendas
+--------------------------------------------------------------------------------
+
+-- Criar roles de grupos
+CREATE ROLE readonly;
+CREATE ROLE vendedor;
+CREATE ROLE gerente;
+
+-- Definir permissões dos grupos
+GRANT CONNECT ON DATABASE loja TO readonly;
+GRANT USAGE ON SCHEMA public TO readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
+
+GRANT readonly TO vendedor;  -- vendedor herda de readonly
+GRANT INSERT, UPDATE ON pedidos, itens_pedido TO vendedor;
+
+GRANT vendedor TO gerente;   -- gerente herda de vendedor
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO gerente;
+
+-- Criar usuários e atribuir a grupos
+CREATE ROLE carlos WITH LOGIN PASSWORD 'senha1';
+GRANT readonly TO carlos;
+
+CREATE ROLE ana WITH LOGIN PASSWORD 'senha2';
+GRANT vendedor TO ana;
+
+CREATE ROLE paulo WITH LOGIN PASSWORD 'senha3';
+GRANT gerente TO paulo;
+
+💡 Hierarquia: readonly < vendedor < gerente
+💡 Facilita gerenciamento de permissões
+
+================================================================================
+4. SEGURANÇA DE DADOS
+================================================================================
+
+ROW LEVEL SECURITY (RLS)
+--------------------------------------------------------------------------------
+
+CONCEITO:
+Controlar acesso por LINHA, não apenas tabela.
+Usuário vê apenas registros que lhe pertencem.
+
+-- Habilitar RLS na tabela
+ALTER TABLE pedidos ENABLE ROW LEVEL SECURITY;
+
+-- Criar política: usuário vê apenas seus pedidos
+CREATE POLICY ver_proprios_pedidos ON pedidos
+    FOR SELECT
+    USING (cliente_id = (
+        SELECT id FROM clientes WHERE email = CURRENT_USER
+    ));
+
+-- Criar política: vendedor vê pedidos de sua região
+CREATE POLICY ver_pedidos_regiao ON pedidos
+    FOR SELECT
+    TO vendedor
+    USING (regiao = (
+        SELECT regiao FROM vendedores WHERE usuario = CURRENT_USER
+    ));
+
+💡 USING → condição que define linhas visíveis
+💡 TO vendedor → aplica apenas a role vendedor
+
+-- Verificar políticas:
+SELECT * FROM pg_policies WHERE tablename = 'pedidos';
+
+--------------------------------------------------------------------------------
+CRIPTOGRAFIA DE DADOS SENSÍVEIS
+--------------------------------------------------------------------------------
+
+-- Extensão pgcrypto para criptografia
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Inserir dado criptografado
+INSERT INTO clientes (nome, cpf_criptografado)
+VALUES ('João', crypt('12345678900', gen_salt('bf')));
+
+-- Verificar dado criptografado
+SELECT * FROM clientes
+WHERE cpf_criptografado = crypt('12345678900', cpf_criptografado);
+
+💡 'bf' → Blowfish, algoritmo seguro
+💡 Senha nunca armazenada em texto puro
+
+--------------------------------------------------------------------------------
+AUDITORIA DE ACESSOS
+--------------------------------------------------------------------------------
+
+-- Tabela de log de acessos
+CREATE TABLE log_acessos (
+    id SERIAL PRIMARY KEY,
+    usuario VARCHAR(100),
+    acao VARCHAR(50),
+    tabela VARCHAR(100),
+    data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ip_origem INET
+);
+
+-- Função para logar
+CREATE OR REPLACE FUNCTION registrar_acesso()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO log_acessos (usuario, acao, tabela, ip_origem)
+    VALUES (
+        CURRENT_USER,
+        TG_OP,
+        TG_TABLE_NAME,
+        inet_client_addr()
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Aplicar em tabelas críticas
+CREATE TRIGGER trg_log_produtos
+AFTER INSERT OR UPDATE OR DELETE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION registrar_acesso();
+
+💡 inet_client_addr() → IP do cliente
+💡 CURRENT_USER → usuário conectado
+
+================================================================================
+5. BACKUP E RESTORE
+================================================================================
+
+TIPOS DE BACKUP:
+1. Lógico (pg_dump) → texto SQL ou arquivo custom
+2. Físico (pg_basebackup) → cópia dos arquivos do banco
+
+--------------------------------------------------------------------------------
+PG_DUMP - Backup Lógico
+--------------------------------------------------------------------------------
+
+No terminal (PowerShell):
+
+# Backup de database inteiro (formato SQL)
+pg_dump -U postgres -d loja -f backup_loja.sql
+
+# Backup formato custom (compactado)
+pg_dump -U postgres -d loja -F c -f backup_loja.backup
+
+# Backup apenas estrutura (sem dados)
+pg_dump -U postgres -d loja -s -f estrutura_loja.sql
+
+# Backup apenas dados
+pg_dump -U postgres -d loja -a -f dados_loja.sql
+
+# Backup de tabela específica
+pg_dump -U postgres -d loja -t produtos -f backup_produtos.sql
+
+# Backup com compressão gzip
+pg_dump -U postgres -d loja | gzip > backup_loja.sql.gz
+
+💡 -U → usuário
+💡 -d → database
+💡 -f → arquivo de saída
+💡 -F c → formato custom (menor e mais rápido para restore)
+💡 -s → schema only
+💡 -a → data only
+💡 -t → tabela específica
+
+--------------------------------------------------------------------------------
+PG_RESTORE - Restaurar Backup
+--------------------------------------------------------------------------------
+
+# Criar database vazio
+createdb -U postgres loja_restaurada
+
+# Restaurar backup custom
+pg_restore -U postgres -d loja_restaurada -v backup_loja.backup
+
+# Restaurar backup SQL
+psql -U postgres -d loja_restaurada -f backup_loja.sql
+
+# Restaurar apenas estrutura
+pg_restore -U postgres -d loja_restaurada -s backup_loja.backup
+
+# Restaurar apenas dados
+pg_restore -U postgres -d loja_restaurada -a backup_loja.backup
+
+# Restaurar tabela específica
+pg_restore -U postgres -d loja_restaurada -t produtos backup_loja.backup
+
+💡 -v → verbose (mostra progresso)
+💡 Sempre criar database vazio antes
+
+--------------------------------------------------------------------------------
+BACKUP AUTOMATIZADO (Script PowerShell)
+--------------------------------------------------------------------------------
+
+# Criar arquivo: backup_automatico.ps1
+$data = Get-Date -Format "yyyyMMdd_HHmmss"
+$arquivo = "D:\backups\loja_$data.backup"
+
+pg_dump -U postgres -d loja -F c -f $arquivo
+
+# Manter apenas últimos 7 dias
+Get-ChildItem "D:\backups\loja_*.backup" | 
+    Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(-7)} | 
+    Remove-Item
+
+💡 Agendar no Windows Task Scheduler
+💡 Rodar diariamente às 2h da manhã
+
+================================================================================
+6. MONITORAMENTO
+================================================================================
+
+CONSULTAS ÚTEIS
+--------------------------------------------------------------------------------
+
+-- Tamanho das databases
+SELECT 
+    datname AS database,
+    pg_size_pretty(pg_database_size(datname)) AS tamanho
+FROM pg_database
+WHERE datname NOT LIKE 'template%'
+ORDER BY pg_database_size(datname) DESC;
+
+-- Tamanho das tabelas
+SELECT 
+    schemaname,
+    tablename,
+    pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS tamanho
+FROM pg_tables
+WHERE schemaname = 'public'
+ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
+
+-- Conexões ativas
+SELECT 
+    pid,
+    usename AS usuario,
+    application_name AS aplicacao,
+    client_addr AS ip,
+    state AS estado,
+    query
+FROM pg_stat_activity
+WHERE state = 'active';
+
+-- Matar conexão específica
+SELECT pg_terminate_backend(pid) 
+WHERE pid = 12345;
+
+-- Queries mais lentas (top 10)
+SELECT 
+    query,
+    calls,
+    total_exec_time,
+    mean_exec_time,
+    max_exec_time
+FROM pg_stat_statements
+ORDER BY mean_exec_time DESC
+LIMIT 10;
+
+💡 pg_stat_statements → extensão para estatísticas de queries
+
+-- Tabelas que precisam VACUUM
+SELECT 
+    schemaname,
+    tablename,
+    n_dead_tup AS linhas_mortas,
+    last_vacuum,
+    last_autovacuum
+FROM pg_stat_user_tables
+WHERE n_dead_tup > 1000
+ORDER BY n_dead_tup DESC;
+
+================================================================================
+7. MANUTENÇÃO
+================================================================================
+
+-- VACUUM: Limpar espaço de linhas deletadas
+VACUUM produtos;
+VACUUM;  -- todas as tabelas
+
+-- VACUUM FULL: Recuperar espaço no disco (bloqueia tabela)
+VACUUM FULL produtos;
+
+-- ANALYZE: Atualizar estatísticas para otimizador
+ANALYZE produtos;
+ANALYZE;  -- todas as tabelas
+
+-- VACUUM ANALYZE: Ambos
+VACUUM ANALYZE;
+
+-- REINDEX: Reconstruir índices
+REINDEX TABLE produtos;
+REINDEX INDEX idx_produtos_nome;
+REINDEX DATABASE loja;  -- todos os índices
+
+-- Verificar necessidade de VACUUM
+SELECT 
+    schemaname,
+    tablename,
+    n_tup_ins AS inseridas,
+    n_tup_upd AS atualizadas,
+    n_tup_del AS deletadas,
+    n_dead_tup AS mortas
+FROM pg_stat_user_tables
+ORDER BY n_dead_tup DESC;
+
+💡 AutoVACUUM roda automaticamente, mas VACUUM manual pode ser necessário
+
+================================================================================
+EXERCÍCIOS PRÁTICOS
+================================================================================
+
+EXERCÍCIO 1: Gerenciamento de Usuários [MÉDIO - 25 min]
+Criar estrutura de usuários:
+- Role readonly (apenas consulta)
+- Role vendedor (consulta + inserir pedidos)
+- Role gerente (tudo exceto DELETE)
+- Role admin (acesso total)
+Criar 2 usuários em cada grupo
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 2: Row Level Security [AVANÇADO - 30 min]
+Implementar RLS onde:
+- Vendedores veem apenas pedidos de seus clientes
+- Gerentes veem pedidos de sua filial
+- Admin vê tudo
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 3: Backup Completo [MÉDIO - 25 min]
+1. Fazer backup do database
+2. Criar novo database
+3. Restaurar backup
+4. Verificar integridade
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 4: Script de Monitoramento [AVANÇADO - 35 min]
+Criar query que gera relatório:
+- Tamanho de cada tabela
+- Índices não usados
+- Tabelas que precisam VACUUM
+- Conexões ativas
+- Top 5 queries mais lentas
+
+================================================================================
+CHECKLIST DE SEGURANÇA
+================================================================================
+
+□ Nunca usar superusuário em aplicações
+□ Usar roles com privilégios mínimos
+□ Senhas fortes e expiração
+□ Criptografar dados sensíveis
+□ Implementar RLS onde apropriado
+□ Auditar operações críticas
+□ Backup diário automatizado
+□ Testar restore regularmente
+□ Monitorar conexões e queries
+□ VACUUM e ANALYZE periódicos
+□ Atualizar PostgreSQL regularmente
+□ Documentar permissões
+
+TAREFA: Implementar segurança e backup | PRÓXIMA AULA: PROJETO FINAL!
+
+================================================================================
+FIM DA AULA 14
+================================================================================

@@ -1,0 +1,1075 @@
+================================================================================
+                    LISTA DE EXERCÍCIOS - BANCO DE DADOS POSTGRESQL
+                           Curso Intensivo - 15 Dias (60h)
+================================================================================
+
+COMO USAR ESTE ARQUIVO:
+- Este documento contém APENAS os enunciados dos exercícios
+- Consulte o arquivo "gabarito_bd_postgres.txt" para respostas completas
+- Execute o arquivo "scripts.sql" para criar as estruturas necessárias
+- Importe os arquivos CSV conforme orientações no plano de aula
+- Assuma PostgreSQL 14+ e DBeaver como ambiente de desenvolvimento
+
+LEGENDA:
+🟢 Fácil      | ⏱️ Tempo estimado | 📊 Tabelas utilizadas
+
+================================================================================
+                              SUMÁRIO POR TÓPICO
+================================================================================
+1. Conceitos Básicos e DDL (Exercícios 1-8)
+2. Manipulação de Dados - DML (Exercícios 9-14)
+3. Consultas Simples e Filtros (Exercícios 15-20)
+4. Junções e Relacionamentos (Exercícios 21-26)
+5. Funções Agregadas e Agrupamento (Exercícios 27-32)
+6. Subconsultas e Consultas Avançadas (Exercícios 33-38)
+7. Views e Performance (Exercícios 39-43)
+8. Funções, Procedures e Triggers (Exercícios 44-48)
+9. Administração e Otimização (Exercícios 49-52)
+10. Projetos Integrados (Exercícios 53-55)
+
+================================================================================
+                    SEÇÃO 1: CONCEITOS BÁSICOS E DDL
+================================================================================
+
+EXERCÍCIO 1 - Criação de Database e Schema
+🟢 Nível: Fácil | ⏱️ Tempo: 10 minutos | 📊 Nenhuma tabela prévia
+
+Crie um banco de dados chamado "loja_virtual" e dentro dele crie dois schemas:
+- "vendas" para armazenar dados de produtos, pedidos e clientes
+- "estoque" para armazenar informações de inventário e fornecedores
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 2 - Criação de Tabelas com Constraints Básicas
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Schema: vendas
+
+No schema "vendas", crie a tabela "clientes" com as seguintes colunas:
+- id_cliente (inteiro, chave primária, auto-incremento)
+- nome (texto até 100 caracteres, obrigatório)
+- email (texto até 150 caracteres, único, obrigatório)
+- cpf (texto 11 caracteres, único)
+- data_nascimento (data)
+- data_cadastro (timestamp, padrão: data/hora atual)
+- ativo (booleano, padrão: true)
+
+Adicione uma constraint CHECK para garantir que a data de nascimento seja 
+anterior a 18 anos atrás (cliente maior de idade).
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 3 - Relacionamentos com Chaves Estrangeiras
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Schema: vendas
+
+Crie as seguintes tabelas no schema "vendas":
+
+a) Tabela "categorias":
+   - id_categoria (inteiro, PK, auto-incremento)
+   - nome (texto 50 caracteres, único, obrigatório)
+   - descricao (texto 200 caracteres)
+
+b) Tabela "produtos":
+   - id_produto (inteiro, PK, auto-incremento)
+   - nome (texto 100 caracteres, obrigatório)
+   - descricao (texto)
+   - preco (decimal 10,2, obrigatório)
+   - id_categoria (inteiro, FK para categorias)
+   - estoque_minimo (inteiro, padrão: 0)
+   - ativo (booleano, padrão: true)
+
+Configure a FK para que, ao deletar uma categoria, os produtos relacionados 
+tenham id_categoria definido como NULL (ON DELETE SET NULL).
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 4 - Tipos de Dados do PostgreSQL
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Schema: estoque
+
+Crie a tabela "fornecedores" no schema "estoque" utilizando diversos tipos de 
+dados do PostgreSQL:
+- id_fornecedor (SERIAL, PK)
+- razao_social (VARCHAR(200), obrigatório)
+- cnpj (CHAR(14), único)
+- contato (JSONB - armazenar telefone, email, website)
+- endereco_completo (TEXT)
+- coordenadas (POINT - latitude/longitude)
+- horario_atendimento (TSRANGE - intervalo de timestamps)
+- avaliacoes (INTEGER[] - array de notas de 1 a 5)
+- ativo (BOOLEAN, padrão true)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 5 - Alteração de Estrutura de Tabelas
+🟡 Nível: Médio | ⏱️ Tempo: 15 minutos | 📊 Tabelas: clientes, produtos
+
+Realize as seguintes alterações:
+
+a) Na tabela "clientes":
+   - Adicione a coluna "telefone" (VARCHAR 20)
+   - Adicione a coluna "limite_credito" (DECIMAL 10,2 com padrão 1000.00)
+   - Renomeie a coluna "ativo" para "status_ativo"
+
+b) Na tabela "produtos":
+   - Adicione uma constraint CHECK para garantir que preco > 0
+   - Adicione uma constraint CHECK para garantir estoque_minimo >= 0
+   - Modifique a coluna "descricao" para ser obrigatória
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 6 - Criação de Tabela de Relacionamento N:N
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Schema: vendas
+
+Crie a estrutura para gerenciar pedidos:
+
+a) Tabela "pedidos":
+   - id_pedido (SERIAL, PK)
+   - id_cliente (INTEGER, FK para clientes, obrigatório)
+   - data_pedido (TIMESTAMP, padrão: agora)
+   - status (VARCHAR 20, CHECK: 'pendente', 'processando', 'enviado', 'entregue', 'cancelado')
+   - valor_total (DECIMAL 10,2, padrão: 0)
+   - observacoes (TEXT)
+
+b) Tabela "itens_pedido" (relacionamento N:N entre pedidos e produtos):
+   - id_item (SERIAL, PK)
+   - id_pedido (INTEGER, FK para pedidos, ON DELETE CASCADE)
+   - id_produto (INTEGER, FK para produtos, ON DELETE RESTRICT)
+   - quantidade (INTEGER, obrigatório, CHECK > 0)
+   - preco_unitario (DECIMAL 10,2, obrigatório)
+   - desconto (DECIMAL 5,2, padrão: 0, CHECK entre 0 e 100)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 7 - Índices e Primary Keys Compostas
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Schema: estoque
+
+Crie a tabela "movimentacoes_estoque" com:
+- id_movimentacao (SERIAL, parte da PK)
+- data_movimentacao (TIMESTAMP, parte da PK)
+- id_produto (INTEGER, FK para vendas.produtos)
+- tipo_movimentacao (CHAR 1: 'E'=entrada, 'S'=saída)
+- quantidade (INTEGER, obrigatório)
+- id_fornecedor (INTEGER, FK para fornecedores, pode ser NULL)
+- custo_unitario (DECIMAL 10,2)
+- observacao (TEXT)
+
+Configure:
+- Primary Key composta: (id_movimentacao, data_movimentacao)
+- Índice em (id_produto, data_movimentacao) para consultas rápidas
+- Índice em (tipo_movimentacao, data_movimentacao)
+- Constraint CHECK: se tipo='E' então id_fornecedor NOT NULL
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 8 - DROP, TRUNCATE e Gestão de Constraints
+🟡 Nível: Médio | ⏱️ Tempo: 15 minutos | 📊 Várias tabelas
+
+Execute as seguintes operações:
+
+a) Crie uma tabela temporária "temp_importacao" com colunas livres
+b) Insira 5 registros fictícios nela
+c) Use TRUNCATE para limpar os dados (mantendo estrutura)
+d) Use DROP para remover a tabela completamente
+e) Na tabela "produtos", remova a constraint de CHECK do preço
+f) Adicione novamente uma constraint CHECK mais rigorosa: preco BETWEEN 0.01 AND 999999.99
+g) Liste todas as constraints da tabela "produtos" usando consulta ao catálogo do sistema
+
+================================================================================
+                    SEÇÃO 2: MANIPULAÇÃO DE DADOS - DML
+================================================================================
+
+EXERCÍCIO 9 - Inserção Básica de Dados
+🟢 Nível: Fácil | ⏱️ Tempo: 10 minutos | 📊 Tabelas: categorias, clientes
+
+Insira dados nas seguintes tabelas:
+
+a) Insira 5 categorias diferentes (eletrônicos, livros, roupas, alimentos, móveis)
+
+b) Insira 8 clientes com dados completos, incluindo:
+   - Pelo menos 2 clientes menores de 30 anos
+   - Pelo menos 2 clientes maiores de 50 anos
+   - Emails únicos e válidos
+   - CPFs fictícios mas únicos
+
+Use INSERT com múltiplas linhas em um único comando.
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 10 - Inserção com Subconsultas e RETURNING
+🟡 Nível: Médio | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, fornecedores
+
+a) Insira 3 fornecedores com dados JSONB para contato:
+   {
+     "telefone": "(11) 98888-9999",
+     "email": "contato@fornecedor.com",
+     "website": "www.fornecedor.com.br"
+   }
+
+b) Insira 15 produtos de diferentes categorias usando RETURNING para capturar 
+   os IDs gerados. Varie os preços entre R$ 10,00 e R$ 5.000,00.
+
+c) Mostre como usar INSERT INTO ... SELECT para copiar produtos de uma categoria 
+   para criar produtos similares em outra categoria (com nomes modificados).
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 11 - Atualização de Dados com WHERE
+🟢 Nível: Fácil | ⏱️ Tempo: 10 minutos | 📊 Tabelas: produtos, clientes
+
+Execute as seguintes atualizações:
+
+a) Aumente em 10% o preço de todos os produtos da categoria "eletrônicos"
+b) Aplique 15% de desconto nos produtos com estoque_minimo > 50
+c) Atualize o limite de crédito para R$ 5.000,00 dos clientes cadastrados há 
+   mais de 1 ano
+d) Marque como inativo (status_ativo = false) os clientes que nunca fizeram pedido
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 12 - UPDATE com JOIN e RETURNING
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: produtos, categorias
+
+a) Atualize o nome de todos os produtos adicionando o prefixo com o nome da 
+   categoria (ex: "Eletrônicos - Notebook Dell")
+
+b) Use RETURNING para retornar os produtos atualizados com id, nome antigo 
+   (se possível armazenar) e nome novo
+
+c) Crie uma auditoria: adicione coluna "data_ultima_atualizacao" em produtos 
+   e atualize-a sempre que houver mudança de preço
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 13 - Deleção com Integridade Referencial
+🟡 Nível: Médio | ⏱️ Tempo: 15 minutos | 📊 Tabelas: pedidos, itens_pedido, clientes
+
+a) Tente deletar um produto que possui itens em pedidos - observe o erro de FK
+b) Delete todos os pedidos com status "cancelado" (isso deve deletar itens_pedido 
+   automaticamente por CASCADE)
+c) Delete clientes que nunca fizeram pedidos E estão inativos
+d) Use DELETE com RETURNING para mostrar quais registros foram removidos
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 14 - Transações e Controle de Concorrência
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos
+
+Simule um processo de criação de pedido dentro de uma transação:
+
+a) Inicie uma transação (BEGIN)
+b) Insira um novo pedido para um cliente
+c) Insira 3 itens desse pedido
+d) Atualize o valor_total do pedido com a soma dos itens
+e) Para cada produto nos itens, SIMULE atualizar o estoque (você pode criar 
+   coluna quantidade_estoque na tabela produtos)
+f) Use SAVEPOINT antes de cada atualização de estoque
+g) Simule um erro (estoque insuficiente) e faça ROLLBACK para o savepoint
+h) Ajuste a quantidade e refaça
+i) Faça COMMIT da transação completa
+
+Demonstre também:
+- Um caso onde você faz ROLLBACK completo
+- Consulta de nível de isolamento atual
+- Mudança do nível de isolamento
+
+================================================================================
+                 SEÇÃO 3: CONSULTAS SIMPLES E FILTROS
+================================================================================
+
+EXERCÍCIO 15 - Projeção e Seleção Básica
+🟢 Nível: Fácil | ⏱️ Tempo: 10 minutos | 📊 Tabelas: clientes, produtos
+
+a) Liste todos os clientes mostrando apenas nome e email
+b) Liste todos os produtos com preço acima de R$ 100,00
+c) Liste clientes cadastrados nos últimos 30 dias
+d) Liste produtos inativos de uma categoria específica
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 16 - Filtros com Operadores Diversos
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, clientes
+
+Use diferentes operadores WHERE para:
+
+a) Produtos com preço BETWEEN 50 AND 500
+b) Clientes cujo nome começa com 'A' ou 'M' (use LIKE ou ILIKE)
+c) Produtos de múltiplas categorias usando IN
+d) Clientes que NÃO têm telefone cadastrado (IS NULL)
+e) Produtos com desconto diferente de zero (IS NOT NULL e <> 0)
+f) Combine condições com AND, OR e parênteses: produtos ativos E (preço < 100 OU estoque_minimo < 10)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 17 - Ordenação e Paginação
+🟢 Nível: Fácil | ⏱️ Tempo: 10 minutos | 📊 Tabelas: produtos, clientes
+
+a) Liste produtos ordenados por preço decrescente
+b) Liste clientes ordenados por nome (ordem alfabética)
+c) Liste os 10 produtos mais caros
+d) Implemente paginação: mostre produtos da página 2, com 5 itens por página 
+   (use LIMIT e OFFSET)
+e) Liste produtos ordenados por categoria (ascendente) e depois por preço 
+   (descendente)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 18 - Funções de String e Data
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: clientes, pedidos
+
+a) Mostre clientes com nome em MAIÚSCULAS
+b) Extraia apenas o primeiro nome dos clientes
+c) Concatene nome e email dos clientes no formato "Nome <email@exemplo.com>"
+d) Calcule a idade dos clientes com base na data de nascimento
+e) Mostre pedidos com a diferença em dias entre data_pedido e hoje
+f) Formate a data_cadastro no formato brasileiro "dd/mm/yyyy"
+g) Extraia o mês e ano do pedido separadamente
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 19 - Expressões CASE e Campos Calculados
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: produtos, clientes, pedidos
+
+a) Classifique produtos por faixa de preço:
+   - "Econômico" (< 50)
+   - "Intermediário" (50-200)
+   - "Premium" (> 200)
+
+b) Classifique clientes por idade:
+   - "Jovem" (18-30)
+   - "Adulto" (31-50)
+   - "Sênior" (> 50)
+
+c) Mostre o status do pedido traduzido para português
+
+d) Calcule o valor final dos itens_pedido considerando desconto:
+   preco_unitario * quantidade * (1 - desconto/100)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 20 - Consultas com DISTINCT e Filtros de Texto
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, clientes
+
+a) Liste todas as categorias únicas de produtos (sem repetição)
+b) Liste os diferentes status de pedidos existentes no banco
+c) Busque produtos cujo nome contém a palavra "Pro" (case-insensitive)
+d) Busque clientes com email de domínio "gmail.com"
+e) Use expressões regulares (SIMILAR TO ou ~) para buscar CPFs com padrão específico
+
+================================================================================
+                   SEÇÃO 4: JUNÇÕES E RELACIONAMENTOS
+================================================================================
+
+EXERCÍCIO 21 - INNER JOIN Básico
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, categorias
+
+a) Liste todos os produtos com o nome da categoria
+b) Mostre produtos e categorias apenas onde há correspondência
+c) Conte quantos produtos existem por categoria
+d) Liste produtos com preço acima de 100 e mostre a categoria
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 22 - LEFT/RIGHT OUTER JOIN
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: categorias, produtos, clientes, pedidos
+
+a) Liste TODAS as categorias e a quantidade de produtos (mesmo categorias sem produtos)
+b) Mostre TODOS os clientes e seus pedidos (incluindo clientes sem pedidos)
+c) Identifique categorias sem nenhum produto
+d) Identifique clientes que nunca fizeram pedidos
+e) Use RIGHT JOIN para mostrar todos os pedidos e clientes (mesmo pedidos sem cliente - não deveria acontecer)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 23 - Múltiplas Junções
+🟡 Nível: Médio | ⏱️ Tempo: 25 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos, clientes, categorias
+
+Crie uma consulta que mostre:
+- Número do pedido
+- Nome do cliente
+- Data do pedido
+- Nome do produto
+- Categoria do produto
+- Quantidade
+- Preço unitário
+- Valor total do item (quantidade * preço)
+
+Filtre apenas pedidos dos últimos 90 dias, ordene por data decrescente.
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 24 - SELF JOIN
+🔴 Nível: Avançado | ⏱️ Tempo: 20 minutos | 📊 Tabela: funcionarios (criar)
+
+a) Crie uma tabela "funcionarios" com:
+   - id_funcionario (PK)
+   - nome
+   - cargo
+   - id_gerente (FK auto-referência para id_funcionario)
+   - salario
+
+b) Insira dados hierárquicos (diretor > gerentes > analistas)
+
+c) Use SELF JOIN para listar cada funcionário com o nome do seu gerente
+
+d) Liste gerentes e a quantidade de subordinados diretos
+
+e) Identifique funcionários sem gerente (diretores/presidência)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 25 - FULL OUTER JOIN e CROSS JOIN
+🔴 Nível: Avançado | ⏱️ Tempo: 20 minutos | 📊 Tabelas: diversas
+
+a) Use FULL OUTER JOIN entre clientes e pedidos para mostrar:
+   - Clientes sem pedidos
+   - Pedidos sem cliente (órfãos - não deveria existir)
+   - Clientes com pedidos
+
+b) Use CROSS JOIN para criar uma matriz de combinações produto x categoria 
+   (útil para análise de possibilidades)
+
+c) Use CROSS JOIN para criar uma tabela de datas (série temporal) cruzando 
+   com produtos para análise de vendas diárias
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 26 - Junções com Condições Complexas
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos, clientes
+
+a) Liste pedidos onde o valor total do pedido seja maior que o limite de 
+   crédito do cliente (situação de risco)
+
+b) Mostre produtos que aparecem em pedidos de mais de 5 clientes diferentes
+
+c) Liste clientes que compraram produtos de TODAS as categorias disponíveis
+
+d) Encontre pares de produtos que foram comprados juntos (no mesmo pedido) 
+   com frequência
+
+================================================================================
+              SEÇÃO 5: FUNÇÕES AGREGADAS E AGRUPAMENTO
+================================================================================
+
+EXERCÍCIO 27 - Funções Agregadas Básicas
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, pedidos, clientes
+
+Calcule:
+a) Total de produtos cadastrados
+b) Preço médio dos produtos
+c) Produto mais caro e mais barato (MAX, MIN)
+d) Soma total de todos os pedidos
+e) Quantidade total de clientes ativos vs inativos
+f) Data do primeiro e do último pedido
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 28 - GROUP BY Simples
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, pedidos
+
+a) Quantidade de produtos por categoria
+b) Valor médio de produtos por categoria
+c) Quantidade de pedidos por status
+d) Total de vendas (valor_total) por status de pedido
+e) Quantidade de pedidos por mês/ano
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 29 - GROUP BY com HAVING
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: produtos, categorias, pedidos, clientes
+
+a) Categorias com mais de 3 produtos
+b) Categorias onde o preço médio dos produtos é superior a R$ 200
+c) Clientes que fizeram mais de 5 pedidos
+d) Meses onde o total de vendas foi acima de R$ 10.000
+e) Produtos que aparecem em mais de 10 pedidos diferentes
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 30 - Agrupamento com Múltiplas Colunas
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos, categorias
+
+a) Total de vendas por categoria e por mês
+b) Quantidade de pedidos por cliente e por status
+c) Valor médio do pedido por cliente e por período (trimestre)
+d) Produto mais vendido (quantidade) por categoria
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 31 - Funções de Janela (Window Functions) Básicas
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: produtos, pedidos, clientes
+
+a) Ranking de produtos mais caros (use ROW_NUMBER, RANK, DENSE_RANK)
+b) Mostre cada pedido com o total acumulado de vendas (RUNNING TOTAL com SUM OVER)
+c) Para cada produto, mostre a diferença de preço em relação à média da categoria (usando AVG OVER PARTITION BY)
+d) Identifique o produto mais caro e mais barato de cada categoria (FIRST_VALUE, LAST_VALUE)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 32 - Agregações Avançadas com ROLLUP e CUBE
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos
+
+a) Use GROUP BY com ROLLUP para mostrar:
+   - Total de vendas por categoria
+   - Total de vendas por categoria e produto
+   - Total geral de vendas
+
+b) Use GROUPING SETS para análises multidimensionais:
+   - Vendas por categoria
+   - Vendas por mês
+   - Vendas totais
+   Tudo em uma única consulta
+
+c) Calcule percentuais de participação de cada categoria no total de vendas
+
+d) Crie relatório com SUBTOTAIS e TOTAL GERAL
+
+================================================================================
+            SEÇÃO 6: SUBCONSULTAS E CONSULTAS AVANÇADAS
+================================================================================
+
+EXERCÍCIO 33 - Subconsultas Simples no WHERE
+🟡 Nível: Médio | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, pedidos, clientes
+
+a) Liste produtos com preço acima da média geral
+b) Mostre clientes que fizeram pedidos acima do valor médio
+c) Encontre produtos que nunca foram vendidos (NOT IN ou NOT EXISTS)
+d) Liste categorias que têm produtos acima de R$ 1.000
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 34 - Subconsultas Correlacionadas
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: produtos, categorias, pedidos, clientes
+
+a) Para cada categoria, mostre produtos com preço acima da média DAQUELA categoria
+b) Liste clientes cujo total de pedidos está acima da média de pedidos por cliente
+c) Mostre o pedido mais recente de cada cliente usando subconsulta correlacionada
+d) Identifique produtos que têm preço maior que TODOS os produtos de outra categoria específica
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 35 - Subconsultas no SELECT e FROM
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: clientes, pedidos, produtos
+
+a) Liste clientes com uma coluna adicional mostrando a quantidade de pedidos 
+   (subconsulta escalar no SELECT)
+
+b) Mostre produtos com coluna de "quantidade vendida total" usando subconsulta
+
+c) Use subconsulta na cláusula FROM (derived table) para calcular primeiro as 
+   vendas por categoria, depois filtrar as top 3
+
+d) Combine JOIN com subconsulta para otimizar performance
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 36 - EXISTS e NOT EXISTS
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: clientes, pedidos, produtos, categorias
+
+a) Clientes que TÊM pedidos (usando EXISTS)
+b) Clientes que NÃO TÊM pedidos (usando NOT EXISTS)
+c) Categorias que TÊM produtos ativos
+d) Produtos que EXISTEM em pelo menos um pedido do último mês
+e) Compare performance de EXISTS vs IN em um caso prático
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 37 - CTEs (Common Table Expressions)
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos, clientes
+
+Use WITH para criar CTEs:
+
+a) CTE simples: calcule totais de vendas por cliente, depois use na consulta principal
+b) Múltiplas CTEs: separe lógica de cálculos intermediários
+c) CTE recursiva: se você criou a tabela de funcionários hierárquica, navegue 
+   pela hierarquia completa (subordinados de subordinados)
+d) Use CTE para melhorar legibilidade de consulta complexa de relatório
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 38 - UNION, INTERSECT e EXCEPT
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: clientes, produtos, pedidos
+
+a) UNION: combine clientes ativos e clientes com pedidos recentes (remova duplicatas)
+b) UNION ALL: mostre todos os eventos (pedidos criados, cancelados) em ordem cronológica
+c) INTERSECT: encontre clientes que são ativos E fizeram pedidos no último trimestre
+d) EXCEPT: clientes ativos que NÃO fizeram pedidos no último ano
+e) Combine operadores: (A UNION B) EXCEPT C
+
+================================================================================
+                  SEÇÃO 7: VIEWS E PERFORMANCE
+================================================================================
+
+EXERCÍCIO 39 - Criação de Views Simples
+🟢 Nível: Fácil | ⏱️ Tempo: 15 minutos | 📊 Tabelas: produtos, categorias, clientes, pedidos
+
+Crie as seguintes views:
+
+a) v_produtos_completos: produtos com nome da categoria
+b) v_clientes_ativos: apenas clientes com status_ativo = true
+c) v_pedidos_recentes: pedidos dos últimos 30 dias com dados do cliente
+d) v_resumo_vendas: totalização de vendas por categoria
+
+Teste as views fazendo SELECT e filtros adicionais.
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 40 - Views Atualizáveis e Complexas
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: produtos, clientes
+
+a) Crie uma view simples sobre produtos que seja atualizável
+b) Tente fazer UPDATE através da view
+c) Crie uma view complexa (com JOIN e agregações) e tente atualizá-la - observe a limitação
+d) Use CREATE OR REPLACE VIEW para modificar uma view existente
+e) Use DROP VIEW e IF EXISTS
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 41 - Materialized Views
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos
+
+a) Crie uma MATERIALIZED VIEW para relatório pesado de vendas:
+   - Total de vendas por produto
+   - Quantidade vendida
+   - Ticket médio
+   - Última venda
+
+b) Consulte a materialized view e observe a velocidade
+
+c) Insira novos dados nas tabelas base
+
+d) Observe que a materialized view não atualizou automaticamente
+
+e) Use REFRESH MATERIALIZED VIEW para atualizar
+
+f) Crie índice na materialized view para melhorar consultas
+
+g) Configure refresh com CONCURRENTLY (requer UNIQUE INDEX)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 42 - Análise de Performance com EXPLAIN
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Tabelas: pedidos, produtos, clientes
+
+a) Execute EXPLAIN em uma consulta simples (SELECT * FROM produtos)
+
+b) Execute EXPLAIN ANALYZE em consulta com JOIN
+
+c) Interprete o plano: Seq Scan, Index Scan, Nested Loop, Hash Join
+
+d) Crie um índice estratégico e compare o EXPLAIN antes/depois
+
+e) Identifique consultas lentas (Seq Scan em tabelas grandes)
+
+f) Use EXPLAIN para consulta com subconsulta correlacionada - observe o custo
+
+g) Otimize a consulta e compare novamente
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 43 - Criação de Índices Estratégicos
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: produtos, pedidos, clientes
+
+a) Crie índice B-Tree padrão em produtos.nome
+
+b) Crie índice composto em (id_categoria, preco) para otimizar buscas específicas
+
+c) Crie índice parcial: apenas produtos ativos
+
+d) Crie índice em expressão: LOWER(email) para buscas case-insensitive
+
+e) Para campo JSONB (contato em fornecedores), crie índice GIN
+
+f) Para busca textual, configure pg_trgm e crie índice GIN em produtos.descricao
+
+g) Mostre como listar todos os índices de uma tabela
+
+h) Discuta trade-offs: índices aceleram SELECT mas atrasam INSERT/UPDATE
+
+================================================================================
+            SEÇÃO 8: FUNÇÕES, PROCEDURES E TRIGGERS
+================================================================================
+
+EXERCÍCIO 44 - Criação de Funções SQL Simples
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Tabelas: produtos, clientes
+
+Crie as seguintes funções:
+
+a) Função calcular_idade(data_nascimento DATE) RETURNS INTEGER
+   - Retorna idade em anos completos
+
+b) Função calcular_desconto(preco DECIMAL, percentual DECIMAL) RETURNS DECIMAL
+   - Retorna preço com desconto aplicado
+
+c) Função obter_total_pedidos_cliente(cliente_id INT) RETURNS DECIMAL
+   - Retorna soma de todos os pedidos do cliente
+
+d) Teste as funções com SELECT
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 45 - Funções PL/pgSQL Complexas
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Tabelas: produtos, pedidos
+
+Crie funções usando PL/pgSQL:
+
+a) Função aplicar_reajuste_categoria(cat_id INT, percentual DECIMAL) RETURNS TEXT
+   - Atualiza preços de todos os produtos da categoria
+   - Retorna mensagem com quantidade de produtos atualizados
+   - Use controle de fluxo (IF)
+
+b) Função gerar_relatorio_vendas(data_inicio DATE, data_fim DATE) 
+   RETURNS TABLE (categoria TEXT, total DECIMAL, qtd_pedidos INT)
+   - Retorna tabela com totalizações
+
+c) Função validar_estoque_pedido(pedido_id INT) RETURNS BOOLEAN
+   - Verifica se há estoque para todos os itens do pedido
+   - Use LOOP para percorrer itens
+
+d) Use blocos EXCEPTION para tratamento de erros
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 46 - Stored Procedures
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas: pedidos, itens_pedido, produtos
+
+a) Crie PROCEDURE processar_pedido(cliente_id INT, produto_ids INT[], quantidades INT[])
+   - Cria um pedido
+   - Insere itens
+   - Atualiza estoque
+   - Calcula total
+   - Tudo em uma transação
+   - Com COMMIT/ROLLBACK interno
+
+b) Crie PROCEDURE cancelar_pedido(pedido_id INT)
+   - Atualiza status para cancelado
+   - Restaura estoque
+   - Registra log de auditoria
+
+c) Execute as procedures com CALL
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 47 - Triggers Básicos
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Tabelas: produtos, pedidos, auditoria
+
+a) Crie tabela auditoria_produtos:
+   - id, id_produto, acao (INSERT/UPDATE/DELETE), data_hora, usuario, dados_antigos, dados_novos
+
+b) Crie função de trigger para auditoria
+
+c) Crie TRIGGER que registra todas as mudanças em produtos
+
+d) Crie trigger BEFORE INSERT em pedidos para:
+   - Validar que cliente existe e está ativo
+   - Definir data_pedido se NULL
+   - Definir status padrão
+
+e) Crie trigger AFTER INSERT em itens_pedido para:
+   - Atualizar automaticamente o valor_total do pedido
+
+f) Teste os triggers inserindo/atualizando/deletando dados
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 48 - Triggers Avançados e Constraints Complexas
+🔴 Nível: Avançado | ⏱️ Tempo: 35 minutos | 📊 Tabelas: pedidos, produtos, movimentacoes_estoque
+
+a) Crie trigger que impede deletar categoria se houver produtos ativos
+
+b) Crie trigger que atualiza estoque automaticamente ao inserir movimentação
+
+c) Crie trigger que impede pedido se cliente exceder limite de crédito
+
+d) Crie trigger de validação complexa: pedido só pode ser cancelado se não foi enviado
+
+e) Use NEW e OLD em triggers de UPDATE
+
+f) Crie trigger condicional (só dispara em certas condições com WHEN)
+
+g) Gerencie ordem de execução de múltiplos triggers (nomes alfabéticos ou prioridade)
+
+================================================================================
+               SEÇÃO 9: ADMINISTRAÇÃO E OTIMIZAÇÃO
+================================================================================
+
+EXERCÍCIO 49 - Backup e Restore
+🟡 Nível: Médio | ⏱️ Tempo: 20 minutos | 📊 Todo o banco
+
+a) Use pg_dump para fazer backup do banco "loja_virtual" (formato custom)
+
+b) Use pg_dumpall para backup de todos os bancos (incluindo roles)
+
+c) Faça backup apenas do schema "vendas"
+
+d) Exporte apenas dados (sem estrutura) de uma tabela específica
+
+e) Restaure o backup em um novo banco "loja_virtual_restore"
+
+f) No DBeaver: use a interface para exportar dados para SQL, CSV, JSON
+
+g) Importe CSV usando COPY ou \copy
+
+h) Documente o processo completo passo-a-passo
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 50 - Gestão de Usuários e Permissões
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Banco completo
+
+a) Crie roles:
+   - role_admin (acesso total)
+   - role_vendedor (SELECT, INSERT, UPDATE em vendas)
+   - role_consulta (apenas SELECT)
+
+b) Crie usuários:
+   - user_admin (membro de role_admin)
+   - user_vendedor1, user_vendedor2 (membros de role_vendedor)
+   - user_relatorio (membro de role_consulta)
+
+c) Configure permissões granulares:
+   - GRANT SELECT ON vendas.produtos TO role_consulta
+   - GRANT INSERT, UPDATE ON vendas.pedidos TO role_vendedor
+   - GRANT ALL ON ALL TABLES IN SCHEMA vendas TO role_admin
+
+d) Teste conectando com diferentes usuários e tentando operações
+
+e) Revogue permissões específicas com REVOKE
+
+f) Configure permissões padrão (ALTER DEFAULT PRIVILEGES)
+
+g) Documente estrutura de segurança
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 51 - Manutenção e Vacuum
+🔴 Nível: Avançado | ⏱️ Tempo: 25 minutos | 📊 Tabelas grandes
+
+a) Execute VACUUM em uma tabela específica
+
+b) Execute VACUUM FULL para recuperar espaço em disco
+
+c) Execute ANALYZE para atualizar estatísticas do planejador
+
+d) Execute VACUUM ANALYZE (combinado)
+
+e) Configure autovacuum (parâmetros no postgresql.conf ou por tabela)
+
+f) Use REINDEX para reconstruir índices
+
+g) Monitore bloat (espaço desperdiçado) em tabelas e índices
+
+h) Execute CLUSTER para reordenar tabela fisicamente por índice
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 52 - Monitoramento e Queries do Catálogo
+🔴 Nível: Avançado | ⏱️ Tempo: 30 minutos | 📊 Sistema
+
+Consulte views do sistema para:
+
+a) pg_stat_activity: conexões ativas, queries em execução
+
+b) pg_stat_user_tables: estatísticas de uso das tabelas (seq scans, index scans)
+
+c) pg_indexes: listar todos os índices
+
+d) pg_tables: listar todas as tabelas
+
+e) information_schema.columns: metadados das colunas
+
+f) pg_size_pretty(pg_total_relation_size('tabela')): tamanho das tabelas
+
+g) Identifique queries lentas em pg_stat_statements (extensão)
+
+h) Crie consulta para listar TOP 10 tabelas maiores
+
+i) Crie consulta para listar índices não utilizados
+
+j) Monitore locks e bloqueios (pg_locks)
+
+================================================================================
+                  SEÇÃO 10: PROJETOS INTEGRADOS
+================================================================================
+
+EXERCÍCIO 53 - Projeto: Sistema de Pedidos Completo
+🔴 Nível: Avançado | ⏱️ Tempo: 120 minutos | 📊 Todas as tabelas
+
+Desenvolva um sistema completo de pedidos:
+
+**Requisitos:**
+
+1. **Modelagem:**
+   - Crie diagrama ER completo
+   - Implemente todas as tabelas necessárias (clientes, produtos, categorias, 
+     pedidos, itens_pedido, fornecedores, movimentacoes_estoque)
+   - Configure todas as constraints, FKs, índices
+
+2. **Carga de Dados:**
+   - Insira pelo menos 50 clientes
+   - 10 categorias
+   - 100 produtos
+   - 200 pedidos
+   - 500 itens de pedidos
+   - Use transações para garantir consistência
+
+3. **Regras de Negócio (via triggers/functions):**
+   - Atualizar valor_total do pedido automaticamente
+   - Controlar estoque nas movimentações
+   - Impedir venda sem estoque
+   - Validar limite de crédito do cliente
+   - Auditoria de todas as operações críticas
+
+4. **Relatórios (views/queries):**
+   - Top 10 clientes por valor total de compras
+   - Produtos mais vendidos
+   - Análise de vendas por categoria/mês
+   - Clientes inativos (sem compra há 6 meses)
+   - Produtos com estoque baixo
+   - Dashboard gerencial (materialized view)
+
+5. **Performance:**
+   - Crie índices estratégicos
+   - Otimize as queries principais
+   - Use EXPLAIN para validar
+
+6. **Segurança:**
+   - Configure roles e usuários
+   - Implemente RLS (Row Level Security) se aplicável
+
+7. **Backup:**
+   - Procedimento de backup completo
+   - Teste de restore
+
+**Entregáveis:**
+- Script SQL completo
+- Documentação do modelo
+- Manual de uso
+- Relatório de testes de performance
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 54 - Projeto: Sistema de Biblioteca
+🔴 Nível: Avançado | ⏱️ Tempo: 120 minutos | 📊 Novo schema
+
+Crie um sistema de biblioteca com:
+
+**Entidades:**
+- Livros (título, ISBN, editora, ano, categoria, quantidade_total)
+- Autores (com relacionamento N:N com livros)
+- Usuários/Membros
+- Empréstimos (data_emprestimo, data_prevista_devolucao, data_devolucao_real)
+- Multas
+
+**Funcionalidades:**
+
+1. Registrar empréstimo:
+   - Verificar disponibilidade
+   - Registrar data de devolução prevista (14 dias)
+   - Verificar se usuário tem multas pendentes
+   - Decrementar quantidade disponível
+
+2. Registrar devolução:
+   - Calcular se há atraso
+   - Gerar multa se atrasado
+   - Incrementar quantidade disponível
+
+3. Relatórios:
+   - Livros mais emprestados
+   - Usuários com mais empréstimos
+   - Livros atrasados
+   - Receita de multas por período
+   - Taxa de ocupação da biblioteca
+
+4. Implementar:
+   - Triggers para regras de negócio
+   - Functions para cálculos
+   - Views para relatórios
+   - Índices para performance
+   - Auditoria
+
+5. Dados de teste:
+   - 200 livros
+   - 50 autores
+   - 100 usuários
+   - 500 empréstimos (histórico)
+
+--------------------------------------------------------------------------------
+
+EXERCÍCIO 55 - Projeto: Sistema de RH
+🔴 Nível: Avançado | ⏱️ Tempo: 120 minutos | 📊 Novo schema
+
+Desenvolva sistema de Recursos Humanos:
+
+**Estrutura:**
+- Departamentos (hierarquia com SELF JOIN)
+- Cargos (com faixas salariais)
+- Funcionários (auto-referência para gerente)
+- Histórico de cargos
+- Folha de pagamento
+- Benefícios
+- Avaliações de desempenho
+
+**Requisitos:**
+
+1. Modelagem hierárquica:
+   - Departamentos com subdepartamentos
+   - Funcionários com gerentes
+   - Use CTE recursiva para navegar hierarquia
+
+2. Regras de negócio:
+   - Salário deve estar na faixa do cargo
+   - Funcionário não pode ser gerente de si mesmo
+   - Histórico de mudanças de cargo
+   - Cálculo de tempo de casa
+
+3. Funcionalidades:
+   - Promoção de funcionário (procedure)
+   - Cálculo de folha com descontos e benefícios
+   - Relatório de aniversariantes do mês
+   - Organograma (query recursiva)
+   - Análise de turnover
+
+4. Queries complexas:
+   - Média salarial por departamento
+   - Funcionários elegíveis para promoção (tempo mínimo no cargo)
+   - Custo total da folha por centro de custo
+   - Análise de performance com window functions
+
+5. Otimização:
+   - Índices adequados
+   - Materialized views para dashboards
+   - Particionamento da folha de pagamento por mês/ano
+
+6. Segurança:
+   - RLS: funcionários só veem próprios dados
+   - Gestores veem subordinados
+   - RH vê tudo
+
+================================================================================
+                              OBSERVAÇÕES FINAIS
+================================================================================
+
+**Instruções Gerais:**
+- Todos os exercícios devem ser executados no PostgreSQL 14+
+- Use DBeaver para gerenciar conexões e executar scripts
+- Scripts completos estão em "scripts.sql"
+- Gabaritos completos em "gabarito_bd_postgres.txt"
+- Plano de aula detalhado em "plano_aula_bd_postgres.txt"
+
+**Dicas de Estudo:**
+- Comece pelos exercícios fáceis de cada seção
+- Não pule para avançado sem dominar o médio
+- Pratique, pratique, pratique
+- Use EXPLAIN para entender o que o PostgreSQL está fazendo
+- Consulte a documentação oficial: https://www.postgresql.org/docs/
+
+**Tempo Total Estimado:**
+- Exercícios Fáceis (1-20): ~4-5 horas
+- Exercícios Médios (21-40): ~10-12 horas  
+- Exercícios Avançados (41-52): ~12-15 horas
+- Projetos Integrados (53-55): ~6-8 horas
+- **TOTAL: ~35-40 horas de prática**
+
+Bons estudos! 🚀
+
+================================================================================
+                                  FIM
+================================================================================

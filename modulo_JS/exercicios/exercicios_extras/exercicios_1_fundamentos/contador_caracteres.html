@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bloco de Notas - Contador de Caracteres</title>
+    <style>
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        margin: 2rem;
+        background: #f7f7f7;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      }
+      textarea {
+        width: 100%;
+        min-height: 220px;
+        font: 14px/1.4 monospace;
+        padding: 0.75rem;
+        resize: vertical;
+      }
+      .status {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+      }
+      .status span {
+        background: #eef;
+        padding: 0.4rem 0.7rem;
+        border-radius: 4px;
+      }
+      .highlight {
+        background: #ffe8c4;
+      }
+      .barra {
+        margin-top: 1rem;
+        height: 10px;
+        width: 100%;
+        background: #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .progresso {
+        height: 100%;
+        background: #4caf50;
+        width: 0%;
+        transition: width 0.25s;
+      }
+      .limite {
+        color: #b30000;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Bloco de Notas</h1>
+      <p>
+        Digite seu texto abaixo. O contador atualiza em tempo real usando
+        métodos de string.
+      </p>
+      <label for="nota"><strong>Texto:</strong></label>
+      <textarea id="nota" placeholder="Comece a digitar..."></textarea>
+
+      <div class="status">
+        <span id="totalChars">Caracteres: 0</span>
+        <span id="totalSemEspacos">Sem espaços: 0</span>
+        <span id="totalPalavras">Palavras: 0</span>
+        <span id="linhas">Linhas: 0</span>
+        <span id="limiteInfo">Limite: 500</span>
+      </div>
+
+      <div class="barra">
+        <div id="progresso" class="progresso"></div>
+      </div>
+
+      <p id="aviso" class="limite" style="display: none">
+        Limite de 500 caracteres excedido!
+      </p>
+
+      <h2>Transformações</h2>
+      <button id="btnUpper">MAIÚSCULAS</button>
+      <button id="btnLower">minúsculas</button>
+      <button id="btnTrim">Remover espaços extremos</button>
+      <button id="btnSlug">Gerar slug</button>
+      <button id="btnLimpar">Limpar</button>
+
+      <p><strong>Slug gerado:</strong> <span id="slugSaida">(vazio)</span></p>
+    </div>
+
+    <script>
+      const textarea = document.getElementById("nota");
+      const totalCharsEl = document.getElementById("totalChars");
+      const totalSemEspacosEl = document.getElementById("totalSemEspacos");
+      const totalPalavrasEl = document.getElementById("totalPalavras");
+      const linhasEl = document.getElementById("linhas");
+      const progressoEl = document.getElementById("progresso");
+      const avisoEl = document.getElementById("aviso");
+      const slugSaida = document.getElementById("slugSaida");
+
+      const LIMITE = 500;
+
+      function atualizarStatus() {
+        const texto = textarea.value; // string original
+
+        // length -> quantidade de unidades UTF-16
+        const total = texto.length;
+
+        // Remover todos espaços: (Espaços, tabs e quebras) usando regex simples
+        const semEspacos = texto.replace(/\s+/g, "");
+
+        // Palavras por separação em espaços (remover múltiplos vazios)
+        const palavras =
+          texto.trim().length === 0 ? [] : texto.trim().split(/\s+/);
+
+        // Linhas usando split por quebra de linha
+        const linhas = texto.split(/\n/); // mesmo vazio retorna [''] se nada digitado
+
+        totalCharsEl.textContent = "Caracteres: " + total;
+        totalSemEspacosEl.textContent = "Sem espaços: " + semEspacos.length;
+        totalPalavrasEl.textContent = "Palavras: " + palavras.length;
+        linhasEl.textContent = "Linhas: " + (texto.length ? linhas.length : 0);
+
+        // Barra de progresso (percentual do limite)
+        const pct = Math.min((total / LIMITE) * 100, 100);
+        progressoEl.style.width = pct + "%";
+        progressoEl.style.background =
+          pct < 70 ? "#4caf50" : pct < 90 ? "#ffa000" : "#d32f2f";
+
+        // Aviso de limite
+        avisoEl.style.display = total > LIMITE ? "block" : "none";
+      }
+
+      textarea.addEventListener("input", atualizarStatus);
+
+      // Transformações usando métodos de string
+      document.getElementById("btnUpper").addEventListener("click", () => {
+        textarea.value = textarea.value.toUpperCase();
+        atualizarStatus();
+      });
+
+      document.getElementById("btnLower").addEventListener("click", () => {
+        textarea.value = textarea.value.toLowerCase();
+        atualizarStatus();
+      });
+
+      document.getElementById("btnTrim").addEventListener("click", () => {
+        textarea.value = textarea.value.trim();
+        atualizarStatus();
+      });
+
+      function gerarSlug(str) {
+        return str
+          .normalize("NFD")
+          .replace(/\p{Diacritic}/gu, "")
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-");
+      }
+
+      document.getElementById("btnSlug").addEventListener("click", () => {
+        slugSaida.textContent = gerarSlug(textarea.value);
+      });
+
+      document.getElementById("btnLimpar").addEventListener("click", () => {
+        textarea.value = "";
+        slugSaida.textContent = "(vazio)";
+        atualizarStatus();
+      });
+
+      // Inicial
+      atualizarStatus();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+Aula 07 – Assíncrono: Callbacks, Promises e Async/Await
+
+Conteúdo Teórico
+- Event loop, call stack, task/microtask queues.
+- Callbacks: padrão de erro primeiro.
+- Promises: estados, encadeamento, catch, finally.
+- Async/Await: sintaxe, try/catch, paralelismo com Promise.all.
+
+Exemplos
+function delay(ms){ return new Promise(res=>setTimeout(res, ms)); }
+async function exemplo(){
+  await delay(500);
+  return "ok";
+}
+exemplo().then(console.log);
+
+// Fetch simulado
+async function getData(){
+  try {
+    const res = await delay(200).then(()=>({status:200, data:{x:42}}));
+    return res.data;
+  } catch(e){ console.error(e); }
+}
+
+Exercícios
+- Básico: converta callback para Promise; use then/catch.
+- Intermediário: escreva função async que faz 3 delays em paralelo.
+- Avançado: implemente retry exponencial com cancelamento.
+
+Atividade Real
+- Cliente simples que consulta API e trata estados e erros.
+
+Resumo
+- Fluxo assíncrono com Promises/Async para código claro e robusto.

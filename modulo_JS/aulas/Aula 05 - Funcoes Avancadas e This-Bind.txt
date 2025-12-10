@@ -1,0 +1,32 @@
+Aula 05 – Funções Avançadas e This/Bind
+
+Conteúdo Teórico
+- this em funções, métodos e arrow; call/apply/bind.
+- Currying, partial application; funções de ordem superior.
+- Debounce e throttle.
+
+Exemplos
+const obj = {
+  x: 10,
+  getX() { return this.x; }
+};
+const unbound = obj.getX;
+console.log(unbound()); // undefined
+const bound = obj.getX.bind(obj);
+console.log(bound()); // 10
+
+// debounce
+function debounce(fn, wait){
+  let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
+}
+
+Exercícios
+- Básico: demonstre bind corrigindo this em métodos.
+- Intermediário: implemente apply/call custom wrappers; currying para soma.
+- Avançado: throttle com opção leading/trailing; compose + pipe utilitários.
+
+Atividade Real
+- Criar utilitário de busca que debouce entrada do usuário.
+
+Resumo
+- Entendemos this e padrões de funções para código mais limpo.

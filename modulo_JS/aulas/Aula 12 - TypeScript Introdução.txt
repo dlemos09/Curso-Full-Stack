@@ -1,0 +1,22 @@
+Aula 12 – Introdução ao TypeScript
+
+Conteúdo Teórico
+- Tipagem estática gradual; interfaces e types.
+- Generics; enums; módulos com TS.
+- Configuração: tsconfig, transpila para JS.
+
+Exemplos
+interface User { id:number; nome:string; ativo?:boolean }
+function wrap<T>(value:T){ return { value }; }
+const u: User = { id:1, nome:'Ana' };
+
+Exercícios
+- Básico: tipar funções existentes.
+- Intermediário: usar generics e constraints.
+- Avançado: utility types e inferências complexas.
+
+Atividade Real
+- Migrar pequeno módulo JS para TS com benefícios claros.
+
+Resumo
+- TS ajuda a prevenir erros e documenta intenções.
