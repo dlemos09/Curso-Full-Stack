@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastro Simples de Usuário</title>
+  <link rel="stylesheet" href="painel.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Cadastro simples (apenas nome)</h1>
+
+    <!-- Formulário simples: ao enviar chama a função cadastrarNome no script -->
+    <form id="form-cadastro">
+      <label for="nome">Nome:</label>
+      <input id="nome" type="text" placeholder="Digite o nome" autocomplete="off" />
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <!-- Mensagem de contagem e lista de nomes cadastrados -->
+    <p id="contador">Nenhum usuário cadastrado.</p>
+    <ul id="lista-nomes" aria-live="polite"></ul>
+
+    <!-- Botão opcional para limpar tudo (didático) -->
+    <button id="limpar" class="secundario">Limpar lista</button>
+  </main>
+
+  <script src="painel.js"></script>
+</body>
+</html>

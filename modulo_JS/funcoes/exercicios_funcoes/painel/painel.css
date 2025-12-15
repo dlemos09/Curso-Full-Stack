@@ -1,0 +1,170 @@
+/* painel.css
+   Estilo simples, limpo e responsivo para o formulário de cadastro.
+   Comentários em PT-BR para facilitar o entendimento didático.
+*/
+
+/* Variáveis para facilitar manutenção */
+:root{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --accent: #2563eb;       /* azul */
+  --accent-contrast: #ffffff;
+  --muted: #6b7280;
+  --item-bg: #f3f5f9;
+  --danger: #e11d48;
+  --radius: 8px;
+  --gap: 10px;
+  font-size: 16px;
+}
+
+/* Reset mínimo */
+*{box-sizing: border-box}
+html,body{height:100%}
+body{
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: #111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Caixa central */
+.container{
+  width: 100%;
+  max-width: 520px;
+  background: var(--card);
+  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+}
+
+/* Título */
+h1{
+  margin: 0 0 12px 0;
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+
+/* Formulário: label + input + botão alinhados de forma simples */
+form{
+  display: flex;
+  gap: var(--gap);
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap; /* permite quebra em telas pequenas */
+}
+
+/* Label pequeno e claro */
+label{
+  flex: 0 0 auto;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Input com borda sutil e foco acessível */
+input[type="text"]{
+  flex: 1 1 auto;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid #e6e9ee;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease;
+}
+
+/* foco de teclado visível */
+input[type="text"]:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+}
+
+/* Botão principal */
+button[type="submit"]{
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .08s ease, opacity .08s ease;
+}
+
+/* efeito hover / active */
+button[type="submit"]:hover{ transform: translateY(-1px); }
+button[type="submit"]:active{ transform: translateY(0); }
+
+/* Botão secundário (limpar) */
+button.secundario{
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid rgba(37,99,235,0.12);
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Aviso de foco para botões (acessibilidade) */
+button:focus{
+  outline: 3px solid rgba(37,99,235,0.12);
+  outline-offset: 2px;
+}
+
+/* Contador informativo */
+#contador{
+  margin: 6px 0 10px 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Lista de nomes: visual limpo com separação */
+ul#lista-nomes{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+/* Cada item é uma caixa discreta */
+ul#lista-nomes li{
+  background: var(--item-bg);
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(15,23,42,0.03);
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Se quiser adicionar um contador lateral pequeno (opcional) */
+ul#lista-nomes li .meta{
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+
+/* Responsividade simples: ajusta espaçamento em telas pequenas */
+@media (max-width: 420px){
+  .container{ padding: 14px; }
+  form{ gap: 8px; }
+  label{ width: 100%; }
+  input[type="text"]{ width: 100%; }
+  button[type="submit"]{ width: 100%; }
+  button.secundario{ width: 100%; text-align:center; }
+}
+
+/* Pequeno estilo para mostrar que a lista está vazia (opcional) */
+ul#lista-nomes:empty + button.secundario {
+  opacity: 0.6;
+  pointer-events: none;
+}
