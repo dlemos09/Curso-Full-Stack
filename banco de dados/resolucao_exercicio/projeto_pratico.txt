@@ -1,0 +1,455 @@
+🔷 ETAPA 1 – MODELAGEM ER (CONCEITUAL → LÓGICA)
+📌 Entidades principais
+
+Categorias → agrupa produtos
+
+Produtos → pertencem a uma categoria
+
+Clientes → realizam pedidos
+
+Endereços → pertencem a clientes
+
+Pedidos → feitos por clientes
+
+Itens_Pedido → tabela associativa Pedido × Produto
+
+Pagamentos → 1 pagamento por pedido
+
+Avaliações → clientes avaliam produtos
+
+📌 Cardinalidades aplicadas
+
+Categoria 1:N Produto
+
+Cliente 1:N Endereço
+
+Cliente 1:N Pedido
+
+Pedido 1:N Itens
+
+Produto N:N Pedido (via itens_pedido)
+
+Pedido 1:1 Pagamento
+
+Produto 1:N Avaliação
+
+
+🔷 ETAPA 2 – CRIAÇÃO DAS TABELAS (DDL)
+
+-- =========================
+-- TABELA: categorias
+-- =========================
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL UNIQUE,
+    descricao TEXT,
+    ativa BOOLEAN DEFAULT TRUE
+);
+
+-- =========================
+-- TABELA: produtos
+-- =========================
+CREATE TABLE produtos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(200) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10,2) NOT NULL CHECK (preco > 0),
+    estoque INTEGER DEFAULT 0 CHECK (estoque >= 0),
+    estoque_minimo INTEGER DEFAULT 10,
+    categoria_id INTEGER NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (categoria_id)
+        REFERENCES categorias(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- =========================
+-- TABELA: clientes
+-- =========================
+CREATE TABLE clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================
+-- TABELA: enderecos
+-- =========================
+CREATE TABLE enderecos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER NOT NULL,
+    rua VARCHAR(200) NOT NULL,
+    numero VARCHAR(20),
+    cidade VARCHAR(100),
+    estado CHAR(2),
+    cep CHAR(8),
+    principal BOOLEAN DEFAULT FALSE,
+
+    FOREIGN KEY (cliente_id)
+        REFERENCES clientes(id)
+        ON DELETE CASCADE
+);
+
+-- =========================
+-- TABELA: pedidos
+-- =========================
+CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER NOT NULL,
+    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(30) NOT NULL,
+    valor_total DECIMAL(10,2) DEFAULT 0 CHECK (valor_total >= 0),
+
+    FOREIGN KEY (cliente_id)
+        REFERENCES clientes(id)
+        ON DELETE RESTRICT
+);
+
+-- =========================
+-- TABELA: itens_pedido
+-- =========================
+CREATE TABLE itens_pedido (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER NOT NULL,
+    produto_id INTEGER NOT NULL,
+    quantidade INTEGER NOT NULL CHECK (quantidade > 0),
+    preco_unitario DECIMAL(10,2) NOT NULL CHECK (preco_unitario > 0),
+
+    FOREIGN KEY (pedido_id)
+        REFERENCES pedidos(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (produto_id)
+        REFERENCES produtos(id)
+        ON DELETE RESTRICT
+);
+
+-- =========================
+-- TABELA: pagamentos
+-- =========================
+CREATE TABLE pagamentos (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER UNIQUE NOT NULL,
+    forma_pagamento VARCHAR(50) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL CHECK (valor > 0),
+    data_pagamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(30) NOT NULL,
+
+    FOREIGN KEY (pedido_id)
+        REFERENCES pedidos(id)
+        ON DELETE CASCADE
+);
+
+-- =========================
+-- TABELA: avaliacoes
+-- =========================
+CREATE TABLE avaliacoes (
+    id SERIAL PRIMARY KEY,
+    produto_id INTEGER NOT NULL,
+    cliente_id INTEGER NOT NULL,
+    nota INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+    comentario TEXT,
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (produto_id)
+        REFERENCES produtos(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (cliente_id)
+        REFERENCES clientes(id)
+        ON DELETE CASCADE
+);
+
+🔷 ETAPA 3 – POPULAÇÃO DE DADOS (TRANSAÇÃO)
+
+-- Inserindo categorias principais da loja
+-- Cada categoria representa um tipo de produto
+INSERT INTO categorias (nome, descricao) VALUES
+('Eletrônicos', 'Produtos eletrônicos em geral'),
+('Informática', 'Computadores, notebooks e acessórios'),
+('Casa', 'Produtos para casa e cozinha'),
+('Livros', 'Livros físicos e didáticos'),
+('Esporte', 'Artigos esportivos');
+
+-- Inserindo clientes fictícios para testes
+-- CPF e email são únicos, por isso precisam ser diferentes
+INSERT INTO clientes (nome, email, cpf, telefone) VALUES
+('Ana Paula', 'ana@email.com', '11111111111', '84999990001'),
+('Carlos Silva', 'carlos@email.com', '22222222222', '84999990002'),
+('Juliana Costa', 'juliana@email.com', '33333333333', '84999990003'),
+('Marcos Lima', 'marcos@email.com', '44444444444', '84999990004'),
+('Fernanda Rocha', 'fernanda@email.com', '55555555555', '84999990005'),
+('Pedro Alves', 'pedro@email.com', '66666666666', '84999990006'),
+('Lucas Martins', 'lucas@email.com', '77777777777', '84999990007'),
+('Renata Souza', 'renata@email.com', '88888888888', '84999990008'),
+('Bruno Santos', 'bruno@email.com', '99999999999', '84999990009'),
+('Paula Mendes', 'paula@email.com', '10101010101', '84999990010'),
+('João Ribeiro', 'joao@email.com', '12121212121', '84999990011'),
+('Camila Nunes', 'camila@email.com', '13131313131', '84999990012'),
+('Diego Freitas', 'diego@email.com', '14141414141', '84999990013'),
+('Larissa Gomes', 'larissa@email.com', '15151515151', '84999990014'),
+('Rafael Pires', 'rafael@email.com', '16161616161', '84999990015');
+
+
+-- Inserindo produtos vinculados às categorias
+-- categoria_id deve existir na tabela categorias
+INSERT INTO produtos (nome, descricao, preco, estoque, categoria_id) VALUES
+('Notebook Dell', 'Notebook para trabalho', 4500.00, 10, 2),
+('Mouse USB', 'Mouse óptico', 50.00, 100, 2),
+('Smart TV 50"', 'TV 4K', 3200.00, 5, 1),
+('Liquidificador', 'Liquidificador doméstico', 250.00, 20, 3),
+('Livro SQL', 'Aprenda SQL', 120.00, 30, 4),
+('Bola de Futebol', 'Bola oficial', 90.00, 15, 5),
+('Teclado Mecânico', 'Teclado gamer', 350.00, 40, 2),
+('Fone Bluetooth', 'Fone sem fio', 200.00, 25, 1),
+('Panela Elétrica', 'Panela de arroz', 300.00, 12, 3),
+('Livro JavaScript', 'Programação JS', 150.00, 18, 4),
+('Tênis Corrida', 'Tênis esportivo', 400.00, 22, 5),
+('Monitor 24"', 'Monitor Full HD', 900.00, 8, 2),
+('Câmera Digital', 'Câmera compacta', 1800.00, 6, 1),
+('Aspirador', 'Aspirador de pó', 500.00, 10, 3),
+('Livro Python', 'Python do básico ao avançado', 180.00, 20, 4),
+('Raquete', 'Raquete profissional', 350.00, 14, 5),
+('HD Externo', 'HD 1TB', 420.00, 17, 2),
+('Caixa de Som', 'Bluetooth portátil', 280.00, 19, 1),
+('Cafeteira', 'Cafeteira elétrica', 320.00, 16, 3),
+('Livro Redes', 'Redes de Computadores', 200.00, 12, 4);
+
+
+-- Cada cliente pode ter vários endereços
+-- ON DELETE CASCADE: se o cliente for apagado, os endereços também são
+INSERT INTO enderecos (cliente_id, rua, numero, cidade, estado, cep, principal) VALUES
+(1, 'Rua A', '100', 'Natal', 'RN', '59000001', true),
+(1, 'Rua B', '200', 'Natal', 'RN', '59000002', false),
+(2, 'Av Central', '300', 'Mossoró', 'RN', '59600000', true),
+(3, 'Rua das Flores', '50', 'Recife', 'PE', '50000000', true),
+(4, 'Rua do Sol', '400', 'Natal', 'RN', '59000003', true),
+(5, 'Rua das Palmeiras', '600', 'Natal', 'RN', '59000004', true),
+(6, 'Rua Nova', '10', 'Parnamirim', 'RN', '59100000', true),
+(7, 'Rua Antiga', '20', 'Natal', 'RN', '59000005', true),
+(8, 'Av Brasil', '900', 'Recife', 'PE', '50000001', true),
+(9, 'Rua Azul', '33', 'Natal', 'RN', '59000006', true),
+(10,'Rua Verde', '77', 'Natal', 'RN', '59000007', true),
+(11,'Rua Laranja', '88', 'Natal', 'RN', '59000008', true),
+(12,'Rua Rosa', '99', 'Natal', 'RN', '59000009', true),
+(13,'Rua Cinza', '55', 'Natal', 'RN', '59000010', true),
+(14,'Rua Branca', '44', 'Natal', 'RN', '59000011', true),
+(15,'Rua Preta', '22', 'Natal', 'RN', '59000012', true),
+(2, 'Rua Extra', '123', 'Mossoró', 'RN', '59600001', false),
+(3, 'Rua Secundária', '321', 'Recife', 'PE', '50000002', false),
+(4, 'Rua Alternativa', '456', 'Natal', 'RN', '59000013', false),
+(5, 'Rua Nova', '789', 'Natal', 'RN', '59000014', false);
+
+-- Cada pedido pertence a um cliente
+INSERT INTO pedidos (cliente_id, status, valor_total) VALUES
+(1, 'FINALIZADO', 5200),
+(2, 'FINALIZADO', 350),
+(3, 'CANCELADO', 0),
+(4, 'FINALIZADO', 900),
+(5, 'FINALIZADO', 1200),
+(6, 'FINALIZADO', 450),
+(7, 'FINALIZADO', 1800),
+(8, 'FINALIZADO', 600),
+(9, 'FINALIZADO', 220),
+(10,'FINALIZADO', 780),
+(11,'FINALIZADO', 1500),
+(12,'FINALIZADO', 950),
+(13,'FINALIZADO', 300),
+(14,'FINALIZADO', 400),
+(15,'FINALIZADO', 2000),
+(1, 'FINALIZADO', 650),
+(2, 'FINALIZADO', 890),
+(3, 'FINALIZADO', 120),
+(4, 'FINALIZADO', 430),
+(5, 'FINALIZADO', 980),
+(6, 'FINALIZADO', 700),
+(7, 'FINALIZADO', 1600),
+(8, 'FINALIZADO', 820),
+(9, 'FINALIZADO', 410),
+(10,'FINALIZADO', 990),
+(11,'FINALIZADO', 1050),
+(12,'FINALIZADO', 870),
+(13,'FINALIZADO', 660),
+(14,'FINALIZADO', 520),
+(15,'FINALIZADO', 2400);
+
+
+-- Cada item liga um pedido a um produto
+-- Essa tabela resolve o relacionamento N:N
+INSERT INTO itens_pedido (pedido_id, produto_id, quantidade, preco_unitario) VALUES
+(1, 1, 1, 4500),
+(1, 2, 2, 50),
+(2, 5, 1, 120),
+(2, 6, 2, 90),
+(4, 11, 1, 400),
+(4, 6, 2, 90),
+(5, 7, 1, 350),
+(5, 8, 2, 200),
+(6, 3, 1, 3200),
+(6, 10, 1, 150),
+(7, 12, 1, 900),
+(7, 15, 2, 180),
+(8, 9, 1, 300),
+(8, 6, 1, 90),
+(9, 5, 1, 120),
+(9, 6, 1, 90),
+(10,11, 1, 400),
+(10,6, 1, 90),
+(11,1, 1, 4500),
+(12,7, 1, 350),
+(13,8, 1, 200),
+(14,6, 1, 90),
+(15,12,1, 900),
+(16,2, 3, 50),
+(17,9, 1, 300),
+(18,5, 1, 120),
+(19,6, 2, 90),
+(20,7, 1, 350),
+(21,8, 1, 200),
+(22,11,1, 400),
+(23,12,1, 900),
+(24,6, 1, 90),
+(25,10,1, 150),
+(26,15,1, 180),
+(27,5, 1, 120),
+(28,6, 1, 90),
+(29,11,1, 400),
+(30,12,1, 900);
+
+
+-- Cada pedido possui apenas um pagamento (1:1)
+INSERT INTO pagamentos (pedido_id, forma_pagamento, valor, status) VALUES
+(1, 'CARTAO', 5200, 'PAGO'),
+(2, 'PIX', 350, 'PAGO'),
+(4, 'CARTAO', 900, 'PAGO'),
+(5, 'PIX', 1200, 'PAGO'),
+(6, 'PIX', 450, 'PAGO'),
+(7, 'CARTAO', 1800, 'PAGO'),
+(8, 'PIX', 600, 'PAGO'),
+(9, 'PIX', 220, 'PAGO'),
+(10,'CARTAO', 780, 'PAGO'),
+(11,'CARTAO', 1500, 'PAGO'),
+(12,'PIX', 950, 'PAGO'),
+(13,'PIX', 300, 'PAGO'),
+(14,'PIX', 400, 'PAGO'),
+(15,'CARTAO', 2000, 'PAGO'),
+(16,'PIX', 650, 'PAGO'),
+(17,'PIX', 890, 'PAGO'),
+(18,'PIX', 120, 'PAGO'),
+(19,'PIX', 430, 'PAGO'),
+(20,'PIX', 980, 'PAGO'),
+(21,'PIX', 700, 'PAGO'),
+(22,'CARTAO',1600,'PAGO'),
+(23,'PIX', 820, 'PAGO'),
+(24,'PIX', 410, 'PAGO'),
+(25,'PIX', 990, 'PAGO'),
+(26,'CARTAO',1050,'PAGO'),
+(27,'PIX', 870, 'PAGO'),
+(28,'PIX', 660, 'PAGO'),
+(29,'PIX', 520, 'PAGO'),
+(30,'PIX', 2400,'PAGO');
+
+🔷 ETAPA 4 – QUERIES OBRIGATÓRIAS
+
+🔹 1. RELATÓRIOS BÁSICOS
+
+-- a) Produtos com categoria
+SELECT p.nome, c.nome AS categoria
+FROM produtos p
+JOIN categorias c ON p.categoria_id = c.id;
+
+-- b) Total de pedidos por cliente
+SELECT c.nome, COUNT(p.id), SUM(p.valor_total)
+FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.cliente_id
+GROUP BY c.nome;
+
+-- c) Produtos mais vendidos
+SELECT pr.nome, SUM(ip.quantidade) total
+FROM itens_pedido ip
+JOIN produtos pr ON pr.id = ip.produto_id
+GROUP BY pr.nome
+ORDER BY total DESC
+LIMIT 10;
+
+-- d) Clientes sem pedidos
+SELECT c.nome
+FROM clientes c
+LEFT JOIN pedidos p ON p.cliente_id = c.id
+WHERE p.id IS NULL;
+
+🔹 2. ANÁLISES
+
+-- Média de avaliação
+SELECT p.nome, AVG(a.nota)
+FROM produtos p
+LEFT JOIN avaliacoes a ON a.produto_id = p.id
+GROUP BY p.nome;
+
+-- Faturamento por categoria
+SELECT c.nome, SUM(ip.quantidade * ip.preco_unitario)
+FROM categorias c
+JOIN produtos p ON p.categoria_id = c.id
+JOIN itens_pedido ip ON ip.produto_id = p.id
+GROUP BY c.nome;
+
+-- Ticket médio
+SELECT cliente_id, AVG(valor_total)
+FROM pedidos
+GROUP BY cliente_id;
+
+-- Estoque crítico
+SELECT nome FROM produtos WHERE estoque < estoque_minimo;
+
+🔹 3. QUERIES COMPLEXAS
+
+-- Pedidos último mês
+SELECT p.id, c.nome, pr.nome, ip.quantidade
+FROM pedidos p
+JOIN clientes c ON c.id = p.cliente_id
+JOIN itens_pedido ip ON ip.pedido_id = p.id
+JOIN produtos pr ON pr.id = ip.produto_id
+WHERE p.data_pedido >= CURRENT_DATE - INTERVAL '30 days';
+
+-- Produtos sem avaliações
+SELECT p.nome
+FROM produtos p
+LEFT JOIN avaliacoes a ON a.produto_id = p.id
+WHERE a.id IS NULL;
+
+
+🔷 ETAPA 4 – VIEWS
+
+CREATE VIEW vw_produtos_completos AS
+SELECT p.nome, c.nome categoria, AVG(a.nota) media
+FROM produtos p
+JOIN categorias c ON c.id = p.categoria_id
+LEFT JOIN avaliacoes a ON a.produto_id = p.id
+GROUP BY p.nome, c.nome;
+
+CREATE VIEW vw_estoque_critico AS
+SELECT * FROM produtos WHERE estoque < estoque_minimo;
+
+
+🔷 ETAPA 5 – DESAFIO EXTRA (TRIGGER)
+
+CREATE OR REPLACE FUNCTION fn_baixar_estoque()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE produtos
+    SET estoque = estoque - NEW.quantidade
+    WHERE id = NEW.produto_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_baixa_estoque
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+EXECUTE FUNCTION fn_baixar_estoque();
