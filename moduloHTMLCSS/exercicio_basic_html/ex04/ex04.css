@@ -1,0 +1,156 @@
+/* 
+ * EXERCÍCIO 04 - TRABALHANDO COM IMAGENS E EFEITOS CSS
+ * 
+ * Conceitos de CSS praticados:
+ * - Propriedades de imagem (width, height, border, border-radius)
+ * - Pseudo-classe :hover para criar efeitos interativos
+ * - transform: scale() para aumentar imagens
+ * - box-shadow para sombra em elementos
+ * - transition para animar alterações
+ * - float para posicionar imagens ao lado do texto
+ * - line-height para espaçamento entre linhas
+ * - text-align: justify para justificar texto
+ * - background-image com attachment fixed
+ * - Estilização de listas e links
+ */
+
+/* Estilo do corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center; /* Centraliza conteúdo */
+    margin: auto; /* Centraliza horizontalmente */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 60%; /* Define largura */
+    padding: 20px; /* Espaço interno */
+    
+    /* Borda com 4 propriedades individuais */
+    border: 1px solid #f1f1f1;
+    border-radius: 30px; /* Arredonda as bordas */
+    
+    /* Background com imagem */
+    background-image: url(../../img/sasuke.webp);
+    background-repeat: no-repeat; /* Não repete a imagem */
+    background-attachment: fixed; /* Imagem fica fixa ao scroll */
+    background-size: contain; /* Ajusta tamanho da imagem */
+}
+
+/* ===== TÍTULOS ===== */
+h1, h2 {
+    color: #e1e1e1; /* Cor cinza claro */
+    margin-top: 20px;
+    text-decoration: underline; /* Sublinha */
+    text-shadow: 2px 2px 5px red; /* Sombra vermelha */
+}
+
+/* ===== PARÁGRAFOS ===== */
+p {
+    color: #e1e1e1; /* Cor cinza claro */
+    text-align: justify; /* Justifica o texto */
+    margin-bottom: 100px; /* Espaço inferior */
+    line-height: 1.5; /* Espaçamento entre linhas */
+}
+
+/* 
+ * Efeito hover em parágrafos
+ * Quando o mouse passa sobre o parágrafo, muda estilos
+ */
+p:hover {
+    background-color: #b1b1b1; /* Fundo cinza */
+    border-radius: 8px; /* Arredonda as bordas */
+    font-weight: bold; /* Texto em negrito */
+    padding: 10px; /* Espaço interno */
+    transition: 0.8s; /* Transição suave de 0.8s */
+    color: #2A2D3A; /* Texto fica escuro */
+}
+
+/* Estilo do rodapé */
+.rodape {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+/* ===== CONFIGURAÇÃO DE IMAGENS ===== */
+img {
+    width: 500px; /* Largura padrão */
+    height: auto; /* Altura ajusta proporcionalmente */
+    border: 2px solid #e10000; /* Borda vermelha */
+    border-radius: 8px; /* Arredonda as bordas */
+    margin-top: 10px;
+}
+
+/* 
+ * Efeito hover em imagens
+ * - scale(1.2) aumenta em 20%
+ * - box-shadow cria uma sombra brilhante
+ * - transition anima a mudança
+ */
+img:hover {
+    box-shadow: 0 0 10px 1px #e10000; /* Sombra vermelha luminosa */
+    transform: scale(1.2); /* Aumenta a imagem em 20% */
+    transition: 0.6s; /* Transição de 0.6s */
+}
+
+/* 
+ * Classes para posicionar imagens à esquerda do texto
+ * float: left faz o texto envolver a imagem
+ */
+.dragao, .aventureiros, .warriorvsdragon, .encontro {
+    float: left; /* Posiciona à esquerda */
+    margin-right: 20px; /* Espaço entre imagem e texto */
+    width: 300px;
+}
+
+/* 
+ * Classes para posicionar imagens à direita do texto
+ */
+.warrior, .war, .elfo {
+    float: right; /* Posiciona à direita */
+    margin-left: 20px; /* Espaço entre imagem e texto */
+    width: 300px;
+}
+
+/* Imagens maiores */
+.aventureiros, .war, .encontro {
+    width: 500px;
+}
+
+/* ===== PAGINAÇÃO ===== */
+ul {
+    list-style: none; /* Remove marcadores de lista */
+    margin-right: 35px;
+    margin-bottom: 40px;
+}
+
+li {
+    display: inline-block; /* Coloca itens lado a lado */
+    padding: auto;
+}
+
+/* Estilo dos links de paginação */
+a {
+    padding: 10px; /* Espaço interno */
+    border-radius: 100%; /* Torna circular */
+    margin: 0px 10px; /* Espaço entre links */
+    text-align: center;
+    text-decoration: none; /* Remove sublinhado */
+    background-color: #f1f1f1; /* Fundo cinza claro */
+    color: #e10000; /* Texto vermelho */
+    border: 2px solid #e10000; /* Borda vermelha */
+}
+
+/* Efeito hover nos links */
+a:hover {
+    background-color: #e10000; /* Fundo vermelho */
+    border: 2px solid #f1f1f1;
+    font-weight: bold;
+    color: #f1f1f1; /* Texto branco */
+    transition: 0.4s; /* Transição de 0.4s */
+}
+
+/* Efeito ao clicar no link */
+a:active {
+    background-color: bisque;
+    color: #e10000;
+}

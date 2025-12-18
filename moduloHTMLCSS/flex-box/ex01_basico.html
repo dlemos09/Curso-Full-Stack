@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 01 - Flexbox Básico</title>
+
+    <style>
+      /*
+         * EXERCÍCIO 01 - FLEXBOX BÁSICO
+         * 
+         * Conceitos praticados:
+         * - display: flex - Ativa o flexbox
+         * - justify-content - Alinha itens horizontalmente
+         * - align-items - Alinha itens verticalmente
+         * - flex-direction - Muda direção dos itens
+         * - flex-wrap - Quebra itens para próxima linha
+         * - align-content - Alinha múltiplas linhas
+         * - gap - Espaço entre itens
+         * - flex-grow, flex-shrink, flex-basis - Controle de tamanho
+         */
+
+      body {
+        font-size: 20px;
+        padding: 20px;
+      }
+
+      /* Classe base para todos os containers flex */
+      .flexbox {
+        height: 250px;
+        border: 3px solid red;
+        margin-bottom: 16px;
+        display: flex;
+        /* display: flex ativa o flexbox neste container */
+      }
+
+      /* Estilo dos itens flex */
+      .flexbox div {
+        border: 2px solid rgb(51, 76, 14);
+        width: 300px;
+        padding: 10px;
+        /* Nota: flex ignora width em certos contextos, depende das propriedades do container */
+      }
+
+      /* ===== CONTAINER 1: Comportamento padrão ===== */
+      .flex-container1 {
+        /* Padrão: flex-direction: row; justify-content: flex-start; align-items: stretch; */
+      }
+
+      /* ===== CONTAINER 2: justify-content space-evenly ===== */
+      .flex-container2 {
+        justify-content: space-evenly;
+        /* space-evenly: distribui itens com espaço igual ao redor */
+      }
+
+      .flex-container2 div {
+        width: 30px;
+        margin: 0;
+      }
+
+      /* ===== CONTAINER 3: Alinhamento vertical com align-items ===== */
+      .flex-container3 {
+        justify-content: space-evenly;
+        align-items: baseline;
+        /* baseline: alinha itens na linha de base do texto */
+      }
+
+      .flex-container3 div {
+        width: 30px;
+      }
+
+      /* ===== CONTAINER 4: align-content com flex-wrap ===== */
+      .flex-container4 {
+        justify-content: space-evenly;
+        align-items: flex-end;
+        align-content: flex-start;
+        flex-wrap: wrap;
+        /* flex-wrap: quebra itens para próxima linha quando não cabem */
+      }
+
+      .flex-container4 div {
+        width: 200px;
+      }
+
+      /* ===== CONTAINER 5: flex-direction column ===== */
+      .flex-container5 {
+        justify-content: flex-end;
+        align-items: flex-start;
+        flex-direction: column;
+        /* column: muda direção para vertical */
+      }
+
+      .flex-container5 div {
+        background-color: yellow;
+        width: 50px;
+        height: 50px;
+      }
+
+      /* ===== CONTAINER 6: Column com altura definida ===== */
+      .flex-container6 {
+        justify-content: flex-end;
+        align-items: flex-start;
+        flex-direction: column;
+        height: 400px;
+        /* Aumentar altura para demonstrar espaço */
+      }
+
+      .flex-container6 div {
+        background-color: rgb(17, 255, 0);
+        width: 50px;
+        height: 50px;
+      }
+
+      /* ===== CONTAINER 7: flex-grow (expande itens) ===== */
+      .flex-container7 {
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        /* gap: cria espaço entre itens */
+      }
+
+      .flex-container7 div {
+        flex-basis: 50px;
+        /* flex-basis: tamanho base do item antes de expandir/encolher */
+        background-color: orange;
+        margin: 0;
+      }
+
+      .flex-container7 .div02 {
+        flex-grow: 1;
+        /* flex-grow: permite que o item cresça para ocupar espaço disponível */
+      }
+
+      .flex-container7 .div04 {
+        flex-grow: 1;
+      }
+
+      /* ===== CONTAINER 8: flex-shrink (encolhe itens) ===== */
+      .flex-container8 {
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .flex-container8 div {
+        margin: 0;
+        flex-basis: 200px;
+        background-color: aquamarine;
+      }
+
+      .flex-container8 .div01 {
+        flex-shrink: 2;
+        /* flex-shrink: controla quanto um item encolhe quando não há espaço */
+      }
+
+      .flex-container8 .div03 {
+        flex-shrink: 3;
+        /* flex shorthand: grow shrink basis */
+        flex: 0 1 200px;
+      }
+
+      /* ===== CONTAINER 9: Exemplo prático ===== */
+      .flex-container9 div {
+        background-color: rgb(17, 226, 17);
+        margin: 10px;
+      }
+
+      .flex-container9 .div02 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Flexbox aninhado */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Exercício 01 - Flexbox Básico</h1>
+
+    <h2>Container 1: Padrão</h2>
+    <div class="flexbox flex-container1">
+      <div class="div01">1</div>
+      <div class="div02">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 2: justify-content: space-evenly</h2>
+    <div class="flexbox flex-container2">
+      <div class="div01">1</div>
+      <div class="div02">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 3: align-items: baseline</h2>
+    <div class="flexbox flex-container3">
+      <div class="div01">1</div>
+      <div class="div02" style="font-size: 50px">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 4: flex-wrap + align-content</h2>
+    <div class="flexbox flex-container4">
+      <div class="div01">1</div>
+      <div class="div02">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 5: flex-direction: column</h2>
+    <div class="flexbox flex-container5">
+      <div class="div01">1</div>
+      <div class="div02">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 6: Column com altura 400px</h2>
+    <div class="flexbox flex-container6">
+      <div class="div01">1</div>
+      <div class="div02">2</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 7: flex-grow (expande)</h2>
+    <div class="flexbox flex-container7">
+      <div class="div01">1</div>
+      <div class="div02">2 (flex-grow: 1)</div>
+      <div class="div03">3</div>
+      <div class="div04">4 (flex-grow: 1)</div>
+    </div>
+
+    <h2>Container 8: flex-shrink (encolhe)</h2>
+    <div class="flexbox flex-container8">
+      <div class="div01">1 (shrink: 2)</div>
+      <div class="div02">2</div>
+      <div class="div03">3 (shrink: 3)</div>
+      <div class="div04">4</div>
+    </div>
+
+    <h2>Container 9: Flexbox aninhado</h2>
+    <div class="flexbox flex-container9">
+      <div class="div01">1</div>
+      <div class="div02">2 (contém flex interno)</div>
+      <div class="div03">3</div>
+      <div class="div04">4</div>
+    </div>
+  </body>
+</html>

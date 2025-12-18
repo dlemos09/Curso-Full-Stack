@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <!-- CSS local do formulário de login -->
+    <link rel="stylesheet" href="./login.css" />
+  </head>
+  <body>
+    <h1>Login</h1>
+
+    <!-- Exemplo simples de login. Em produção use HTTPS e POST -->
+    <form action="#" method="post" autocomplete="on">
+      <fieldset>
+        <legend>Entre com seus dados de acesso</legend>
+
+        <label for="user">Usuário</label>
+        <input
+          type="text"
+          id="user"
+          name="username"
+          required
+          autofocus
+          autocomplete="username"
+        />
+
+        <label for="pass">Senha</label>
+        <input
+          type="password"
+          id="pass"
+          name="password"
+          required
+          autocomplete="current-password"
+        />
+
+        <div class="actions">
+          <input type="reset" value="Apagar" class="btn2" />
+          <input class="btn" type="submit" value="Enviar" />
+        </div>
+      </fieldset>
+    </form>
+  </body>
+</html>

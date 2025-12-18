@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 01 - Fundamentos de CSS Grid</title>
+    <style>
+      /*
+         * EXERCÍCIO 01 - FUNDAMENTOS DE CSS GRID
+         * 
+         * Conceitos de CSS praticados:
+         * - display: grid
+         * - grid-template-columns
+         * - grid-template-rows
+         * - gap (espaçamento)
+         * - grid-column / grid-row (posicionamento)
+         * - fr (unidade flexível)
+         * - repeat()
+         * - minmax()
+         * - auto-fit / auto-fill
+         * - Areas nomeadas
+         */
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f0f0;
+        padding: 2em;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 2em;
+        color: #333;
+      }
+
+      h2 {
+        margin-top: 2em;
+        margin-bottom: 1em;
+        color: #555;
+        font-size: 1.2em;
+      }
+
+      /* ===== CONTAINER 1: GRID BÁSICO (3 COLUNAS IGUAIS) ===== */
+      .grid-basico {
+        display: grid;
+        /* Ativa o layout Grid */
+        grid-template-columns: 1fr 1fr 1fr;
+        /* 3 colunas iguais (1fr = 1 unidade flexível = igual tamanho) */
+        gap: 1em;
+        /* Espaço entre items */
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-basico .item {
+        background-color: #3498db;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 2: GRID COM PROPORÇÕES DIFERENTES (1:2:1) ===== */
+      .grid-proporcoes {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        /* 3 colunas: primeira e terceira menores (1fr), meio maior (2fr) */
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-proporcoes .item {
+        background-color: #e74c3c;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 3: GRID COM REPEAT() ===== */
+      .grid-repeat {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        /* repeat(4, 1fr) = repeat(quantidade, tamanho) */
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-repeat .item {
+        background-color: #27ae60;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 4: GRID COM COLUNAS E LINHAS ===== */
+      .grid-linhas {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto 150px auto;
+        /* Define altura das linhas */
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-linhas .item {
+        background-color: #f39c12;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ===== CONTAINER 5: GRID COM POSICIONAMENTO (SPAN) ===== */
+      .grid-span {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-span .item {
+        background-color: #9b59b6;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .grid-span .item:nth-child(1) {
+        grid-column: span 2;
+        /* Item ocupa 2 colunas */
+      }
+
+      .grid-span .item:nth-child(2) {
+        grid-row: span 2;
+        /* Item ocupa 2 linhas */
+      }
+
+      /* ===== CONTAINER 6: GRID COM MINMAX() ===== */
+      .grid-minmax {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(150px, 1fr));
+        /* minmax(mínimo, máximo) - item tem mínimo 150px, máximo flexível */
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-minmax .item {
+        background-color: #1abc9c;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 7: GRID AUTO-FIT (RESPONSIVO AUTOMÁTICO) ===== */
+      .grid-autofit {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        /* auto-fit adapta número de colunas conforme espaço disponível */
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-autofit .item {
+        background-color: #34495e;
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 8: GRID COM GRID-TEMPLATE-AREAS ===== */
+      .grid-areas {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-rows: auto 1fr auto;
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+        grid-template-areas:
+          "header header header"
+          "sidebar main main"
+          "footer footer footer";
+      }
+
+      .grid-areas .header {
+        grid-area: header;
+        background-color: #2c3e50;
+      }
+
+      .grid-areas .sidebar {
+        grid-area: sidebar;
+        background-color: #95a5a6;
+      }
+
+      .grid-areas .main {
+        grid-area: main;
+        background-color: #3498db;
+      }
+
+      .grid-areas .footer {
+        grid-area: footer;
+        background-color: #34495e;
+      }
+
+      .grid-areas > div {
+        color: white;
+        padding: 2em;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      /* ===== CONTAINER 9: GRID ANINHADO (NESTED GRID) ===== */
+      .grid-nested {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        margin-bottom: 2em;
+        background-color: white;
+        padding: 1em;
+        border-radius: 8px;
+      }
+
+      .grid-nested .item {
+        background-color: #e67e22;
+        color: white;
+        padding: 2em;
+        border-radius: 4px;
+      }
+
+      /* Grid dentro de um Grid */
+      .grid-nested .item:first-child {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5em;
+      }
+
+      .grid-nested .item:first-child > span {
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 1em;
+        border-radius: 4px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+     * EXERCÍCIO 01 - FUNDAMENTOS DE CSS GRID
+     * 
+     * Este exercício demonstra 9 conceitos fundamentais do CSS Grid:
+     * 1. Grid básico com 3 colunas iguais
+     * 2. Grid com proporções diferentes (1fr 2fr 1fr)
+     * 3. Grid com função repeat()
+     * 4. Grid com colunas E linhas definidas
+     * 5. Grid com span (posicionamento de items)
+     * 6. Grid com minmax() para responsividade
+     * 7. Grid com auto-fit (responsividade automática)
+     * 8. Grid com áreas nomeadas (grid-template-areas)
+     * 9. Grid aninhado (nested grid)
+     * 
+     * COMO USAR:
+     * - Abra este arquivo em um navegador
+     * - Inspecione com F12 para ver o CSS
+     * - Modifique valores e observe mudanças
+     * - Redimensione a tela para ver responsividade
+    -->
+
+    <h1>🎓 Exercício 01 - Fundamentos de CSS Grid</h1>
+
+    <h2>1️⃣ Grid Básico (3 colunas iguais)</h2>
+    <p><strong>Conceito:</strong> grid-template-columns: 1fr 1fr 1fr</p>
+    <div class="grid-basico">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+    </div>
+
+    <h2>2️⃣ Grid com Proporções (1:2:1)</h2>
+    <p><strong>Conceito:</strong> grid-template-columns: 1fr 2fr 1fr</p>
+    <div class="grid-proporcoes">
+      <div class="item">Coluna 1<br />(1fr)</div>
+      <div class="item">Coluna 2<br />(2fr - 2x maior)</div>
+      <div class="item">Coluna 3<br />(1fr)</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+    </div>
+
+    <h2>3️⃣ Grid com repeat()</h2>
+    <p><strong>Conceito:</strong> grid-template-columns: repeat(4, 1fr)</p>
+    <div class="grid-repeat">
+      <div class="item">1</div>
+      <div class="item">2</div>
+      <div class="item">3</div>
+      <div class="item">4</div>
+      <div class="item">5</div>
+      <div class="item">6</div>
+      <div class="item">7</div>
+      <div class="item">8</div>
+    </div>
+
+    <h2>4️⃣ Grid com Colunas E Linhas</h2>
+    <p><strong>Conceito:</strong> grid-template-columns + grid-template-rows</p>
+    <div class="grid-linhas">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+      <div class="item">Item 7</div>
+      <div class="item">Item 8</div>
+      <div class="item">Item 9</div>
+    </div>
+
+    <h2>5️⃣ Grid com Span (Posicionamento)</h2>
+    <p><strong>Conceito:</strong> grid-column: span 2 (item ocupa 2 colunas)</p>
+    <div class="grid-span">
+      <div class="item">Item 1 (span 2 col)</div>
+      <div class="item">Item 2 (span 2 lin)</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+    </div>
+
+    <h2>6️⃣ Grid com minmax() (Responsivo)</h2>
+    <p>
+      <strong>Conceito:</strong> grid-template-columns: repeat(3, minmax(150px,
+      1fr))
+    </p>
+    <div class="grid-minmax">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+    </div>
+
+    <h2>7️⃣ Grid com auto-fit (Responsividade Automática)</h2>
+    <p>
+      <strong>Conceito:</strong> grid-template-columns: repeat(auto-fit,
+      minmax(150px, 1fr))
+    </p>
+    <div class="grid-autofit">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+      <div class="item">Item 6</div>
+    </div>
+
+    <h2>8️⃣ Grid com Áreas Nomeadas (grid-template-areas)</h2>
+    <p>
+      <strong>Conceito:</strong> Nomear regiões do grid para melhor organização
+    </p>
+    <div class="grid-areas">
+      <div class="header">Header</div>
+      <div class="sidebar">Sidebar</div>
+      <div class="main">Main Content</div>
+      <div class="footer">Footer</div>
+    </div>
+
+    <h2>9️⃣ Grid Aninhado (Nested Grid)</h2>
+    <p>
+      <strong>Conceito:</strong> Grid dentro de um Grid (aplicar display: grid
+      em items)
+    </p>
+    <div class="grid-nested">
+      <div class="item">
+        <span>Sub-item 1</span>
+        <span>Sub-item 2</span>
+        <span>Sub-item 3</span>
+        <span>Sub-item 4</span>
+      </div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+    </div>
+  </body>
+</html>

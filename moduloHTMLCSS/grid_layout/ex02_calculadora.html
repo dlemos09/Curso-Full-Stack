@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 02 - Calculadora com CSS Grid</title>
+    <style>
+      /*
+         * EXERCÍCIO 02 - CALCULADORA COM CSS GRID
+         * 
+         * Conceitos de CSS praticados:
+         * - display: grid
+         * - grid-template-columns e grid-template-rows
+         * - grid-column: span
+         * - gap (espaçamento)
+         * - Aplicação prática: interface de calculadora
+         */
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      h1 {
+        color: white;
+        margin-bottom: 2em;
+        font-size: 2em;
+      }
+
+      /*
+         * CALCULADORA COM GRID
+         * 
+         * Usa grid para organizar display + botões
+         * Display ocupa 4 colunas (grid-column: span 4)
+         * Botões organizados em grid 4x5
+         */
+      #calculator {
+        display: grid;
+        /* Define 4 colunas iguais */
+        grid-template-columns: repeat(4, 80px);
+        /* Define 5 linhas: 1 display grande + 4 linhas de botões */
+        grid-template-rows: 80px repeat(4, 60px);
+        gap: 10px;
+        background-color: #333;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* OUTPUT (DISPLAY DA CALCULADORA) */
+      #display {
+        grid-column: span 4;
+        /* Ocupa todas as 4 colunas */
+        background-color: #222;
+        color: #00ff00;
+        font-size: 2em;
+        font-weight: bold;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: right;
+        border: 2px solid #00ff00;
+        font-family: "Courier New", monospace;
+      }
+
+      /* BOTÕES */
+      button {
+        background-color: #555;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button:hover {
+        background-color: #777;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      /* BOTÕES ESPECIAIS */
+      button:nth-child(2) {
+        /* AC (Clear) */
+        background-color: #e74c3c;
+      }
+
+      button:nth-child(2):hover {
+        background-color: #c0392b;
+      }
+
+      button:nth-child(3),
+      button:nth-child(4),
+      button:nth-child(5) {
+        /* Operadores (%, X, /) */
+        background-color: #f39c12;
+      }
+
+      button:nth-child(3):hover,
+      button:nth-child(4):hover,
+      button:nth-child(5):hover {
+        background-color: #d68910;
+      }
+
+      button:nth-child(8),
+      button:nth-child(12),
+      button:nth-child(16),
+      button:nth-child(20) {
+        /* = (igual) */
+        background-color: #27ae60;
+      }
+
+      button:nth-child(8):hover,
+      button:nth-child(12):hover,
+      button:nth-child(16):hover,
+      button:nth-child(20):hover {
+        background-color: #229954;
+      }
+
+      /* BOTÃO 0 - OCUPA 2 COLUNAS */
+      .zero {
+        grid-column: span 2;
+        /* Ocupa 2 colunas */
+      }
+
+      /* BOTÃO + - OCUPA 1 LINHA + 1 COLUNA */
+      .somar {
+        grid-row: span 2;
+        /* Ocupa 2 linhas */
+      }
+
+      /* RESPONSIVIDADE */
+      @media (max-width: 450px) {
+        #calculator {
+          grid-template-columns: repeat(4, 60px);
+          grid-template-rows: 60px repeat(4, 50px);
+          gap: 8px;
+          padding: 15px;
+        }
+
+        button {
+          font-size: 1em;
+        }
+
+        #display {
+          font-size: 1.5em;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+     * EXERCÍCIO 02 - CALCULADORA COM CSS GRID
+     * 
+     * Este exercício demonstra:
+     * - Uso prático de Grid para interface
+     * - grid-column: span para items ocuparem múltiplas colunas
+     * - grid-row: span para items ocuparem múltiplas linhas
+     * - Organização de componentes com Grid
+     * - Responsividade em layout Grid
+     * 
+     * LAYOUT:
+     * - Display ocupa 4 colunas (linha 1)
+     * - Botões em grid 4x4 (linhas 2-5)
+     * - Botão "0" ocupa 2 colunas
+     * - Botão "+" ocupa 2 linhas
+    -->
+
+    <div class="container">
+      <h1>🧮 Calculadora com CSS Grid</h1>
+      <div id="calculator">
+        <output id="display">0</output>
+
+        <button>AC</button>
+        <button>%</button>
+        <button>X</button>
+        <button>/</button>
+
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>=</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>-</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button class="somar">+</button>
+
+        <button class="zero">0</button>
+        <button>,</button>
+      </div>
+    </div>
+  </body>
+</html>

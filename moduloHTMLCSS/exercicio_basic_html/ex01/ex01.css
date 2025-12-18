@@ -1,0 +1,58 @@
+/* 
+ * EXERCÍCIO 01 - CSS BÁSICO
+ * 
+ * Conceitos de CSS praticados:
+ * - Estilização de elementos básicos (body, h1, h2, p, a)
+ * - Seletores de classe (.p1)
+ * - Seletor combinador adjacente (h3 + p)
+ * - Propriedades de texto e cores
+ * - Efeitos visuais (text-shadow)
+ */
+
+/* Estilo global do corpo da página */
+body {
+  font-family: Arial, Helvetica, sans-serif; /* Fonte padrão da página */
+  background-color: #1a8699; /* Cor de fundo azul-esverdeada */
+  color: aliceblue; /* Cor do texto em tom claro */
+}
+
+/* Estilo do título principal */
+h1 {
+  text-align: center; /* Centraliza o texto */
+  font-size: 35px; /* Define tamanho da fonte */
+  text-shadow: 2px 2px black; /* Adiciona sombra preta deslocada 2px */
+  text-decoration: underline; /* Sublinha o texto */
+}
+
+/* Estilo dos subtítulos */
+h2 {
+  text-align: center; /* Centraliza o texto */
+  text-shadow: 1px 1px 1px black; /* Sombra sutil */
+}
+
+/* Estilo dos parágrafos normais */
+p {
+  font-size: small; /* Tamanho de fonte pequeno */
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+/* Classe para parágrafos com alinhamento especial */
+.p1 {
+  font-weight: bold; /* Texto em negrito */
+  text-align: right; /* Alinha o texto à direita */
+}
+
+/* Estilo dos links */
+a {
+  text-decoration: none; /* Remove o sublinhado padrão */
+  color: rgb(33, 30, 210); /* Cor azul para os links */
+  font-weight: normal; /* Peso da fonte normal */
+}
+
+/* 
+ * Seletor adjacente: seleciona apenas parágrafos que vêm
+ * imediatamente após um h3 
+ */
+h3 + p {
+  background-color: rgb(8, 6, 128); /* Fundo azul escuro */
+}

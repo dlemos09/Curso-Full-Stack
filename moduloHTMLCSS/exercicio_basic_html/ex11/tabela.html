@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <!-- Codificação -->
+    <meta charset="UTF-8" />
+    <!-- Responsividade -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Título -->
+    <title>Exercício 11 - Tabelas de Dados</title>
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="tabela.css" />
+  </head>
+  <body>
+    <!--
+      EXERCÍCIO 11 - TABELAS HTML
+      
+      Conceitos praticados:
+      - Tag <table> para criar tabelas
+      - <thead> para cabeçalho da tabela
+      - <tbody> para corpo da tabela
+      - <tr> para linhas (table row)
+      - <th> para células de cabeçalho (table header)
+      - <td> para células de dados (table data)
+      - border-collapse para unificar bordas
+      - nth-child para estilização alternada
+      - Hover effects em linhas
+      
+      Objetivo: Demonstrar como criar tabelas semânticas
+      e estilizadas com CSS
+      
+      Estrutura de uma tabela:
+      <table>
+        <thead>      ← Cabeçalho
+          <tr><th>Coluna 1</th><th>Coluna 2</th></tr>
+        </thead>
+        <tbody>      ← Corpo da tabela
+          <tr><td>Dado 1</td><td>Dado 2</td></tr>
+        </tbody>
+      </table>
+    -->
+
+    <!-- Título da página -->
+    <h1>Tabela de Preços de Produtos</h1>
+
+    <!-- Tabela semântica -->
+    <table>
+      <!-- THEAD - Cabeçalho da tabela -->
+      <thead>
+        <tr>
+          <!-- TH - Células de cabeçalho -->
+          <th>Produto</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Disponibilidade</th>
+        </tr>
+      </thead>
+
+      <!-- TBODY - Corpo da tabela com dados -->
+      <tbody>
+        <!-- TR - Table Row (linha) -->
+        <tr>
+          <!-- TD - Table Data (célula de dados) -->
+          <td>Notebook</td>
+          <td>Eletrônicos</td>
+          <td>R$ 3500,00</td>
+          <td>Em estoque</td>
+        </tr>
+
+        <tr>
+          <td>Smartphone</td>
+          <td>Eletrônicos</td>
+          <td>R$ 1500,00</td>
+          <td>Em estoque</td>
+        </tr>
+
+        <tr>
+          <td>Geladeira</td>
+          <td>Eletrodomésticos</td>
+          <td>R$ 2000,00</td>
+          <td>Fora de estoque</td>
+        </tr>
+
+        <tr>
+          <td>Fogão</td>
+          <td>Eletrodomésticos</td>
+          <td>R$ 1200,00</td>
+          <td>Em estoque</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

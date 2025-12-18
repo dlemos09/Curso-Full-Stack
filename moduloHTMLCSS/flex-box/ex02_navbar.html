@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 02 - Flexbox Navbar</title>
+
+    <style>
+      /*
+         * EXERCÍCIO 02 - NAVBAR COM FLEXBOX
+         * 
+         * Conceitos praticados:
+         * - Criar navegação horizontal com flexbox
+         * - justify-content: space-between para separar logo e menu
+         * - gap para espaço entre itens
+         * - flex-wrap: wrap para responsividade
+         * - Estilização de links com hover
+         * - Layout com main e cards
+         */
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ccc;
+      }
+
+      /* ===== NAVBAR ===== */
+      .nav_bar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        /* Separa logo e menu para extremos opostos */
+        align-items: center;
+        background-color: #181818;
+        height: 120px;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+
+      /* Logo com círculo */
+      .nav_bar_logo {
+        border: 2px solid #b7ff00;
+        padding: 10px;
+        border-radius: 50%;
+        /* 50% ou 100% cria círculo */
+        background-color: #252525;
+      }
+
+      .nav_bar_logo h1 {
+        color: #b7ff00;
+        font-size: 24px;
+      }
+
+      /* Menu de navegação */
+      .nav_bar_lista {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+        width: 30%;
+        padding: 25px;
+        list-style: none;
+      }
+
+      /* Links no menu */
+      .nav_bar_lista li a {
+        text-decoration: none;
+        border: 2px solid #b7ff00;
+        color: #b7ff00;
+        border-radius: 50%;
+        background-color: #252525;
+        padding: 20px 13px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.3s;
+      }
+
+      /* Efeito hover nos links */
+      .nav_bar_lista li a:hover {
+        background-color: #b7ff00;
+        color: #252525;
+        font-weight: bold;
+      }
+
+      /* ===== MAIN CONTENT ===== */
+      main {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      /* Cabeçalho com título */
+      .header_titulo {
+        width: 80%;
+      }
+
+      main h1 {
+        padding: 10px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      /* Container de cards */
+      .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        width: 80%;
+        margin-bottom: 5px;
+        overflow-y: auto;
+        max-height: 400px;
+      }
+
+      /* Cards */
+      .card {
+        border: 2px solid #0e4a30;
+        width: 20%;
+        min-width: 150px;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: white;
+        text-align: center;
+      }
+
+      .card h2 {
+        color: #0e4a30;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR COM FLEXBOX -->
+    <nav class="nav_bar">
+      <!-- Logo -->
+      <div class="nav_bar_logo">
+        <h1>LOGO</h1>
+      </div>
+
+      <!-- Menu de navegação -->
+      <ul class="nav_bar_lista">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="#">Serviços</a></li>
+        <li><a href="#">Contato</a></li>
+      </ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <!-- Título -->
+      <header class="header_titulo">
+        <h1>Nossos Serviços</h1>
+      </header>
+
+      <!-- Container de cards -->
+      <section class="card-container">
+        <article class="card">
+          <h2>Card 01</h2>
+        </article>
+        <article class="card">
+          <h2>Card 02</h2>
+        </article>
+        <article class="card">
+          <h2>Card 03</h2>
+        </article>
+        <article class="card">
+          <h2>Card 04</h2>
+        </article>
+        <article class="card">
+          <h2>Card 05</h2>
+        </article>
+        <article class="card">
+          <h2>Card 06</h2>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

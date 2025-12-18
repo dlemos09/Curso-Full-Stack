@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <!-- Codificação -->
+    <meta charset="UTF-8" />
+    <!-- Responsividade -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Título -->
+    <title>Exercício 14 - Formulários</title>
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="form-styles.css" />
+  </head>
+  <body>
+    <!--
+      EXERCÍCIO 14 - FORMULÁRIOS HTML
+      
+      Conceitos praticados:
+      - Tag <form> para criar formulários
+      - Tag <input> com diferentes types:
+        * type="text" - Campo de texto simples
+        * type="email" - Campo para e-mail
+        * type="password" - Campo com texto oculto
+        * type="checkbox" - Caixa de seleção
+        * type="submit" - Botão de envio
+      - Tag <label> para associar rótulos a inputs
+      - Tag <button> para botões
+      - Atributo 'for' no label (conecta com 'id' do input)
+      - Atributo 'name' para identificar campo no envio
+      - Atributo 'required' para campos obrigatórios
+      
+      Objetivo: Demonstrar como criar formulários funcionais
+      e acessíveis em HTML
+    -->
+
+    <!-- Container do formulário -->
+    <div class="container">
+      <!-- Título -->
+      <h1>Formulário de Registro</h1>
+
+      <!-- FORM - Define o formulário -->
+      <form action="#" method="post">
+        <!-- 
+              action="#" - Onde o formulário será enviado (# = não vai a lugar algum para esse exercício)
+              method="post" - Método HTTP usado para envio (post é mais seguro que get)
+            -->
+
+        <!-- FORM-GROUP - Agrupa um campo com seu rótulo -->
+        <div class="form-group">
+          <!-- LABEL - Rótulo para o campo input -->
+          <label for="firstname">Nome:</label>
+          <!-- 
+                  'for="firstname"' conecta com o 'id="firstname"' do input
+                  Permite clicar no rótulo para focar no campo
+                -->
+
+          <!-- INPUT type="text" - Campo de texto simples -->
+          <input
+            type="text"
+            id="firstname"
+            name="firstname"
+            required
+            <!--
+            id="firstname"
+            -
+            Identificador
+            único
+            do
+            elemento
+            name="firstname"
+            -
+            Nome
+            do
+            campo
+            enviado
+            no
+            formulário
+            required
+            -
+            Torna
+            o
+            campo
+            obrigatório
+            --
+          />
+          >
+        </div>
+
+        <!-- Campo de sobrenome -->
+        <div class="form-group">
+          <label for="lastname">Sobrenome:</label>
+          <input type="text" id="lastname" name="lastname" required />
+        </div>
+
+        <!-- Campo de e-mail -->
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <!-- 
+                  INPUT type="email" - Valida formato de e-mail automaticamente
+                -->
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <!-- Campo de senha -->
+        <div class="form-group">
+          <label for="password">Senha:</label>
+          <!-- 
+                  INPUT type="password" - Oculta o texto digitado (mostra asteriscos/pontos)
+                -->
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <!-- Campo de confirmação de senha -->
+        <div class="form-group">
+          <label for="confirm-password">Confirme a Senha:</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            required
+          />
+        </div>
+
+        <!-- Campo de checkbox para termos e condições -->
+        <div class="form-group">
+          <label>
+            <!-- 
+                      INPUT type="checkbox" - Caixa de seleção
+                      required - Obriga o usuário a aceitar para enviar
+                    -->
+            <input type="checkbox" name="terms" required />
+            Eu aceito os <a href="#">termos e condições</a>.
+          </label>
+        </div>
+
+        <!-- BUTTON - Botão para enviar o formulário -->
+        <button type="submit">Registrar</button>
+        <!-- 
+              type="submit" - Envia o formulário quando clicado
+            -->
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+/* 
+ * EXERCÍCIO 02 - PROPRIEDADE DISPLAY
+ * 
+ * Conceitos de CSS praticados:
+ * - display: inline (padrão para <a>, <span>, etc)
+ * - display: block (padrão para <div>, <p>, <h1>, etc)
+ * - display: inline-block (combina características dos dois)
+ * - Pseudo-propriedades :hover
+ * - Seletores de elemento e classe
+ * - Alinhamento e espaçamento
+ */
+
+/* Estilo global */
+body {
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove preenchimento padrão */
+    text-align: center; /* Centraliza todo o texto */
+}
+
+/* Estilo dos títulos e parágrafos */
+h1, h2, p {
+    margin: 0; /* Remove margens padrão */
+    padding: 16px; /* Adiciona espaço interno */
+}
+
+/* Estilo específico dos títulos */
+h1, h2 {
+    background-color: #333; /* Fundo escuro */
+    color: #fff; /* Texto branco */
+}
+
+/* Estilo dos links em parágrafos normais */
+a {
+    color: white; /* Texto branco */
+    text-decoration: none; /* Remove sublinhado padrão */
+    border-radius: 10px; /* Arredonda as bordas */
+    padding: 10px; /* Espaço interno */
+    background-color: #444; /* Fundo cinza escuro */
+    display: inline-block; /* 
+                              IMPORTANTE: Transforma links inline em inline-block
+                              Isso permite que eles respeitem margin, padding e width
+                              Mantém-os na mesma linha (diferente de block)
+                            */
+    margin: 13px; /* Espaço externo entre links */
+}
+
+/* Efeito de hover nos links */
+a:hover {
+    background-color: #555; /* Escurece mais o fundo ao passar o mouse */
+}
+
+/* Estilo especial para o parágrafo seguinte ao h2 */
+h2 + p {
+    border: 1px solid #ccc; /* Borda cinza clara */
+    padding: 10px; /* Espaço interno */
+    display: block; /* Garante que ocupe a largura total */
+}

@@ -1,0 +1,246 @@
+/*
+ * EXERCÍCIO 05 - CSS PARA PROJETO PRÁTICO SENAC
+ * 
+ * Conceitos de CSS praticados:
+ * - Import de fontes Google Fonts
+ * - flexbox em múltiplas camadas
+ * - flex-direction e flex-wrap
+ * - gap para espaçamento
+ * - justify-content e align-items
+ * - Transições e hover effects
+ * - Responsividade com media queries
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* Reset de estilos padrão */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo global do body */
+body {
+  display: flex;
+  flex-direction: column;
+  /* Coloca header, main e footer em coluna */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* ===== HEADER E NAVBAR ===== */
+header {
+  width: 100%;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  /* Coloca logo e menu em linha */
+  justify-content: space-between;
+  /* Logo na esquerda, menu na direita */
+  align-items: center;
+  background-color: darkblue;
+  padding: 1em;
+  gap: 1em;
+}
+
+/* Logo com subtitle */
+.menu_container {
+  color: #ffa500;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1em;
+}
+
+.menu_container h1 {
+  font-size: 2em;
+  text-shadow: 2px 1px 0px #ffffff;
+  margin: 0;
+}
+
+.menu_container_subtitle {
+  display: flex;
+  gap: 10px;
+}
+
+.menu_container_subtitle p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* Menu de links */
+.menu_container_lista {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+  list-style: none;
+}
+
+.menu_container_lista li a {
+  border-radius: 10px;
+  background-color: white;
+  text-decoration: none;
+  padding: 0.4em 0.8em;
+  font-family: "Poppins", sans-serif;
+  color: #00008b;
+  font-weight: 500;
+  transition: ease-in-out 0.3s;
+}
+
+.menu_container_lista li a:hover {
+  background-color: darkblue;
+  color: #ffa500;
+  outline: 2px solid #ffa500;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 2em;
+  padding: 2em;
+}
+
+/* ===== SEÇÃO HERO (imagem + texto) ===== */
+.container_foto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  width: 100%;
+  background-color: white;
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container_foto_image {
+  flex: 0 0 40%;
+  /* Não cresce, não encolhe, 40% de largura */
+}
+
+.container_foto_image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.container_foto_text {
+  flex: 1;
+  /* Cresce para ocupar espaço restante */
+  font-size: 1.1em;
+  line-height: 1.8;
+  color: #333;
+}
+
+/* ===== SEÇÃO DE CURSOS (CARDS) ===== */
+.card_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Coloca título e cards em coluna */
+  align-items: center;
+  justify-content: center;
+  background-color: #eeeeee;
+  padding: 3em;
+  gap: 2em;
+  border-radius: 8px;
+}
+
+.container_titulo h2 {
+  font-size: 2.4em;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  color: #00008b;
+}
+
+/* Container dos cards */
+.card_container_content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Cards individuais */
+.course_card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 1.5em;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-width: 150px;
+}
+
+.course_card:hover {
+  transform: translateY(-8px);
+  /* Levanta o card ao passar o mouse */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.course_card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.course_card h3 {
+  text-align: center;
+  color: #00008b;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: darkblue;
+  color: white;
+  text-align: center;
+  padding: 1.5em;
+  margin-top: auto;
+  font-family: "Poppins", sans-serif;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .menu_container {
+    margin-left: 0;
+  }
+
+  .container_foto {
+    flex-direction: column;
+  }
+
+  .container_foto_image {
+    flex: 0 0 100%;
+  }
+
+  .card_container {
+    padding: 1.5em;
+  }
+
+  .card_container_content {
+    flex-direction: column;
+  }
+}

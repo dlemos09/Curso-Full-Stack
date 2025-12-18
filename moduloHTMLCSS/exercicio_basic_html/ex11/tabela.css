@@ -1,0 +1,81 @@
+/* 
+ * EXERCÍCIO 11 - ESTILIZAÇÃO DE TABELAS
+ * 
+ * Conceitos de CSS praticados:
+ * - border-collapse - Une bordas de células
+ * - box-shadow - Sombra em elementos
+ * - nth-child() - Seleciona elemento baseado em posição
+ * - Pseudo-classe :hover - Efeito ao passar mouse
+ * - text-shadow - Sombra em texto
+ * - Alinhamento de conteúdo em tabelas
+ */
+
+/* Reset para remover margens e preenchimentos padrão do navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Inclui padding na largura total */
+}
+
+/* Estilo global da página */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #8a8a8a; /* Fundo cinza escuro */
+  padding: 20px;
+}
+
+/* Estilo do título principal */
+h1 {
+  text-align: center; /* Centraliza */
+  margin-bottom: 20px; /* Espaço inferior */
+  color: #ededed; /* Texto branco-acinzentado */
+  text-shadow: 2px 3px 4px black; /* Sombra no texto */
+}
+
+/* Estilo da tabela */
+table {
+  width: 100%; /* Ocupar toda largura */
+  border-collapse: collapse; /* 
+                                  IMPORTANTE: Une as bordas das células
+                                  Sem isso, haveria espaço entre células
+                                */
+  margin: 0 auto; /* Centraliza a tabela */
+  background-color: #fff; /* Fundo branco */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Estilo das células (tanto TH quanto TD) */
+th,
+td {
+  padding: 12px; /* Espaço interno nas células */
+  text-align: left; /* Alinha texto à esquerda */
+  border-bottom: 1px solid #414141; /* Linha inferior cinza */
+}
+
+/* Estilo específico do cabeçalho (TH) */
+th {
+  background-color: #f8f8f8; /* Fundo cinza claro */
+  color: #555; /* Texto cinza escuro */
+  font-weight: bold; /* Texto em negrito */
+}
+
+/* 
+ * Estilo das linhas alternadas
+ * odd = linhas ímpares (1ª, 3ª, 5ª, etc)
+ * Cria padrão visual alternado
+ */
+tbody tr:nth-child(odd) {
+  background-color: #bebbbb; /* Fundo cinza claro */
+}
+
+/* 
+ * Efeito hover nas linhas da tabela
+ * Quando o mouse passa sobre uma linha, ela muda de cor
+ */
+tbody tr:hover {
+  background-color: #2c2c2c; /* Fundo cinza escuro */
+  color: #ededed; /* Texto claro */
+  /* 
+       Dica: Adicione 'cursor: pointer;' se a tabela for clicável
+    */
+}

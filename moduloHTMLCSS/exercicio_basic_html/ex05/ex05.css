@@ -1,0 +1,78 @@
+/* 
+ * EXERCÍCIO 05 - CSS PARA TAGS SEMÂNTICAS HTML5
+ * 
+ * Conceitos de CSS praticados:
+ * - Estilização de elementos semânticos
+ * - Background colors para diferentes seções
+ * - Padding e margin para espaçamento
+ * - line-height para legibilidade
+ * - Borders e separadores
+ * - Hover effects em links
+ * - Transitions para animações suaves
+ */
+
+/* Estilo global */
+body {
+  font-family: Arial, sans-serif; /* Fonte padrão */
+  line-height: 1.6; /* Espaçamento entre linhas para melhor legibilidade */
+  padding: 20px; /* Espaço interno */
+  background-color: #f0f0f0; /* Fundo cinza claro */
+  margin: auto; /* Centraliza */
+  width: 60%; /* Largura da página */
+}
+
+/* Estilo do cabeçalho */
+header {
+  background-color: #4caf50; /* Fundo verde */
+  color: white; /* Texto branco */
+  padding: 20px; /* Espaço interno */
+  text-align: center; /* Centraliza texto */
+  margin-bottom: 20px; /* Espaço inferior */
+}
+
+/* Estilo da navegação */
+nav ul {
+  list-style-type: none; /* Remove marcadores de lista */
+  padding: 0; /* Remove padding padrão */
+}
+
+nav ul li {
+  display: inline; /* Coloca itens lado a lado */
+  margin-right: 10px; /* Espaço entre itens */
+}
+
+nav ul li a {
+  color: white; /* Cor do link */
+  text-decoration: none; /* Remove sublinhado */
+}
+
+/* Efeito hover nos links de navegação */
+a:hover {
+  background-color: #f0f0f0; /* Muda fundo ao passar mouse */
+  font-weight: bold; /* Texto fica mais grosso */
+  color: #4caf50; /* Texto fica verde */
+  padding: 15px; /* Espaço interno */
+  transition: 0.5s; /* Transição suave */
+  border-radius: 10px; /* Arredonda as bordas */
+}
+
+/* Estilo do conteúdo principal */
+main {
+  background-color: white; /* Fundo branco */
+  padding: 20px; /* Espaço interno */
+  border: 1px solid #ddd; /* Borda cinza clara */
+  margin-bottom: 20px; /* Espaço inferior */
+}
+
+/* Estilo das seções */
+section {
+  margin-bottom: 20px; /* Espaço entre seções */
+}
+
+/* Estilo do rodapé */
+footer {
+  background-color: #4caf50; /* Fundo verde como header */
+  color: white; /* Texto branco */
+  text-align: center; /* Centraliza */
+  padding: 10px; /* Espaço interno */
+}

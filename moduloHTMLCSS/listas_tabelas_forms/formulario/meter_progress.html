@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meter e Progress</title>
+  </head>
+  <body>
+    <h1>Meter</h1>
+
+    <!-- Representa uma medição escalar dentro de um intervalo conhecido -->
+    <label for="combustivel">Nível do combustível</label>
+    <meter
+      id="combustivel"
+      min="0"
+      max="100"
+      low="30"
+      high="90"
+      value="95"
+      optimum="50"
+    ></meter>
+
+    <h1>Progress</h1>
+
+    <!-- Indicador de progresso de uma tarefa -->
+    <label for="tarefa">Porcentagem da tarefa</label>
+    <progress id="tarefa" max="100" value="50">50%</progress>
+
+    <!-- Cálculo simples usando output vinculado -->
+    <form oninput="result.value = a.value * b.value">
+      <input type="number" name="a" id="a" placeholder="A" /> x
+      <input type="number" name="b" id="b" placeholder="B" /> =
+      <output name="result" for="a b"></output>
+    </form>
+  </body>
+</html>

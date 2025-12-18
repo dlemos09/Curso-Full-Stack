@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Curso</title>
+
+    <style>
+      /* Interações básicas com o componente details/summary */
+      details {
+        cursor: pointer;
+      }
+      summary {
+        background-color: orange;
+      }
+      details[open] {
+        background-color: #ffdddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Curso Full Stack</h1>
+
+    <details open>
+      <summary>Pré-requisitos</summary>
+      <p>
+        Para fazer esse curso é necessário atender aos Pré-requisitos a seguir:
+      </p>
+      <ul>
+        <li>Html</li>
+        <li>Css</li>
+        <li>JS</li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>Carga horária</summary>
+      <p>O curso possui carga horária prevista de 80 horas.</p>
+    </details>
+  </body>
+</html>

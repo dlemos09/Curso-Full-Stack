@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabelas</title>
+    <style>
+      /* A área de scroll ajuda em telas pequenas */
+      .scroll {
+        width: 100%;
+        overflow: auto;
+      }
+
+      table {
+        margin: 2rem auto;
+        width: 80%;
+        border-collapse: collapse;
+      }
+
+      caption {
+        caption-side: top;
+        font-weight: bold;
+        padding: 0.5rem;
+      }
+
+      th {
+        background-color: burlywood;
+        border: 2px solid #000;
+        text-align: center;
+      }
+
+      td {
+        border: 1px solid crimson;
+        background-color: #e9e8e8;
+        text-align: center;
+      }
+
+      tbody td {
+        padding: 10px;
+      }
+
+      tbody td:hover {
+        background-color: #dca55d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scroll">
+      <table>
+        <caption>
+          Tabela de Cursos e Valores
+        </caption>
+
+        <thead>
+          <tr>
+            <th scope="col">Área</th>
+            <th scope="col">Item</th>
+            <th scope="col">Preço</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td rowspan="3">Design</td>
+            <td>InDesign</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>Photoshop</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>Illustrator</td>
+            <td>1000</td>
+          </tr>
+
+          <tr>
+            <td rowspan="4">Desenvolvimento</td>
+            <td>HTML</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>CSS</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>JavaScript</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>PHP</td>
+            <td>1000</td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td colspan="3">Valores sujeitos a alteração sem aviso prévio</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </body>
+</html>

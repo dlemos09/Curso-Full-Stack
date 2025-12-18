@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 05 - Projeto Prático SENAC</title>
+
+    <link rel="stylesheet" href="ex05_projeto.css" />
+  </head>
+  <body>
+    <!--
+      EXERCÍCIO 05 - PROJETO PRÁTICO COM FLEXBOX
+      
+      Conceitos praticados:
+      - Menu navbar com flexbox
+      - Layout hero com imagem e texto lado a lado
+      - Cards em linha com flex-wrap
+      - Footer
+      - Uso combinado de múltiplas propriedades flexbox
+      - Fonte importada do Google Fonts
+    -->
+
+    <!-- HEADER COM NAVBAR -->
+    <header>
+      <nav class="menu">
+        <!-- Logo e marca -->
+        <div class="menu_container">
+          <h1>SENAC</h1>
+          <div class="menu_container_subtitle">
+            <p>Fecomércio</p>
+            <p>Sesc</p>
+          </div>
+        </div>
+
+        <!-- Menu de navegação -->
+        <ul class="menu_container_lista">
+          <li><a href="#">Início</a></li>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Suporte</a></li>
+          <li><a href="#">Trabalhe Conosco</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+      <!-- SEÇÃO HERO (imagem + texto) -->
+      <section class="container_foto">
+        <article class="container_foto_image">
+          <img
+            src="https://via.placeholder.com/400x300?text=Aluno+Estudando"
+            alt="Aluno estudando no Senac"
+          />
+        </article>
+        <article class="container_foto_text">
+          <p>
+            "Estudar no Senac é uma experiência enriquecedora, tanto para quem
+            busca capacitação profissional quanto para quem deseja aprimorar
+            suas habilidades em áreas específicas. Com uma abordagem pedagógica
+            focada no desenvolvimento de competências práticas e alinhada às
+            demandas do mercado, o Senac proporciona um ambiente de aprendizado
+            dinâmico e moderno."
+          </p>
+        </article>
+      </section>
+
+      <!-- SEÇÃO DE CURSOS (CARDS) -->
+      <section class="card_container">
+        <div class="container_titulo">
+          <h2>Conheça Nossos Cursos</h2>
+        </div>
+
+        <!-- Cards com imagens placeholder -->
+        <div class="card_container_content">
+          <article class="course_card">
+            <img
+              src="https://via.placeholder.com/150?text=Globalizacao"
+              alt="Cursos de Globalização"
+            />
+            <h3>Globalização</h3>
+          </article>
+          <article class="course_card">
+            <img
+              src="https://via.placeholder.com/150?text=Tecnologia+Informacao"
+              alt="Cursos de TI"
+            />
+            <h3>Tecnologia da Informação</h3>
+          </article>
+          <article class="course_card">
+            <img
+              src="https://via.placeholder.com/150?text=Idiomas"
+              alt="Cursos de Idiomas"
+            />
+            <h3>Idiomas</h3>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>SENAC &copy; 2024 - Educação Profissional de Qualidade</p>
+    </footer>
+  </body>
+</html>

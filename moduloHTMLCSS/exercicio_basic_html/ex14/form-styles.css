@@ -1,0 +1,117 @@
+/* 
+ * EXERCÍCIO 14 - ESTILIZAÇÃO DE FORMULÁRIOS
+ * 
+ * Conceitos de CSS praticados:
+ * - Flexbox para centralização
+ * - box-sizing: border-box para consistência
+ * - border-radius para arredondar bordas
+ * - box-shadow para sombras
+ * - Estilização de inputs e buttons
+ * - Pseudo-classe :hover para efeitos
+ * - width: 100% para responsividade
+ * - max-width para limitar tamanho
+ */
+
+/* Reset para remover espaçamentos padrão */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Inclui padding na largura */
+}
+
+/* Estilo da página */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4; /* Fundo cinza claro */
+  display: flex; /* Ativa flexbox */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 100vh; /* Altura total da viewport */
+}
+
+/* Container do formulário */
+.container {
+  background-color: #fff; /* Fundo branco */
+  padding: 20px; /* Espaço interno */
+  border-radius: 8px; /* Arredonda as bordas */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 100%; /* Largura 100% */
+  max-width: 400px; /* Largura máxima */
+}
+
+/* Título do formulário */
+h1 {
+  text-align: center; /* Centraliza */
+  margin-bottom: 20px; /* Espaço inferior */
+  color: #333; /* Texto escuro */
+}
+
+/* Grupo de formulário (label + input) */
+.form-group {
+  margin-bottom: 15px; /* Espaço entre grupos */
+}
+
+/* Estilo dos rótulos */
+label {
+  display: block; /* Faz o label ocupar linha inteira */
+  margin-bottom: 5px; /* Espaço entre label e input */
+  color: #555; /* Texto cinza escuro */
+}
+
+/* Estilo dos campos de texto, email e senha */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%; /* Ocupar toda largura disponível */
+  padding: 10px; /* Espaço interno */
+  border: 1px solid #ddd; /* Borda cinza clara */
+  border-radius: 4px; /* Arredonda as bordas */
+  font-size: 16px; /* Tamanho da fonte */
+  color: #333; /* Cor do texto */
+}
+
+/* Efeito focus em campos de input */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none; /* Remove outline padrão */
+  border-color: #4caf50; /* Borda verde */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); /* Sombra verde sutil */
+}
+
+/* Estilo do checkbox */
+input[type="checkbox"] {
+  margin-right: 10px; /* Espaço à direita */
+}
+
+/* Estilo dos links */
+a {
+  color: #4caf50; /* Cor verde */
+  text-decoration: none; /* Remove sublinhado */
+}
+
+a:hover {
+  text-decoration: underline; /* Sublinha ao passar mouse */
+}
+
+/* Estilo do botão */
+button {
+  width: 100%; /* Ocupar toda largura */
+  padding: 10px; /* Espaço interno */
+  border: none; /* Remove borda padrão */
+  border-radius: 4px; /* Arredonda as bordas */
+  background-color: #4caf50; /* Fundo verde */
+  color: white; /* Texto branco */
+  font-size: 16px; /* Tamanho da fonte */
+  cursor: pointer; /* Muda cursor para pointer */
+}
+
+/* Efeito hover no botão */
+button:hover {
+  background-color: #45a049; /* Verde mais escuro */
+}
+
+/* Efeito active no botão (ao clicar) */
+button:active {
+  transform: scale(0.98); /* Reduz ligeiramente o botão */
+}

@@ -1,0 +1,122 @@
+/* 
+ * EXERCÍCIO 03 - SELETORES AGRUPADOS E PSEUDO-CLASSES
+ * 
+ * Conceitos de CSS praticados:
+ * - Seletores agrupados: h1, h2 { ... }
+ * - Pseudo-classes:
+ *   * :hover - quando o mouse está sobre o elemento
+ *   * :focus - quando o elemento tem foco (ex: após clique em link)
+ *   * :active - enquanto o elemento está sendo clicado
+ *   * :first-child - primeiro filho do elemento pai
+ *   * :last-child - último filho do elemento pai
+ * - Combinadores: seletor + seletor (elemento adjacente)
+ * - Seletores de descendente: pai filho
+ */
+
+/* Estilo global do corpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* SELETOR AGRUPADO: Aplica o mesmo estilo a múltiplos seletores */
+h1, h2, p {
+    margin: 0;
+    padding: 16px;
+}
+
+h1, h2 {
+    background-color: #333;
+    color: #fff;
+    text-shadow: 1px 1px 2px pink;
+}
+
+/* Estilo da lista de navegação */
+ul {
+    margin: 25px 0px;
+}
+
+/* Remove o marcador de lista e transforma itens em blocos inline */
+ul li {
+    list-style-type: none; /* Remove o ponto/círculo padrão */
+    display: inline-block; /* Coloca itens lado a lado */
+}
+
+/* 
+ * SELETOR DE DESCENDENTE: Estiliza links dentro da navegação
+ * Só links dentro de ul.nav serão afetados
+ */
+ul.nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: #555;
+    margin: 0 8px;
+}
+
+/* 
+ * PSEUDO-CLASSE :hover
+ * Aplica estilo quando o mouse passa sobre o link
+ */
+ul.nav a:hover {
+    background-color: #666;
+}
+
+/* 
+ * PSEUDO-CLASSE :focus
+ * Aplica estilo quando o link recebe foco (Ex: após clique)
+ */
+ul.nav a:focus {
+    outline: 2px solid #ff0000;
+}
+
+/* 
+ * PSEUDO-CLASSE :active
+ * Aplica estilo enquanto o link está sendo clicado
+ */
+ul.nav a:active {
+    background-color: #333;
+}
+
+/* 
+ * SELETOR AGRUPADO: Estiliza h2 e parágrafos com classe "content"
+ */
+h2, p.content {
+    border: 1px solid #ccc;
+    margin: 16px auto;
+    max-width: 600px;
+}
+
+/* 
+ * PSEUDO-CLASSE :hover para parágrafos
+ * Destaca o parágrafo quando o mouse passa sobre
+ */
+p.content:hover {
+    background-color: #f0f0f0;
+}
+
+/* 
+ * PSEUDO-CLASSE :active para parágrafos
+ */
+p.content:active {
+    background-color: #333;
+    color: #ff0000;
+}
+
+/* 
+ * PSEUDO-CLASSE :first-child
+ * Seleciona apenas o primeiro parágrafo "content" dentro seu pai
+ */
+p.content:first-child {
+    background-color: #f9f9f9;
+}
+
+/* 
+ * PSEUDO-CLASSE :last-child
+ * Seleciona apenas o último parágrafo "content" dentro seu pai
+ */
+p.content:last-child {
+    background-color: #e9e9e9;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <!-- Codificação de caracteres -->
+    <meta charset="UTF-8" />
+    <!-- Responsividade -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Título da página -->
+    <title>Exercício 05 - Semântica HTML5</title>
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="ex05.css" />
+  </head>
+  <body>
+    <!--
+      EXERCÍCIO 05 - TAGS SEMÂNTICAS HTML5
+      
+      Conceitos praticados:
+      - Tags semânticas: <header>, <nav>, <main>, <section>, <footer>
+      - Estrutura semântica moderna versus tags genéricas <div>
+      - Hierarquia de conteúdo
+      - Links internos com âncoras (#)
+      - Listas em navegação
+      
+      Objetivo: Demonstrar a importância de usar HTML semântico
+      para melhor organização, acessibilidade e SEO
+      
+      Benefícios da semântica:
+      - Melhor acessibilidade para leitores de tela
+      - Melhor SEO para buscadores
+      - Código mais legível e mantível
+      - Estrutura clara de conteúdo
+    -->
+
+    <!-- 
+      HEADER - Contém o cabeçalho/topo da página
+      Geralmente inclui logo, título e menu de navegação
+    -->
+    <header>
+      <h1>Bem-vindo à Minha Página Semântica</h1>
+
+      <!-- NAV - Contém links de navegação principal da página -->
+      <nav>
+        <ul>
+          <!-- Links internos usando âncoras (#sobre, #projetos, #contato) -->
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- 
+      MAIN - Define o conteúdo principal da página
+      Deve haver apenas um <main> por página
+      Contém <section> com conteúdo relevante
+    -->
+    <main>
+      <!-- SECTION - Agrupa conteúdo relacionado -->
+      <section id="sobre">
+        <h2>Sobre Mim</h2>
+        <p>
+          Olá! Esta é uma breve descrição sobre mim. Gosto de aprender novas
+          tecnologias e criar projetos interessantes.
+        </p>
+      </section>
+
+      <!-- SECTION - Segunda seção de conteúdo -->
+      <section id="projetos">
+        <h2>Projetos</h2>
+        <p>Aqui estão alguns dos meus projetos recentes:</p>
+        <ul>
+          <li>Projeto 1</li>
+          <li>Projeto 2</li>
+          <li>Projeto 3</li>
+        </ul>
+      </section>
+
+      <!-- Você poderia adicionar mais sections aqui -->
+    </main>
+
+    <!-- 
+      FOOTER - Contém informações do rodapé da página
+      Geralmente copyright, links adicionais, contato
+    -->
+    <footer>
+      <p>&copy; 2024 Minha Página. Todos os direitos reservados.</p>
+    </footer>
+  </body>
+</html>

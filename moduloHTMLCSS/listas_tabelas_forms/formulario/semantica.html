@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Semântica do formulário</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+
+    <!-- Estrutura semântica básica de um formulário -->
+    <form action="#" method="post" autocomplete="on">
+      <fieldset>
+        <legend>Login</legend>
+
+        <label for="user">Usuário</label>
+        <input
+          type="text"
+          id="user"
+          name="username"
+          required
+          autofocus
+          autocomplete="username"
+        />
+        <!-- required obriga o preenchimento do campo -->
+        <!-- autofocus posiciona o cursor diretamente no campo -->
+
+        <label for="pass">Senha</label>
+        <input
+          type="password"
+          id="pass"
+          name="password"
+          required
+          autocomplete="current-password"
+        />
+
+        <input type="submit" value="Entrar" />
+      </fieldset>
+    </form>
+  </body>
+</html>

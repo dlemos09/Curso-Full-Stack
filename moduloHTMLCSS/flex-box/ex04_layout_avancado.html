@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercício 04 - Layout Avançado (Dois Sidebars)</title>
+
+    <style>
+      /*
+         * EXERCÍCIO 04 - LAYOUT AVANÇADO COM DOIS SIDEBARS
+         * 
+         * Conceitos praticados:
+         * - Layout com 3 colunas (sidebar left, content, sidebar right)
+         * - Proporções de largura com porcentagem
+         * - Cards aninhados com flex-wrap
+         * - Gap e padding para espaçamento
+         * - Alinhamento complexo de múltiplos elementos
+         */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+      }
+
+      /* ===== HEADER ===== */
+      header {
+        background-color: #50b714;
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header h1 {
+        margin: 0;
+      }
+
+      /* ===== NAVBAR ===== */
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        transition: 0.3s;
+      }
+
+      nav ul li a:hover {
+        text-decoration: underline;
+      }
+
+      /* ===== MAIN COM 3 COLUNAS ===== */
+      main {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+        min-height: calc(100vh - 200px);
+      }
+
+      /* ===== SIDEBARS (LEFT E RIGHT) ===== */
+      .aside-left,
+      .aside-right {
+        width: 20%;
+        background-color: #07f7ff;
+        padding: 20px;
+        border-radius: 8px;
+        height: fit-content;
+      }
+
+      .aside-left h2,
+      .aside-right h2 {
+        margin-top: 0;
+      }
+
+      /* ===== CARDS CONTAINER (CENTER - 60%) ===== */
+      .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 60%;
+        align-content: flex-start;
+      }
+
+      /* ===== CARDS ===== */
+      .card {
+        background-color: #e47e12;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        width: calc(50% - 10px);
+        /* Dois cards por linha */
+        color: white;
+        transition: 0.3s;
+      }
+
+      .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .card h2 {
+        margin-top: 0;
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        background-color: #a908ff;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      /* Responsividade */
+      @media (max-width: 1024px) {
+        main {
+          flex-direction: column;
+        }
+
+        .cards-container,
+        .aside-left,
+        .aside-right {
+          width: 100%;
+        }
+
+        .card {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <h1>Meu Site</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Serviços</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- MAIN COM LAYOUT 3 COLUNAS -->
+    <main>
+      <!-- SIDEBAR ESQUERDA (20%) -->
+      <aside class="aside-left">
+        <h2>Barra Lateral Esquerda</h2>
+        <p>Conteúdo da barra lateral esquerda.</p>
+        <p>Este layout de 3 colunas é comum em blogs e portais.</p>
+      </aside>
+
+      <!-- CARDS CONTAINER (60%) -->
+      <section class="cards-container">
+        <article class="card">
+          <h2>Card 1</h2>
+          <p>Conteúdo do card 1</p>
+        </article>
+        <article class="card">
+          <h2>Card 2</h2>
+          <p>Conteúdo do card 2</p>
+        </article>
+        <article class="card">
+          <h2>Card 3</h2>
+          <p>Conteúdo do card 3</p>
+        </article>
+        <article class="card">
+          <h2>Card 4</h2>
+          <p>Conteúdo do card 4</p>
+        </article>
+        <article class="card">
+          <h2>Card 5</h2>
+          <p>Conteúdo do card 5</p>
+        </article>
+        <article class="card">
+          <h2>Card 6</h2>
+          <p>Conteúdo do card 6</p>
+        </article>
+      </section>
+
+      <!-- SIDEBAR DIREITA (20%) -->
+      <aside class="aside-right">
+        <h2>Barra Lateral Direita</h2>
+        <p>Conteúdo da barra lateral direita.</p>
+        <p>Todas as três colunas se alinham horizontalmente com flexbox.</p>
+      </aside>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Rodapé da página. &copy; 2024 - Layout com Flexbox</p>
+    </footer>
+  </body>
+</html>

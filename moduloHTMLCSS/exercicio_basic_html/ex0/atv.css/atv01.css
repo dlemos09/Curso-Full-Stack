@@ -1,0 +1,47 @@
+/* 
+ * EXERCÍCIO 01 - CSS BÁSICO
+ * 
+ * Conceitos de CSS praticados:
+ * - Seletores de elementos (body, h1, h2, hr)
+ * - Seletores de classe (.lista_01)
+ * - Propriedades de texto (font-family, color, font-size, text-align)
+ * - Efeitos visuais (text-shadow, text-decoration)
+ * - Box model (margin, width)
+ * - Estilização de bordas (border, border-radius)
+ * - Cores CSS (nomes, hexadecimal, rgb)
+ */
+
+/* Estilo do corpo da página */
+body {
+  font-family: Arial, Helvetica, sans-serif; /* Define a fonte padrão */
+  background-color: #faebd7; /* Cor de fundo bege claro (antiquewhite) */
+  margin: auto; /* Centraliza o conteúdo horizontalmente */
+  width: 60%; /* Define largura de 60% da tela para o conteúdo */
+}
+
+/* Estilo do título principal */
+h1 {
+  color: darkblue; /* Cor do texto azul escuro */
+  font-size: 40px; /* Tamanho da fonte */
+  text-align: center; /* Alinha o texto ao centro */
+  text-shadow: 0px 0px 5px red; /* Adiciona sombra vermelha ao texto */
+  text-decoration: underline; /* Sublinha o texto */
+}
+
+/* Estilo da linha horizontal */
+hr {
+  border: 8px solid rgb(0, 17, 255); /* Borda sólida azul de 8px */
+  border-radius: 4px; /* Arredonda as bordas */
+}
+
+/* Estilo dos subtítulos */
+h2 {
+  background-color: cornflowerblue; /* Cor de fundo azul claro */
+  color: rgb(2, 2, 30); /* Cor do texto quase preto */
+  text-align: center; /* Alinha o texto ao centro */
+}
+
+/* Estilo da lista de qualificações */
+.lista_01 {
+  list-style-type: circle; /* Define marcadores de lista como círculos */
+}
