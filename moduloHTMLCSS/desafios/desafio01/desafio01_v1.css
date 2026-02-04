@@ -79,40 +79,42 @@ p{
 }
 
 
-li {
+.menu li {
     list-style-type: none ;
     font-size: small;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border-radius: 5px;
+    padding: 0px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.24);
+    background-color: #fffbfb;
 }
 
 .menu {
-        text-align: right;
+    text-align: right;
 }
 
-.menu button{
-    border-radius: 10px;
-    padding: 0px;
-    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
-      
-}
-
-.menu li{
-    display: inline-block;
+.menu {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    gap: 5px;
     padding: 0px;
 }
 
 .menu a{
-    background-color: #fffbfb;
     display: inline-block;
     padding: 10px;
     text-decoration: none;
     border-radius: 7px;
 }
 
-.menu a:hover {
-    background-color: #474747;
-    color: #ffffff;
-    transition: 0.4s all;
+.menu a:hover{
+    color: white;
 }
 
+.menu li:hover {
+    background-color: #474747;
+    transition: 0.4s all;
+    box-shadow: 1px 2px 1px 1px rgba(0, 0, 0, 0.24);
+}
 
