@@ -1,11 +1,9 @@
-
-body {
+body{
     background-color: #e0dede;
     width: 80%;
     margin: auto;
     color: #474747;
 }
-
 
 h1{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -15,29 +13,30 @@ h1{
     margin-bottom: 0;
 }
 
-.img_perfil{
-    width: 200px;
-    float: left;
-    border-radius: 100px;
-    border: 2px solid #474747;
-    margin-left: 80px;
+section{
+    display: flex;
+    justify-content: space-between;
 }
 
+/* imagem */
 
-
+.img_perfil{
+    width: 200px;
+    border-radius: 100px;
+    border: 2px solid #061761;
+}
 
 h2{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 25px;
     color: #061761;
-    border-bottom: 2px solid;
-    text-align: left;
     background-color: #c8c8cf;
+    text-align: left;
     padding: 10px;
-
+    border-bottom: 2px solid #061761;
 }
 
-h3 {
+h3{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: left;
     font-size: small;
@@ -48,13 +47,12 @@ h4{
     font-size: small;
 }
 
-
-a {
+a{
     text-decoration: none;
-    color: #1f1fa5;
+    color: #1f1f45;
 }
 
-a:hover {
+a:hover{
     text-decoration: underline;
 }
 
@@ -68,53 +66,42 @@ p{
     text-align: center;
 }
 
-.subtitle {
+.subtitle{
     margin-top: 0;
     background-color: #e1e1ff;
-
 }
 
-.p2 {
-    font-weight: lighter;
-}
-
-
-.menu li {
-    list-style-type: none ;
-    font-size: small;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    border-radius: 5px;
-    padding: 0px;
-    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.24);
-    background-color: #fffbfb;
-}
-
-.menu {
+.menu{
     text-align: right;
-}
-
-.menu {
     display: flex;
     align-items: end;
     justify-content: end;
-    gap: 5px;
-    padding: 0px;
+    gap: 10px;
+    padding: 0;
+}
+
+.menu li{
+    list-style-type: none;
+    font-size: small;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border-radius: 5px;
+    background-color: #fffbfb;
+    box-shadow: 1px 1px 1px 1px black;
 }
 
 .menu a{
     display: inline-block;
-    padding: 10px;
     text-decoration: none;
     border-radius: 7px;
+    padding: 10px;
 }
 
 .menu a:hover{
     color: white;
 }
 
-.menu li:hover {
+.menu li:hover{
     background-color: #474747;
-    transition: 0.4s all;
-    box-shadow: 1px 2px 1px 1px rgba(0, 0, 0, 0.24);
+    transition: 0.4s;
+    box-shadow: 1px 2px 1px 1px rgba(0, 0, 0, 0.486);
 }
-
