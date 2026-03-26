@@ -1,6 +1,5 @@
 # 📚 Repositório de Exercícios - Curso Completo de Desenvolvimento Web
 
-
 ## 📋 Sobre o Repositório
 
 Bem-vindo ao repositório completo de exercícios e materiais didáticos do curso de **Desenvolvimento Web Full Stack**. Este repositório contém uma coleção abrangente de conteúdos estruturados para o aprendizado progressivo de tecnologias web modernas.
@@ -18,6 +17,7 @@ repo_exercicios/
 ├── 📁 banco_de_dados/          # Curso completo de PostgreSQL (60h)
 ├── 📁 moduloHTMLCSS/            # HTML5 e CSS3 + Projetos
 ├── 📁 modulo_JS/                # JavaScript Completo (15 aulas)
+├── 📁 moduloReact/              # React + Vite + projetos SPA
 ├── 📁 moduloNode/               # Node.js + Express + Sequelize
 ├── 📁 moduloBootstrap/          # Bootstrap (15 aulas)
 ├── 📁 moduloTailwind/           # Tailwind CSS
@@ -181,7 +181,28 @@ repo_exercicios/
 
 ---
 
-### 🚀 4. Módulo Node.js
+### ⚛️ 4. Módulo React
+
+**Pasta:** `moduloReact/`
+
+**Descrição:** Projetos de interface com React, Vite e roteamento SPA.
+
+#### 📂 Conteúdo
+
+- `hotel-react/` - Projeto de site de hotel com home e página de reserva
+- `README.md` - Guia do módulo React
+
+#### 🎯 Tópicos
+
+- Componentes funcionais
+- Hooks (`useState`, `useEffect`)
+- React Router (`BrowserRouter`, `Routes`, `Route`)
+- Organização de estilos por página/componente
+- Formulários controlados
+
+---
+
+### 🚀 5. Módulo Node.js
 
 **Pasta:** `moduloNode/`
 
@@ -267,7 +288,7 @@ nodemon, session-file-store, dotenv, express-handlebars
 
 ---
 
-### 🎨 5. Módulo Bootstrap
+### 🎨 6. Módulo Bootstrap
 
 **Pasta:** `moduloBootstrap/`
 
@@ -294,7 +315,7 @@ nodemon, session-file-store, dotenv, express-handlebars
 
 ---
 
-### 🎨 6. Módulo Tailwind CSS
+### 🎨 7. Módulo Tailwind CSS
 
 **Pasta:** `moduloTailwind/`
 
@@ -307,7 +328,7 @@ nodemon, session-file-store, dotenv, express-handlebars
 
 ---
 
-### 📦 7. Legado
+### 📦 8. Legado
 
 **Pasta:** `legado/`
 
@@ -323,7 +344,7 @@ nodemon, session-file-store, dotenv, express-handlebars
 
 ---
 
-### 🎨 8. Modelo
+### 🎨 9. Modelo
 
 **Pasta:** `modelo/`
 
@@ -397,6 +418,7 @@ Cada módulo tem sua própria organização e READMEs internos.
 
 - [MDN Web Docs](https://developer.mozilla.org/) - HTML, CSS, JavaScript
 - [Node.js Docs](https://nodejs.org/docs/) - Node.js
+- [React Docs](https://react.dev/) - React
 - [PostgreSQL Docs](https://www.postgresql.org/docs/) - PostgreSQL
 - [Bootstrap Docs](https://getbootstrap.com/docs/) - Bootstrap
 - [Tailwind Docs](https://tailwindcss.com/docs) - Tailwind CSS
@@ -432,16 +454,23 @@ Cada módulo tem sua própria organização e READMEs internos.
 - CSS Grid Layout
 - JavaScript
 
+### 4. **Hotel Lux** (moduloReact/hotel-react/)
+
+- SPA com React Router
+- Landing page institucional
+- Formulário de reserva com estado controlado
+
 ---
 
 ## 📊 Estatísticas do Repositório
 
-- ✅ **5+ módulos** completos
+- ✅ **8+ módulos** completos
 - ✅ **15 aulas** de JavaScript
 - ✅ **15 aulas** de Bootstrap
 - ✅ **55 exercícios** de Banco de Dados
 - ✅ **10 arquivos** de exercícios JS
 - ✅ **3 projetos** completos
+- ✅ **1 projeto React** publicado no módulo
 - ✅ **60 horas** de conteúdo em BD
 - ✅ **Centenas** de exemplos práticos
 
@@ -478,6 +507,12 @@ Este é um repositório educacional. Sugestões e melhorias são bem-vindas!
 
 - Navegador moderno (Chrome, Firefox)
 - VS Code ou editor de código
+
+**React:**
+
+- Node.js 18+ instalado
+- NPM
+- Navegador moderno (Chrome, Firefox)
 
 ### 💡 Dicas de Estudo
 
@@ -523,7 +558,8 @@ Este material é destinado para fins educacionais.
 1. moduloHTMLCSS/grid_layout/
 2. moduloBootstrap/ (aula01-aula08)
 3. modulo_JS/exercicios/ (06-10)
-4. moduloNode/1_Intro/ até 4_npm_fundamentos/
+4. moduloReact/hotel-react/
+5. moduloNode/1_Intro/ até 4_npm_fundamentos/
 ```
 
 ### Avançado (6-9 meses)
@@ -564,7 +600,7 @@ Este material é destinado para fins educacionais.
 
 ---
 
-**Última Atualização:** Dezembro 2025
+**Última Atualização:** Março 2026
 
 ---
 

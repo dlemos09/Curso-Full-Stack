@@ -1,0 +1,79 @@
+.reserve-page {
+  min-height: 100vh;
+  padding: 120px 20px 60px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.reserve-card {
+  width: 100%;
+  max-width: 720px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  padding: 28px;
+  color: #1f2937;
+}
+
+.reserve-card h2 {
+  margin-bottom: 8px;
+}
+
+.reserve-card p {
+  margin-bottom: 20px;
+  color: #6b7280;
+}
+
+.reserve-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reserve-form input,
+.reserve-form textarea,
+.reserve-form button {
+  font: inherit;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  padding: 12px;
+}
+
+.reserve-form input,
+.reserve-form textarea {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.reserve-form input:focus,
+.reserve-form textarea:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #3b82f6;
+}
+
+.reserve-form button {
+  margin-top: 6px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reserve-form button:hover {
+  background: #1d4ed8;
+}
+
+.reserve-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .reserve-grid {
+    grid-template-columns: 1fr;
+  }
+}
