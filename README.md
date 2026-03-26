@@ -1,4 +1,4 @@
-# 📚 Repositório de Exercícios - Curso Completo de Desenvolvimento Web
+﻿# 📚 Repositório de Exercícios - Curso Completo de Desenvolvimento Web
 
 ## 📋 Sobre o Repositório
 
@@ -464,12 +464,12 @@ Cada módulo tem sua própria organização e READMEs internos.
 
 ## 📊 Estatísticas do Repositório
 
-- ✅ **8+ módulos** completos
+- ✅ **9+ módulos** completos
 - ✅ **15 aulas** de JavaScript
 - ✅ **15 aulas** de Bootstrap
 - ✅ **55 exercícios** de Banco de Dados
 - ✅ **10 arquivos** de exercícios JS
-- ✅ **3 projetos** completos
+- ✅ **4 projetos** completos
 - ✅ **1 projeto React** publicado no módulo
 - ✅ **60 horas** de conteúdo em BD
 - ✅ **Centenas** de exemplos práticos
